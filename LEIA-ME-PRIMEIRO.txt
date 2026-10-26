@@ -1,0 +1,14 @@
+COMO ABRIR O YOURFXJOURNEY
+
+1. No GitHub, clique em Code e depois em Download ZIP.
+2. Extraia o ZIP no seu computador.
+3. Abra YourFXjourney-standalone.html no Chrome ou Edge.
+
+Nao e necessario instalar nada ou iniciar servidor.
+O leitor de prints ja esta embutido nesse arquivo.
+
+IMPORTANTE: antes de trocar de arquivo ou navegador, exporte seu backup
+em Trades > Exportar backup e restaure-o na nova versao.
+
+Se houver campos que o print nao mostre claramente, confira a leitura.
+Um planejamento nao e tratado como operacao encerrada.
