@@ -187,3 +187,18 @@ Em **Trades → Limpar histórico**, a confirmação informa o total de operaç�
 A limpeza remove todos os trades fechados (importados e manuais), com suas notas e prints vinculados. Mantém planejamentos, estratégias, revisões e configurações da conta. Não há desfazer sem backup. O botão fica desativado quando o histórico está vazio. A gravação no localStorage é feita antes de atualizar o estado em memória: se falhar, os registros são preservados e a confirmação mostra o erro. Depois da limpeza, um CSV anterior pode ser importado novamente, pois a deduplicação usa as operações presentes no histórico.
 
 `tests/clear-history.cjs` cobre confirmação com filtros ativos, cancelamento, backup antes da exclusão, falha de armazenamento, persistência após recarregar, preservação dos outros dados e reimportação.
+
+## Históricos importados sem risco: completar o cálculo na própria tela
+
+Quando faltam dados, o calendário mostra **Configurar cálculo de R** com a cobertura (por exemplo, 0 de 21 trades). Não há risco presumido nem valor padrão automático.
+
+- **Mesmo risco inicial:** informe o risco monetário que realmente foi utilizado e confirme explicitamente que ele foi igual nos trades selecionados. Aplica somente aos trades do mês sem R calculável e com P&L conhecido, preservando risco/R já registrado, notas e valores financeiros.
+- **Riscos variáveis:** preencha os R líquidos realizados individuais na lista e salve vários registros de uma vez. Campos vazios são preservados.
+
+As duas opções persistem antes de alterar o estado em memória; uma falha de armazenamento mantém os registros anteriores. Não use perda média como risco inicial. Se o risco foi variável e não foi registrado, o P&L sozinho não permite recuperar o R verdadeiro.
+
+Win rate passa a usar o P&L conhecido independentemente da disponibilidade do risco. Dias sem R calculável podem ser classificados/coloridos pela direção do resultado financeiro, com indicação explícita na tela e na imagem. Não são apresentados como zero nem como breakeven só porque o risco está ausente. Totais e profit factor **em R** continuam exigindo cobertura completa.
+
+Os importadores de trades pareados Strategy Tester/Tickmill também leem colunas explícitas de risco monetário inicial, stop e R realizado. Não tratam risco percentual ou R:R planejado como resultado realizado. Reimportar o mesmo CSV completa somente esses campos ausentes, preserva IDs, notas e P&L, e não duplica operações. Históricos de ordens com saídas parciais conservam o tratamento anterior, pois a distribuição de risco entre ordens exige informação adicional.
+
+Testes: `tests/share-risk-setup.cjs` reproduz 21 trades sem risco, valida métricas disponíveis, confirmação obrigatória, lote de riscos/R, preservação dos dados, persistência e falha de armazenamento. `tests/import-risk.cjs` valida aproveitamento e reparação dos campos na reimportação sem duplicação.
