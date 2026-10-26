@@ -159,3 +159,23 @@ A leitura da ferramenta de posição procura um rótulo vermelho, um verde e uma
 `tests/shot-opening.cjs` verifica o HTML embutido aberto por `file://`, exibição imediata, OCR real dos rótulos coloridos em uma fixture baseada nos níveis do exemplo, rejeição do preço atual como entrada e ausência de requisições HTTP. O arquivo de imagem original mostrado na conversa não foi disponibilizado como arquivo de teste local; a validação automatizada desse layout usa uma reprodução sintética, sem dispensar a conferência dos dados reconhecidos.
 
 Antes de mudar o nome/caminho do HTML ou de navegador, exporte o backup na versão anterior e restaure-o na nova. O localStorage de arquivos locais pode depender do caminho.
+
+## R no calendário sem risco monetário preenchido
+
+O calendário compartilhável agora resolve o R de cada operação nesta ordem:
+
+1. P&L líquido / risco monetário planejado, quando ambos estão registrados.
+2. Campo **R líquido realizado**, informado explicitamente pelo trader.
+3. Movimento entre entrada e **saída real**, dividido pela distância entre entrada e stop inicial, respeitando compra/venda e a posição válida do stop.
+
+O terceiro método é identificado como **R por preço, sem ajuste de custos** na tela e na imagem exportada. Quando houver esse método, o total é rotulado **Resultado em R***, em vez de resultado líquido. Não se presume valor de pip, tamanho de posição, risco fixo, fechamento no alvo ou que uma perda foi de −1R.
+
+O detalhe de cada dia apresenta a fonte ou informa exatamente quais campos estão faltando. Use **Salvar R** para registrar diretamente o R líquido realizado, ou **Preencher dados do trade** para revisar entrada, stop e saída. Esse registro persiste no backup sem alterar o P&L em dinheiro. O campo também está no editor do trade.
+
+Dias incompletos permanecem indisponíveis até existir informação suficiente para todos os trades. Apenas o alvo ou R:R planejado não comprova resultado realizado. Os cálculos monetários e a fórmula original das métricas R do Dashboard/Insights não foram alterados por essa extensão do calendário; essas métricas continuam identificando sua cobertura por risco monetário informado.
+
+```sh
+BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/share-r-sources.cjs
+```
+
+Verifica compras/vendas, resultados positivos/negativos/zero, prioridade do resultado líquido, R registrado, valores numéricos legados em texto, stop inválido, alvo sem saída, somas diárias/mensais, persistência do novo campo e identificação de R por preços no PNG.
