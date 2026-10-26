@@ -179,3 +179,11 @@ BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/share-r-sources.cjs
 ```
 
 Verifica compras/vendas, resultados positivos/negativos/zero, prioridade do resultado líquido, R registrado, valores numéricos legados em texto, stop inválido, alvo sem saída, somas diárias/mensais, persistência do novo campo e identificação de R por preços no PNG.
+
+## Limpar histórico
+
+Em **Trades → Limpar histórico**, a confirmação informa o total de operações que serão removidas, incluindo as ocultas pelos filtros. É possível exportar um backup dentro da confirmação antes de escolher **Confirmar limpeza**, ou cancelar sem alterações.
+
+A limpeza remove todos os trades fechados (importados e manuais), com suas notas e prints vinculados. Mantém planejamentos, estratégias, revisões e configurações da conta. Não há desfazer sem backup. O botão fica desativado quando o histórico está vazio. A gravação no localStorage é feita antes de atualizar o estado em memória: se falhar, os registros são preservados e a confirmação mostra o erro. Depois da limpeza, um CSV anterior pode ser importado novamente, pois a deduplicação usa as operações presentes no histórico.
+
+`tests/clear-history.cjs` cobre confirmação com filtros ativos, cancelamento, backup antes da exclusão, falha de armazenamento, persistência após recarregar, preservação dos outros dados e reimportação.
