@@ -9,7 +9,7 @@ const path=require('node:path');
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  let count=0;const check=(name,fn)=>{fn();count++;console.log('PASS',name)};
  await page.clock.setFixedTime(new Date('2026-10-26T12:00:00Z'));
- await page.goto('file://'+path.resolve(__dirname,'../YourFXjourney.html'));
+ await page.goto('file://'+path.resolve(__dirname,'../YourFXjourney.html'));await page.evaluate(()=>taGo('dash'));
  check('empty dashboard renders without fabricated performance',()=>{});
  assert.equal(await page.locator('.primary-metrics .k').count(),7);
  assert.match(await page.locator('.primary-metrics').innerText(),/Aguardando operações/);

@@ -1,204 +1,126 @@
-# YourFXjourney — Dashboard e Trading Insights
+# Trade Assistant · YourFXjourney
 
-## Baixar e abrir no computador
+Upgrade do projeto existente para um espaço pessoal de preparação, análise e revisão de trading. Vanilla HTML/CSS/JavaScript no navegador, com backend opcional Node.js sem dependências de produção. As operações, imports, screenshots, cálculos e a chave `yfx1` do localStorage foram preservados.
 
-1. No GitHub, clique em **Code → Download ZIP**.
-2. Extraia o ZIP para uma pasta no computador.
-3. Abra **YourFXjourney-standalone.html** no Chrome ou Edge. Não abra o HTML dentro do visualizador de ZIP.
+## Baixar e abrir
 
-Essa é a versão completa, com leitor de prints embutido. Não precisa instalar dependências, iniciar servidor nem manter conexão com a internet. O arquivo `YourFXjourney.html` é a versão modular para desenvolvimento/hospedagem e depende de `vendor/ocr` para ler prints.
+No GitHub: **Code → Download ZIP**, extraia e abra **YourFXjourney-standalone.html** no Chrome ou Edge. A Home do Trade Assistant é a página inicial. O leitor OCR e os novos módulos estão embutidos nessa versão, que funciona como arquivo local.
 
-Antes de trocar de arquivo ou navegador, exporte seu backup em **Trades → Exportar backup** e restaure-o na nova versão. Os dados de trading ficam no navegador; não são enviados ao GitHub.
+**Antes de mudar de arquivo, origem ou navegador:** exporte um backup na versão antiga em **Trades → Exportar backup** e restaure-o na nova. O navegador pode manter armazenamentos separados para caminhos diferentes. O projeto não envia seu histórico ao GitHub.
 
+## O que funciona offline
 
-Aplicação independente, sem framework, dependências de produção ou etapa de build. O arquivo enviado foi usado como base; importadores, editor de trades, prints, revisões, estratégias, risco e análises foram preservados.
+- Home com saudação no seu fuso, sessão configurável, contagem regressiva, recomendações locais apoiadas nos registros e resumo semanal com cobertura de R.
+- Sessões de Londres, Nova York, Ásia ou personalizadas, dias selecionáveis, horários noturnos e ajustes de horário de verão por fuso IANA.
+- Trading Plan com textos próprios, instrumentos, timeframes, limites, notícias e critérios explícitos ponderados. Cada salvamento cria uma versão; análises anteriores mantêm a cópia exata do plano utilizado.
+- Trade Analyst com screenshot, contexto e **revisão manual claramente identificada**, score determinístico, evidências e correções auditáveis. O modo manual não interpreta a imagem por IA.
+- Todos os recursos anteriores: Dashboard estatístico, trades, CSV, prints, notas, análises, risco, estratégias, padrões, revisões, Trading Insights e calendário compartilhável.
 
-## Abrir
+Dados de mercado, calendário econômico e análise por IA exibem estados de indisponibilidade quando não há servidor/configuração. Nenhum evento, volatilidade, preço ou padrão visual é inventado para preencher a interface.
 
-Abra `YourFXjourney.html` no navegador ou sirva esta pasta com:
+## Servidor autenticado e IA
+
+Requer Node.js **22.17+** ou **24+**. Na pasta extraída:
+
+1. Copie `.env.example` para `.env`.
+2. Defina `TRADE_ASSISTANT_PASSWORD` com ao menos 12 caracteres.
+3. Configure somente os provedores que deseja usar:
+   - `TRADE_AI_KEY`: OpenAI Responses API multimodal. Modelo padrão `gpt-4.1-mini`.
+   - `TRADE_ECONOMIC_KEY`: Financial Modeling Prep, acesso a `stable/economic-calendar`.
+   - `TRADE_MARKET_KEY`: Twelve Data, acesso a `time_series`.
+4. Execute `npm start` ou `node --env-file-if-exists=.env server/index.cjs`.
+5. Abra a aplicação pela origem do servidor e entre em **Configurações → Conectar ao servidor**.
+
+Nenhuma instalação npm é necessária para executar o servidor. As chaves ficam **somente no servidor**. O `.env` é ignorado pelo Git e não pode ser servido pela aplicação. Não cole chaves em chat, screenshots, HTML ou localStorage. Veja [server/SETUP.md](server/SETUP.md) para endpoints, produção HTTPS, provedores e método de volatilidade.
+
+O servidor é **pessoal, de proprietário único por instância**. Não implementa contas SaaS multiusuário, banco compartilhado ou sincronização de histórico. Cada navegador mantém seus próprios dados. A senha protege os serviços online; cookies HttpOnly/SameSite, CSRF, validação de origem, limites e HTTPS para origens públicas protegem as chamadas. Sessões expiram em oito horas e ao reiniciar.
+
+**Estado de validação:** não havia chaves reais configuradas no ambiente de desenvolvimento. O servidor, autenticação, fluxo da interface e chamadas estruturadas foram verificados com provedores simulados e indisponibilidade real; as APIs faturadas e seus direitos de acesso ainda precisam ser verificados com credenciais válidas. A funcionalidade não é anunciada como IA ou mercado ao vivo operacional antes dessa configuração.
+
+## Home e calendário econômico
+
+Configure nome, fuso, instrumentos e sessão em **Configurações**. Não existe nome ou sessão pessoal presumida na primeira abertura. A Home prioriza rotina, contexto, eventos, um foco e ações rápidas; estatísticas completas continuam em **Painel**.
+
+Notícias trazem horário convertido, moeda, impacto, anterior, previsão e realizado quando disponíveis. Eventos relevantes dentro da sessão e sua janela de cautela são destacados. Datas locais consultam também os dias UTC adjacentes, evitando perder eventos próximos da meia-noite. A fonte e a hora da consulta são informadas; caches não são exibidos como atualização em tempo real contínua.
+
+Volatilidade usa dados reais quando conectada e cálculo ATR documentado: média de 14 true ranges horários / último fechamento. Limiares gerais não constituem previsão nem substituem critérios específicos do plano. Respostas inválidas ou atrasadas são identificadas.
+
+O insight local da Home é determinístico e identificado como registro observado ou sugestão baseada no plano. Padrões exigem amostra/cobertura; sem dados suficientes, a orientação é neutra. Isso não é apresentado como texto gerado por IA. Com conexão autenticada e chave, **Gerar insight com IA** envia somente o plano/perfil e fatos agregados calculados por código. O modelo escolhe IDs desses fatos e uma ação curta; o servidor reconstrói os textos estatísticos originais e rejeita IDs desconhecidos e números/percentuais inventados na ação. Essa chamada não contém histórico bruto nem evidências de mercado ao vivo; a IA é instruída a não inferir condições atuais a partir dela. A consulta é iniciada pelo usuário, com cache e deduplicação.
+
+## Trading Plan e Trade Analyst
+
+Registre as definições da sua estratégia, sem depender de conceitos genéricos de ICT/SMC. Critérios possuem definição, peso, obrigatoriedade, criticidade, tipo e função (confirmação ou invalidação).
+
+- **Score:** peso satisfeito / peso total ×100; o denominador inclui critérios não verificáveis e sua cobertura fica visível.
+- Critério obrigatório/crítico ausente ou falho impede conformidade completa. Invalidação presente bloqueia independentemente da nota.
+- R:R mínimo, risco máximo por trade, sessão e notícias usam regras determinísticas/contexto estruturado. A IA não escolhe a porcentagem. Limites diário/semanal ficam documentados no plano; o sistema não presume que correspondam a soma de risco, drawdown ou perda líquida e não executa bloqueio de ordens.
+- Screenshots e definições são enviados ao provedor apenas ao clicar **Analisar com IA**. Sem credenciais, é possível usar **Revisar manualmente**. Dados e critérios sem evidência são “Não verificável”.
+- Critérios numéricos exigem dados na unidade do plano. Sugestões visuais não substituem o R:R explicitamente informado; divergências ficam para revisão.
+- Cada análise conserva plano, contexto, perfil e imagem exatos enviados, inclusive se a pessoa mudar o plano durante a requisição.
+- Correções de avaliações visuais guardam status anterior, evidência e data, sem apagar a resposta original e sem alegar retreinamento automático. Critérios automáticos exigem corrigir os dados estruturados e reavaliar.
+- Sessão e janela de notícias da análise online são verificadas pelo servidor; calendário inválido ou indisponível mantém a restrição “Não verificável”. Não há execução de trades.
+
+O provedor só avalia evidência visível; OHLC não é usado para comprovar BOS, liquidez ou Order Blocks nesta versão. Os módulos separados permitem um adaptador OHLC posterior sem substituir o histórico ou a fórmula do score.
+
+## Diário, importação e cálculos preservados
+
+O histórico usa P&L monetário registrado, não recalculado pela IA. Strategy Tester e histórico pareado Tickmill reutilizam o importador existente; histórico de ordens Paper/Broker continua identificado como estimado. XLSX deve ser convertido para CSV. Datas de trades preservam a convenção de fechamento armazenada, sem nova conversão automática de fuso. Os fusos configurados aplicam-se às sessões, notícias e saudação.
+
+- Campos opcionais de risco/stop/R realizado são aproveitados quando explicitamente disponíveis. Reimportar completa metadados ausentes sem duplicar trades nem alterar notas, IDs ou P&L.
+- **Limpar histórico** exige confirmação e permite backup; mantém planejamentos, estratégias, revisões e configurações. Falhas de gravação preservam dados.
+- **Ocultar valores** no Painel mascara dinheiro, eixos e tooltips e persiste a preferência, sem alterar cálculos.
+- Saldo inicial legado de 10.000 exige confirmação; saldo calculado não é equity com posições abertas nem considera depósitos/saques não registrados.
+- Payoff = ganho médio / perda média. R realizado, R:R planejado e payoff não são intercambiáveis.
+- Breakeven financeiro conserva zero exato; a faixa operacional de Insights é mostrada separadamente e não reescreve P&L.
+
+### Prints e planejamento
+
+Novo trade aceita upload, arrastar ou colar PNG/JPEG/WebP. O print aparece antes do OCR, inclusive se o leitor falhar. A versão standalone contém Tesseract.js/WASM/idiomas locais. Rótulos claros e a ferramenta de posição colorida podem sugerir ativo, entrada, stop, alvo, lado e R:R planejado; o preço atual não é tratado como entrada. Leituras ambíguas exigem revisão. Testes de OCR usam fixtures sintéticas, não garantem acerto em qualquer layout do TradingView.
+
+Salvar planejamento mantém o registro em `S.tradeDrafts`, fora das estatísticas. A conclusão requer fechamento e P&L realizado; o print de um alvo não comprova que ele foi atingido. Estado emocional e critérios comportamentais são opcionais.
+
+### Trading Insights
+
+Abas diária/semanal/mensal usam registros reais. Disciplina não depende de lucro, win rate ou resultado: considera critérios explícitos com pesos iguais nos trades avaliáveis, exigindo cobertura mínima de 60%. Comparações exigem amostras equivalentes; ausência de registro não vira resposta positiva. Campos opcionais distinguem nenhum erro de não avaliado. Regras são configuráveis e ficam em `S.insightRules`.
+
+### Calendário compartilhável
+
+Mês próprio, grade ampla, detalhes R por trade, PNG quadrado/Story de 1080 ou 2160 px, temas e elementos opcionais. Exportação Canvas usa somente uma projeção de métricas/contagens/período, sem dinheiro, saldo, notas, IDs ou screenshots. O nome/@ digitado é público.
+
+R usa P&L líquido / risco inicial, R líquido explicitamente informado ou, quando disponível, entrada/stop/saída real. O último caso é **R por preço sem ajuste de custos**, identificado também na imagem. Não se usa alvo como resultado.
+
+**Configurar cálculo de R** permite completar risco inicial comum somente após confirmação explícita do valor real, ou registrar vários R individuais. Não há risco padrão presumido. Win rate e direção dos dias podem usar P&L conhecido mesmo quando falta risco. Totais/PF em R exigem cobertura completa, e dias incompletos não viram breakeven.
+
+## Arquitetura e construção
+
+- `YourFXjourney.html`: store/rotas/recursos originais, com chave `yfx1` preservada.
+- `public/assistant.js`, `assistant.css`: workspace, perfil, planos, analista e conexão.
+- `public/daily-workspace.js`: briefing local, Home e calendário econômico.
+- `public/plan-engine.js`: validação, score e correções, compartilhado com servidor.
+- `public/session-engine.js`: sessões e horário de verão via Intl/IANA.
+- `server/`: autenticação, provedores, esquema multimodal, cache e endpoints.
+- `scripts/build_standalone.py`: embute OCR, CSS e módulos no HTML offline.
 
 ```sh
-python3 -m http.server 8080
+python3 scripts/build_standalone.py
 ```
 
-Os dados continuam na chave `yfx1` do localStorage. **Exporte um backup na versão anterior antes de mudar de endereço, navegador ou caminho do arquivo.** O armazenamento depende da origem; se necessário, use Trades → Restaurar backup na nova localização. Não há banco remoto nem sincronização entre dispositivos.
-
-## Dashboard
-
-- Identidade escura com dourado, navegação consistente e sete métricas principais, incluindo risco/retorno médio (payoff realizado: ganho médio ÷ perda média, sem depender do preenchimento de risco).
-- Filtros por período, datas personalizadas, ativo e estratégia compartilhados pelo gráfico, calendário e estatísticas.
-- Gráficos SVG de P&L acumulado, P&L diário, R acumulado, drawdown e saldo calculado, com pontos acessíveis por teclado, toque e cursor.
-- Calendário mensal com P&L, quantidade e cobertura de R por dia. O detalhe do dia mostra operações, notas, aprendizados e prints, com acesso ao editor original.
-- No celular, o gráfico adapta sua escala à tela e o calendário permite rolagem horizontal interna para manter os valores legíveis, sem transbordar a página.
-- As métricas secundárias ficam abaixo do calendário. Não são inseridos dados de demonstração na aplicação.
-
-## Convenções e limites dos dados
-
-- Datas agrupadas pelo fechamento (`close.slice(0,10)`), preservando a convenção existente e sem nova conversão de fuso.
-- P&L, win rate, profit factor, drawdown, sequências e R reutilizam `st()`; agregações usam `grp()` e filtros usam `ft()`.
-- R só inclui trades com risco monetário positivo. A interface informa a cobertura; risco ausente não vira R=0.
-- O saldo inicial legado de 10.000 exige confirmação em **Configurar saldo inicial e moeda**. O saldo registrado calculado usa todo o histórico; o gráfico de saldo respeita o período e inclui os resultados anteriores à data inicial. Esse gráfico fica indisponível com filtros de ativo/estratégia.
-- Saldo calculado não é equity em tempo real: faltam posições abertas, depósitos e retiradas. Moeda é uma escolha explícita de formatação, sem conversão cambial.
-- Drawdown monetário e percentual conservam a fórmula existente. O percentual é calculado sobre saldo inicial configurado + pico de P&L do recorte, como explicado na interface.
-- Comissões separadas e R:R planejado não existem no modelo original: aparecem como indisponíveis. O payoff realizado é identificado separadamente. Os importadores podem já incluir taxas no P&L líquido; elas não são descontadas outra vez.
-- Média diária considera somente dias com trades. O calendário e seus detalhes respeitam todos os filtros ativos; navegar para outro mês não altera o período selecionado.
+Mudanças no código modular devem ser seguidas desse build antes de distribuir `YourFXjourney-standalone.html`. O backend não é embutido nem recebe segredos do build. O OCR tem suas licenças e checksums em `vendor/ocr`.
 
 ## Verificação
 
-Teste de regressão com Playwright, sem dependências adicionadas à aplicação:
-
 ```sh
-# Com Playwright e Chromium disponíveis no ambiente de desenvolvimento:
-node tests/dashboard.cjs
-# Para usar outro executável Chromium:
+npm test
+# Testes de navegador requerem Playwright e Chromium no ambiente de desenvolvimento:
+BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/assistant-ui.cjs
+BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/assistant-server.cjs
 BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/dashboard.cjs
-```
-
-O teste usa um contexto isolado com operações sintéticas apenas no navegador de teste. Verifica cálculos conhecidos, filtros, calendário e detalhes, prints/notas, gráficos e tooltips por teclado, saldo com histórico anterior, lançamento manual, persistência, importação CSV/deduplicação, oito páginas, exportação de backup e ausência de overflow da página em 320, 390, 768, 1024 e 1440px.
-
-## Trading Insights
-
-A nova navegação **Trading Insights** contém abas Diário, Semanal e Mensal, seletores de data, navegação entre períodos e atalho para o último trade. Usa os mesmos trades, `st()`, agrupamentos, convenções de fechamento, filtros por ativo/estratégia e P&L líquido da aplicação. Não requer serviço externo de IA, credencial ou dependência nova.
-
-O relatório cruza o período escolhido com os filtros globais de data. O período anterior usa as mesmas posições de calendário, ativos e estratégias; para a semana ou mês atual, considera somente os dias decorridos. Dias inexistentes no mês anterior são limitados ao último dia disponível. Os intervalos usados aparecem no relatório. Comparações são descritivas, com denominadores visíveis, sem alegação de causalidade ou significância estatística.
-
-### Registro opcional e disciplina
-
-No editor de trade, expanda **Execução e disciplina** para registrar:
-
-- Cumprimento das regras de entrada, risco, saída/gerenciamento, limites e plano: Sim, Não ou Não avaliado.
-- Classificação declarada do setup: A, B, C ou Não avaliado.
-- Erros por seleção rápida, distinguindo “Nenhum erro” de “Não avaliado”.
-
-Setup, emoção, notas e prints continuam usando os campos existentes. Os novos dados ficam em `trade.behavior`; trades legados e importados não recebem respostas presumidas. Campos comportamentais são preservados pelo backup JSON e pela edição. As emoções Impulsivo e Hesitante foram acrescentadas sem remover opções existentes.
-
-Em **Minhas regras operacionais**, o trader pode ativar critérios, descrever regras e configurar limites opcionais de operações por dia e risco informado por trade. Regras ficam em `S.insightRules`. A avaliação do teto diário considera todos os trades da conta, incluindo ativos ocultos por filtros. O teto monetário usa o risco planejado informado, não uma medida de risco efetivamente executado que a aplicação não possui. Sem limite ou sem informação, não se presume cumprimento.
-
-A disciplina é a proporção de critérios cumpridos, com pesos iguais, nos trades que têm **todos os critérios ativos avaliados**. Exige pelo menos um trade avaliável e **60% de cobertura** no recorte. Qualidade de execução usa entrada, risco e saída; taxa de cumprimento do plano usa o campo explícito de plano, com a mesma cobertura mínima. Nenhum desses índices usa lucro, perdas ou win rate. A comparação da disciplina requer pelo menos cinco trades avaliáveis em cada janela.
-
-Alterar regras recalcula relatórios históricos, sem reescrever trades. O sistema oferece no máximo três observações principais (uma por categoria), uma prioridade diária, até duas semanais e até três mensais. Erros e emoções só são descritos quando registrados. Frequências comparadas requerem cinco registros de erros em cada período e pelo menos 60% de cobertura. Grupos de ativo/setup/sessão exigem a amostra mínima configurada (padrão: 10); abaixo de 30 são tratados como exploratórios. A ausência de abertura impede agrupamento por sessão/horário de entrada.
-
-A faixa configurável de breakeven é **operacional**, mostrada na análise detalhada. Não muda a classificação financeira existente nem recalcula P&L: as fórmulas financeiras continuam usando zero exato. Custos separados permanecem indisponíveis no modelo atual; custos já incluídos no P&L não são descontados novamente. Retorno percentual exige saldo inicial confirmado e usa o saldo de abertura calculado da conta; R exige risco monetário originalmente informado e mostra sua cobertura.
-
-### Testes de Trading Insights
-
-```sh
-node tests/insights.cjs
-# Alternativa com Chromium fornecido pelo ambiente:
 BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/insights.cjs
-```
-
-A suíte verifica dados legados/ausentes, score independente do P&L, cobertura, regras, limites com ativos ocultos, R parcial/zero, janelas equivalentes e ano bissexto, limites de observações e ações, evolução de disciplina e erros, conservação das fórmulas financeiras, retorno percentual, edição/persistência, navegação por teclado, regras sem reescrita do histórico, restauração de backup, importação repetida e responsividade em cinco larguras. Usa apenas fixtures isoladas no navegador de teste, sem gravar resultados fictícios na conta do usuário.
-
-## Calendário de Compartilhamento
-
-A nova aba é independente do calendário original e tem seu próprio mês/ano. Mostra o mês completo do histórico, sem herdar filtros globais, e usa a mesma data de fechamento sem conversão adicional de fuso. Não altera operações, saldo, regras ou o estado do calendário original.
-
-Cada operação contribui com `P&L líquido / risco planejado informado`. O resultado diário soma os múltiplos individuais; o profit factor divide a soma dos R positivos pela soma absoluta dos R negativos. Win rate, média e resultado mensal também são calculados em R. Não se utiliza risco fixo nem se deduzem custos novamente.
-
-Se qualquer operação do dia não tiver P&L numérico válido ou risco positivo registrado, o dia mostra **R indisponível**, e as métricas mensais que exigem cobertura completa também ficam indisponíveis. Quantidade de operações e dias classificáveis continuam visíveis; dias incompletos não são classificados como breakeven. Um mês vazio não é apresentado como resultado financeiro zero. Resultados estimados na origem são identificados na imagem.
-
-Escolha tema claro/escuro, formato Post 1:1 ou Story 9:16, visibilidade de win rate, contagem de operações e profit factor, identificação pública opcional e marca da plataforma. As preferências ficam na sessão. O botão **Compartilhar Calendário** oferece PNG de 1080×1080 / 1080×1920, alta resolução de 2160×2160 / 2160×3840 e cópia de imagem quando a API do navegador permitir. Negação de permissão para copiar mantém o download como alternativa. Nada é publicado automaticamente.
-
-A renderização usa Canvas nativo e uma projeção explícita com mês, dias, resultados agregados em R e contagens. Dados brutos dos trades, moedas, saldo, capital, notas, prints, nomes de ativos, IDs de conta/corretora e percentuais de rentabilidade não são enviados ao renderizador nem inseridos no PNG. O nome/@ digitado voluntariamente é público na imagem. O percentual opcional de win rate mede apenas a proporção de trades vencedores.
-
-```sh
 BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/sharing.cjs
-```
-
-A suíte verifica cálculos, cobertura incompleta, projeção de privacidade, conteúdo desenhado, PNG sem metadados de texto/EXIF, dimensões, downloads reais, personalizações, calendário independente, atualização por histórico, cópia com permissão negada, meses com seis semanas e responsividade em cinco larguras. Os dados sintéticos permanecem isolados no navegador de teste.
-
-## Cadastro por print do TradingView
-
-Em **+ Novo trade → Ler print**, escolha uma imagem PNG/JPEG/WebP de até 20 MB, arraste-a para a área ou cole-a com Ctrl/Cmd+V. A leitura é feita localmente com Tesseract.js 7, WASM e modelos inglês/português fornecidos em `vendor/ocr`. Nenhuma imagem é enviada para serviços externos. O print permanece anexado ao registro, sujeito ao limite de armazenamento do navegador.
-
-**Na versão modular `YourFXjourney.html`, sirva o projeto por HTTP/HTTPS e mantenha `vendor` ao lado do HTML. Na versão `YourFXjourney-standalone.html`, o OCR está embutido e funciona também por arquivo local, sem servidor.** O restante da aplicação mantém o funcionamento anterior. Exemplo:
-
-```sh
-python3 -m http.server 8088 --bind 127.0.0.1
-# Abra http://127.0.0.1:8088/YourFXjourney.html no seu navegador.
-```
-
-O reconhecimento é assistido e conservador: extrai ativo, preços de entrada/stop/alvo, quantidade, risco monetário e horários **quando há rótulos legíveis**. Calcula lado e R:R planejado a partir dos três níveis consistentes. Não interpreta números soltos do eixo de preços como entrada/saída; nem confunde a distância de stop, “Amount”, lucro aberto ou alvo com risco monetário/resultado realizado. Horários aceitos pelo extrator são rotulados e explícitos no formato ISO, sem conversão de fuso. Vários ativos ou valores conflitantes ficam para revisão.
-
-Após a leitura, confira o resumo e marque a confirmação. Campos já preenchidos são preservados; os detalhes técnicos permitem corrigir a leitura. O estado emocional fica acessível separadamente. Stop, alvo e `plannedRR` são campos novos e independentes do R efetivamente realizado e do payoff do Dashboard. Os registros antigos continuam compatíveis.
-
-Um print não revela necessariamente preço de entrada, risco em moeda, horário de fechamento ou lucro líquido. Não é possível garantir cadastro completo a partir de qualquer tela do TradingView. **Após o exemplo fornecido pelo usuário, o leitor passou a detectar rótulos coloridos da ferramenta de posição. Os testes usam imagens sintéticas com o mesmo tipo de marcação e os mesmos preços do exemplo; as leituras devem ser conferidas com o print.** Para telas com números sem rótulos ou ferramenta de posição não selecionada, confirme/corrija os campos ausentes; nenhum resultado é inventado.
-
-**Salvar planejamento** grava em `S.tradeDrafts`, mantendo a imagem, níveis, informações comportamentais e dados reconhecidos fora das estatísticas financeiras. Os planejamentos aparecem em **Trades → Planejamentos por print**. Use **Revisar / concluir** para adicionar fechamento e P&L realizado; a conclusão move o registro uma única vez para `S.trades`. No fluxo por print, não se estima lucro automaticamente a partir de preço/quantidade. Backups JSON existentes incluem os planejamentos e campos novos.
-
-```sh
-# Com o servidor acima ativo:
+# OCR modular requer servidor estático em 127.0.0.1:8088:
 BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/screenshot.cjs
+# OCR standalone:
+BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/shot-opening.cjs
 ```
 
-O teste executa OCR real com os modelos locais, verifica rótulos e ambiguidades, preenchimento, confirmação, separação entre planejado/realizado, preservação do print e emoção, persistência, conclusão sem duplicar, ausência de requisições a terceiros e layout móvel. Os testes anteriores continuam usando seus contextos isolados.
-
-## Calendário ampliado e visibilidade monetária
-
-O Calendário de Compartilhamento agora usa uma grade HTML ampla, com células maiores, fundos/bordas verdes para dias positivos e vermelhos para negativos. Em telas pequenas, a rolagem fica dentro da grade. A prévia da imagem fica em uma área expansível; os PNGs também reservam mais espaço para o calendário e usam os mesmos indicadores de cor.
-
-Clique em um dia com operações para conferir os R individuais, sem exibir valores monetários. Exemplo: +3R e −2R resultam em +1R no dia. Continua sendo resultado realizado / risco monetário inicial de **cada** trade, sem usar payoff médio ou R:R do alvo como substituto. Se falta risco registrado, mantém “R indisponível”; os dados não são inventados.
-
-No Dashboard, **Ocultar valores / Mostrar valores** controla os valores monetários dos cards principais e secundários, calendário, eixos e tooltips do gráfico. O campo de configuração do saldo não é renderizado enquanto os valores estão ocultos. Percentuais, contagens e múltiplos R permanecem disponíveis. A preferência é persistida separadamente no localStorage (`yfx-hide-money`), sem modificar dados financeiros. É uma preferência de exibição do Dashboard; a edição explícita de trades e as outras páginas continuam funcionando normalmente.
-
-```sh
-BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/privacy-calendar.cjs
-```
-
-Essa verificação cobre mostrar/ocultar, persistência após recarregar, tooltips, preservação dos dados, dimensões da grade, sinais por trade/dia e ausência de overflow na página em telas pequenas.
-
-## Correção: abrir o print no HTML baixado
-
-Para usar diretamente como arquivo, abra **YourFXjourney-standalone.html**. Essa distribuição contém biblioteca, worker, núcleo WASM e idiomas embutidos; não depende de CDN, rede ou pasta `vendor`. Para reconstruí-la após editar o projeto, execute `python scripts/build_standalone.py`.
-
-O print agora é decodificado, exibido e anexado **antes** do carregamento do OCR. Se o leitor falhar, a imagem permanece disponível para salvar o planejamento. O decodificador usa `Image`, com compatibilidade mais ampla que a dependência anterior de `createImageBitmap`.
-
-A leitura da ferramenta de posição procura um rótulo vermelho, um verde e uma entrada cinza entre eles, com regiões de risco/retorno coloridas no gráfico. Faz OCR separado dos preços e verifica geometria, precisão decimal consistente e resultados ambíguos. O preço atual em preto é ignorado. No exemplo CADJPY, os níveis são stop 112.424, entrada 112.315 e alvo 111.978, correspondendo a venda e R:R planejado ~3.09:1. Essa informação não fornece risco em moeda nem comprova fechamento.
-
-`tests/shot-opening.cjs` verifica o HTML embutido aberto por `file://`, exibição imediata, OCR real dos rótulos coloridos em uma fixture baseada nos níveis do exemplo, rejeição do preço atual como entrada e ausência de requisições HTTP. O arquivo de imagem original mostrado na conversa não foi disponibilizado como arquivo de teste local; a validação automatizada desse layout usa uma reprodução sintética, sem dispensar a conferência dos dados reconhecidos.
-
-Antes de mudar o nome/caminho do HTML ou de navegador, exporte o backup na versão anterior e restaure-o na nova. O localStorage de arquivos locais pode depender do caminho.
-
-## R no calendário sem risco monetário preenchido
-
-O calendário compartilhável agora resolve o R de cada operação nesta ordem:
-
-1. P&L líquido / risco monetário planejado, quando ambos estão registrados.
-2. Campo **R líquido realizado**, informado explicitamente pelo trader.
-3. Movimento entre entrada e **saída real**, dividido pela distância entre entrada e stop inicial, respeitando compra/venda e a posição válida do stop.
-
-O terceiro método é identificado como **R por preço, sem ajuste de custos** na tela e na imagem exportada. Quando houver esse método, o total é rotulado **Resultado em R***, em vez de resultado líquido. Não se presume valor de pip, tamanho de posição, risco fixo, fechamento no alvo ou que uma perda foi de −1R.
-
-O detalhe de cada dia apresenta a fonte ou informa exatamente quais campos estão faltando. Use **Salvar R** para registrar diretamente o R líquido realizado, ou **Preencher dados do trade** para revisar entrada, stop e saída. Esse registro persiste no backup sem alterar o P&L em dinheiro. O campo também está no editor do trade.
-
-Dias incompletos permanecem indisponíveis até existir informação suficiente para todos os trades. Apenas o alvo ou R:R planejado não comprova resultado realizado. Os cálculos monetários e a fórmula original das métricas R do Dashboard/Insights não foram alterados por essa extensão do calendário; essas métricas continuam identificando sua cobertura por risco monetário informado.
-
-```sh
-BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/share-r-sources.cjs
-```
-
-Verifica compras/vendas, resultados positivos/negativos/zero, prioridade do resultado líquido, R registrado, valores numéricos legados em texto, stop inválido, alvo sem saída, somas diárias/mensais, persistência do novo campo e identificação de R por preços no PNG.
-
-## Limpar histórico
-
-Em **Trades → Limpar histórico**, a confirmação informa o total de operações que serão removidas, incluindo as ocultas pelos filtros. É possível exportar um backup dentro da confirmação antes de escolher **Confirmar limpeza**, ou cancelar sem alterações.
-
-A limpeza remove todos os trades fechados (importados e manuais), com suas notas e prints vinculados. Mantém planejamentos, estratégias, revisões e configurações da conta. Não há desfazer sem backup. O botão fica desativado quando o histórico está vazio. A gravação no localStorage é feita antes de atualizar o estado em memória: se falhar, os registros são preservados e a confirmação mostra o erro. Depois da limpeza, um CSV anterior pode ser importado novamente, pois a deduplicação usa as operações presentes no histórico.
-
-`tests/clear-history.cjs` cobre confirmação com filtros ativos, cancelamento, backup antes da exclusão, falha de armazenamento, persistência após recarregar, preservação dos outros dados e reimportação.
-
-## Históricos importados sem risco: completar o cálculo na própria tela
-
-Quando faltam dados, o calendário mostra **Configurar cálculo de R** com a cobertura (por exemplo, 0 de 21 trades). Não há risco presumido nem valor padrão automático.
-
-- **Mesmo risco inicial:** informe o risco monetário que realmente foi utilizado e confirme explicitamente que ele foi igual nos trades selecionados. Aplica somente aos trades do mês sem R calculável e com P&L conhecido, preservando risco/R já registrado, notas e valores financeiros.
-- **Riscos variáveis:** preencha os R líquidos realizados individuais na lista e salve vários registros de uma vez. Campos vazios são preservados.
-
-As duas opções persistem antes de alterar o estado em memória; uma falha de armazenamento mantém os registros anteriores. Não use perda média como risco inicial. Se o risco foi variável e não foi registrado, o P&L sozinho não permite recuperar o R verdadeiro.
-
-Win rate passa a usar o P&L conhecido independentemente da disponibilidade do risco. Dias sem R calculável podem ser classificados/coloridos pela direção do resultado financeiro, com indicação explícita na tela e na imagem. Não são apresentados como zero nem como breakeven só porque o risco está ausente. Totais e profit factor **em R** continuam exigindo cobertura completa.
-
-Os importadores de trades pareados Strategy Tester/Tickmill também leem colunas explícitas de risco monetário inicial, stop e R realizado. Não tratam risco percentual ou R:R planejado como resultado realizado. Reimportar o mesmo CSV completa somente esses campos ausentes, preserva IDs, notas e P&L, e não duplica operações. Históricos de ordens com saídas parciais conservam o tratamento anterior, pois a distribuição de risco entre ordens exige informação adicional.
-
-Testes: `tests/share-risk-setup.cjs` reproduz 21 trades sem risco, valida métricas disponíveis, confirmação obrigatória, lote de riscos/R, preservação dos dados, persistência e falha de armazenamento. `tests/import-risk.cjs` valida aproveitamento e reparação dos campos na reimportação sem duplicação.
+Não há dependências de produção para instalar. Playwright é somente uma ferramenta de desenvolvimento e não faz parte do HTML entregue. As suítes usam contextos isolados; dados sintéticos e eventos simulados não entram na conta real. Os testes cobrem score, invalidações, correções, DST, overnight/weekend, autenticação/CSRF/HTTPS, schemas, cache, indisponibilidade, integração da interface, preservação de dados legados e layout de 320 a 1440px. Veja `tests/` para regressões de risco, importação e limpeza.

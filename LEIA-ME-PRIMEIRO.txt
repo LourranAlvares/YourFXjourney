@@ -1,14 +1,20 @@
-COMO ABRIR O YOURFXJOURNEY
+TRADE ASSISTANT — COMO ABRIR
 
-1. No GitHub, clique em Code e depois em Download ZIP.
-2. Extraia o ZIP no seu computador.
-3. Abra YourFXjourney-standalone.html no Chrome ou Edge.
+MODO OFFLINE
+1. Extraia o ZIP do GitHub no computador.
+2. Abra YourFXjourney-standalone.html no Chrome ou Edge.
+3. A nova Home abre primeiro. Configure sua rotina e seu Trading Plan.
+4. Diario, calendario, importacao, analises estatisticas e revisao manual
+   de setups continuam funcionando sem servidor.
 
-Nao e necessario instalar nada ou iniciar servidor.
-O leitor de prints ja esta embutido nesse arquivo.
+IA E DADOS AO VIVO
+Esses recursos precisam do servidor incluido, Node.js 22.17+ e credenciais
+validas dos provedores. A versao offline nao finge ter IA ou noticias ao vivo.
+Veja README.md e server/SETUP.md. Nenhuma chave deve ser posta no HTML.
 
-IMPORTANTE: antes de trocar de arquivo ou navegador, exporte seu backup
-em Trades > Exportar backup e restaure-o na nova versao.
+ANTES DE TROCAR DE ARQUIVO OU NAVEGADOR
+Exporte seu backup na versao anterior em Trades > Exportar backup.
+Depois restaure esse backup na nova versao. Os dados ficam no navegador.
 
-Se houver campos que o print nao mostre claramente, confira a leitura.
-Um planejamento nao e tratado como operacao encerrada.
+O score do Trade Analyst mede aderencia ao plano, nao chance de lucro.
+Nao ha execucao automatica de ordens.
