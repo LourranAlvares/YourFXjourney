@@ -12,6 +12,7 @@
     "build:offline": "python3 scripts/build_standalone.py",
     "test:ui": "node tests/terminal-ui.cjs",
     "test:premium": "node tests/premium-ui.cjs",
-    "test:diary": "node tests/diary-workspace.cjs"
+    "test:diary": "node tests/diary-workspace.cjs",
+    "test:mt5": "node tests/mt5-import.cjs"
   }
 }

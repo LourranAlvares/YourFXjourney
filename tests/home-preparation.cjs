@@ -188,6 +188,39 @@ const { createApp } = require("../server/index.cjs");
         "overflow " + width,
       );
       assert.equal(await p.locator(".terminal-market-backdrop").count(), 1);
+      assert.ok(
+        await p.evaluate(() => {
+          const overview = document
+              .querySelector(".ta-home-overview")
+              .getBoundingClientRect(),
+            radar = document
+              .querySelector("#main>.ta-ready-card")
+              .getBoundingClientRect(),
+            events = document
+              .querySelector(".ta-home-events")
+              .getBoundingClientRect();
+          const cards = [
+            ...document.querySelectorAll(
+              ".ta-session-card,.ta-market-card,.ta-assistant-insight,#main>.ta-ready-card,.ta-home-events",
+            ),
+          ].map((e) => e.getBoundingClientRect());
+          return (
+            radar.top >= overview.bottom - 1 &&
+            events.top >= radar.bottom - 1 &&
+            cards.every((a, i) =>
+              cards
+                .slice(i + 1)
+                .every(
+                  (b) =>
+                    Math.min(a.right, b.right) - Math.max(a.left, b.left) <=
+                      1 ||
+                    Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) <= 1,
+                ),
+            )
+          );
+        }),
+        "home cards overlap at " + width,
+      );
     }
     await p
       .locator(".ta-personal-profile")

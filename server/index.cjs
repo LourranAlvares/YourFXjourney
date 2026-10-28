@@ -14,14 +14,36 @@ function createApp(options = {}) {
       fetchFn: options.fetchFn || global.fetch,
       now: options.now || (() => new Date()),
     }),
-    sessions = new Map(),
+    revokedSessions = new Map(),
     attempts = new Map(),
     requests = new Map(),
     password = env.TRADE_ASSISTANT_PASSWORD || "",
     configured = password.length >= 12,
     salt = crypto.randomBytes(32),
     passwordHash = configured ? crypto.scryptSync(password, salt, 64) : null,
-    allowedOrigin = env.TRADE_ALLOWED_ORIGIN || null;
+    allowedOrigin = env.TRADE_ALLOWED_ORIGIN || null,
+    sessionSeconds = 30 * 24 * 3600,
+    sessionKey = configured
+      ? crypto.scryptSync(
+          password,
+          "EliteX remembered session v1|" +
+            (env.TRADE_SESSION_SECRET || "") +
+            "|" +
+            (allowedOrigin || "local"),
+          32,
+        )
+      : null;
+  function sessionSignature(value) {
+    return crypto
+      .createHmac("sha256", sessionKey)
+      .update(value)
+      .digest("base64url");
+  }
+  function revokeSession(current) {
+    if (current) {
+      revokedSessions.set(current.token, current.expires);
+    }
+  }
   let secure = env.TRADE_COOKIE_SECURE === "true";
   if (allowedOrigin) {
     const u = new URL(allowedOrigin);
@@ -48,14 +70,32 @@ function createApp(options = {}) {
     cookie = (value, maxAge) =>
       `trade_session=${value}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${maxAge}${secure ? "; Secure" : ""}`;
   function session(req) {
+    if (!configured) return null;
     const match = (req.headers.cookie || "").match(
-        /(?:^|;\s*)trade_session=([A-Za-z0-9_-]{43})(?:;|$)/,
+        /(?:^|;\s*)trade_session=([A-Za-z0-9_-]{43}\.\d{13}\.[A-Za-z0-9_-]{43})(?:;|$)/,
       ),
-      token = match?.[1],
-      s = token ? sessions.get(token) : null;
-    if (s && s.expires > Date.now()) return s;
-    if (token) sessions.delete(token);
-    return null;
+      token = match?.[1];
+    if (!token) return null;
+    const now = Date.now();
+    for (const [key, expires] of revokedSessions)
+      if (expires <= now) revokedSessions.delete(key);
+    if (revokedSessions.has(token)) return null;
+    const [id, rawExpires, signature] = token.split("."),
+      expires = Number(rawExpires);
+    if (
+      expires <= now ||
+      expires > now + sessionSeconds * 1000 + 60000 ||
+      !timingEqual(
+        Buffer.from(signature),
+        Buffer.from(sessionSignature(id + "." + rawExpires)),
+      )
+    )
+      return null;
+    return {
+      token,
+      expires,
+      csrf: sessionSignature("csrf|" + id + "." + rawExpires),
+    };
   }
   function trustOrigin(req) {
     let host;
@@ -158,8 +198,15 @@ function createApp(options = {}) {
             authConfigured: configured,
             services: {
               ai: !!env.TRADE_AI_KEY,
-              economicCalendar: ["forexfactory", "showmytrades"].includes(env.TRADE_ECONOMIC_PROVIDER) || !!env.TRADE_ECONOMIC_KEY,
-              economicProvider: ["forexfactory", "showmytrades"].includes(env.TRADE_ECONOMIC_PROVIDER) ? env.TRADE_ECONOMIC_PROVIDER : "fmp",
+              economicCalendar:
+                ["forexfactory", "showmytrades"].includes(
+                  env.TRADE_ECONOMIC_PROVIDER,
+                ) || !!env.TRADE_ECONOMIC_KEY,
+              economicProvider: ["forexfactory", "showmytrades"].includes(
+                env.TRADE_ECONOMIC_PROVIDER,
+              )
+                ? env.TRADE_ECONOMIC_PROVIDER
+                : "fmp",
               marketConditions: !!env.TRADE_MARKET_KEY,
             },
             mode: "single-owner-local",
@@ -187,17 +234,13 @@ function createApp(options = {}) {
           )
             throw new APIError(401, "invalid_credentials", "Senha inválida.");
           attempts.delete(ip);
-          if (current) sessions.delete(current.token);
-          if (sessions.size >= 20)
-            sessions.delete(sessions.keys().next().value);
-          const token = crypto.randomBytes(32).toString("base64url"),
-            s = {
-              token,
-              csrf: crypto.randomBytes(32).toString("base64url"),
-              expires: Date.now() + 8 * 3600e3,
-            };
-          sessions.set(token, s);
-          res.setHeader("set-cookie", cookie(token, 8 * 3600));
+          if (current) revokeSession(current);
+          const id = crypto.randomBytes(32).toString("base64url"),
+            expires = Date.now() + sessionSeconds * 1000,
+            unsigned = id + "." + expires,
+            token = unsigned + "." + sessionSignature(unsigned),
+            s = { token, expires, csrf: sessionSignature("csrf|" + unsigned) };
+          res.setHeader("set-cookie", cookie(token, sessionSeconds));
           json(res, 200, { authenticated: true, csrf: s.csrf });
           return;
         }
@@ -220,7 +263,7 @@ function createApp(options = {}) {
             "Sessão de segurança inválida. Atualize o login.",
           );
         if (req.method === "POST" && url.pathname === "/api/logout") {
-          sessions.delete(current.token);
+          revokeSession(current);
           res.setHeader("set-cookie", cookie("", 0));
           json(res, 200, { authenticated: false });
           return;

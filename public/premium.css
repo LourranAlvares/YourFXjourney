@@ -500,3 +500,62 @@ dialog[open] {
     font-size: 9px;
   }
 }
+
+/* Home: radar follows the overview instead of extending one column. */
+.ta-home-overview {
+  align-items: stretch;
+  margin-bottom: 18px;
+  gap: 18px;
+}
+.ta-home-overview > .card,
+.ta-preparation-right > .card {
+  margin-bottom: 0;
+}
+.ta-preparation-right {
+  gap: 18px;
+  align-content: start;
+}
+.ta-home-overview > .ta-session-card {
+  height: auto;
+  min-width: 0;
+}
+#main > .ta-ready-card {
+  margin-bottom: 18px;
+}
+#main > .ta-ready-card .ta-ready-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+#main > .ta-ready-card .ta-ready-step {
+  min-width: 0;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-content: start;
+  gap: 10px;
+}
+#main > .ta-ready-card .ta-ready-step > .b {
+  grid-column: 2;
+  justify-self: start;
+}
+.ta-home-overview p,
+.ta-ready-card small {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1050px) {
+  #main > .ta-ready-card .ta-ready-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .ta-home-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ta-preparation-right {
+  display: flex;
+  flex-direction: column;
+}
+.ta-preparation-right > .ta-assistant-insight {
+  flex: 1;
+}
