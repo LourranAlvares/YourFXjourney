@@ -1102,3 +1102,26 @@ body.elitex-unified textarea {
     font-size: 12px;
   }
 }
+/* Vector pictograms keep the same weight and geometry at every display density. */
+.elite-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.reference-command > b .elite-icon {
+  width: 24px;
+  height: 24px;
+}
+.reference-topbar > .terminal-icon-button .elite-icon {
+  width: 20px;
+  height: 20px;
+}
+.elite-tool-result > span:last-child .elite-icon {
+  width: 16px;
+  height: 16px;
+}
+.elite-trade-result > span:last-child .elite-icon {
+  width: 16px;
+  height: 16px;
+}

@@ -43,7 +43,7 @@ function terminalTopbar() {
     month: "short",
     year: "numeric",
   }).format(new Date());
-  return `<div class="terminal-topbar reference-topbar"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">☰</button><button class="reference-search" onclick="eliteOpenTradeSearch()" aria-label="Buscar trades realizados">${terminalIcon("analyst")}<span>Busque trades por data ou ativo…</span><kbd>Ctrl + K</kbd></button><div class="reference-top-actions"><button class="reference-icon reference-alert" onclick="eliteOpenAlerts()" aria-label="Ver pontos de atenção">${terminalIcon("alert")}</button><div class="reference-clock"><span id="elite-live-date">${esc(date)}</span><b id="elite-live-clock" title="${esc(taProfile().timezone)}">${eliteClockText()}</b></div>${accountCurrencyControl()}<button class="reference-icon" onclick="eliteToggleContrast()" aria-label="Alternar contraste" aria-pressed="${eliteContrast}">☼</button><button class="reference-connection" onclick="taGo('settings')" aria-label="Ver conexão"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
+  return `<div class="terminal-topbar reference-topbar"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">${terminalIcon("menu")}</button><button class="reference-search" onclick="eliteOpenTradeSearch()" aria-label="Buscar trades realizados">${terminalIcon("search")}<span>Busque trades por data ou ativo…</span><kbd>Ctrl + K</kbd></button><div class="reference-top-actions"><button class="reference-icon reference-alert" onclick="eliteOpenAlerts()" aria-label="Ver pontos de atenção">${terminalIcon("alert")}</button><div class="reference-clock"><span id="elite-live-date">${esc(date)}</span><b id="elite-live-clock" title="${esc(taProfile().timezone)}">${eliteClockText()}</b></div>${accountCurrencyControl()}<button class="reference-icon" onclick="eliteToggleContrast()" aria-label="Alternar contraste" aria-pressed="${eliteContrast}">${terminalIcon("contrast")}</button><button class="reference-connection" onclick="taGo('settings')" aria-label="Ver conexão"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
 }
 setInterval(() => {
   const node = document.getElementById("elite-live-clock");
@@ -86,7 +86,7 @@ function eliteToolRows(query = "") {
       )
       .map(
         ([id, label]) =>
-          `<button class="elite-tool-result" onclick="document.getElementById('elite-tools-dialog').close();taGo('${id}')">${terminalIcon(id)}<span>${esc(label)}</span><span>↗</span></button>`,
+          `<button class="elite-tool-result" onclick="document.getElementById('elite-tools-dialog').close();taGo('${id}')">${terminalIcon(id)}<span>${esc(label)}</span><span>${terminalIcon("open")}</span></button>`,
       )
       .join("") || "<p>Nenhuma ferramenta encontrada.</p>"
   );
@@ -144,7 +144,7 @@ function eliteReferenceHome() {
           ? "Semana em atenção"
           : "Semana equilibrada"
       : "Seu ritmo nesta semana";
-  return `<section class="elite-scene reference-home" data-state="${eliteDesk.state}"><div class="scene-character-motion" aria-hidden="true"></div><div class="reference-left"><div class="scene-greeting"><h1>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},<br><span>${esc(p.name || "trader")}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><div class="reference-workspace-actions"><div class="elite-office scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("analyst")}<span>Escolha uma ferramenta ou análise…</span><b>➤</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
+  return `<section class="elite-scene reference-home" data-state="${eliteDesk.state}"><div class="scene-character-motion" aria-hidden="true"></div><div class="reference-left"><div class="scene-greeting"><h1>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},<br><span>${esc(p.name || "trader")}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><div class="reference-workspace-actions"><div class="elite-office scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
     ["analyst", "EliteX Analyst"],
     ["economic", "Eventos de hoje"],
     ["plan", "Revisar meu plano"],
@@ -156,7 +156,7 @@ function eliteReferenceHome() {
     )
     .join(
       "",
-    )}</div></div></div><div class="reference-right"><section class="scene-card reference-briefing scene-focus"><div class="reference-card-heading">${terminalIcon("rev")}<h2>Briefing do Dia</h2><button class="scene-link" onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando…" : ready ? "Atualizar foco com IA" : "Conectar IA"}</button></div><div class="reference-briefing-body"><div class="reference-brief-row"><span class="reference-brief-icon">${terminalIcon("dash")}</span><div><h3>${regime}</h3><div class="elite-momentum"><span>Semana <b class="${m.week.percent === null ? "" : cl(m.week.percent)}">${fmt(m.week.percent)}${m.week.estimated ? " *" : ""}</b></span><span>Mês <b class="${m.month.percent === null ? "" : cl(m.month.percent)}">${fmt(m.month.percent)}${m.month.estimated ? " *" : ""}</b></span></div><p>${esc(m.tip)}</p>${m.month.percent === null ? '<button class="scene-link" onclick="taGo(\'dash\');diaryConfigureBalance()">Ativar percentuais ↗</button>' : ""}</div></div><div class="reference-brief-row"><span class="reference-brief-icon focus">${terminalIcon("idea")}</span><div><h3>Foco de hoje</h3><p>${esc(valid ? taBriefing.result.action : insight.text)}</p><button class="scene-link" onclick="taGo('${plan ? "analyst" : "plan"}')">${plan ? "Validar próxima operação" : "Definir meu sistema"} ↗</button></div></div></div><details class="reference-method"><summary>Base do briefing</summary>${eliteMomentumView(m)}${valid ? taBriefing.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("") : `<p>${esc(insight.label)}. Sem inferir erros a partir de perdas ou prometer lucro.</p>`}${taBriefing.error ? `<p role="status">${esc(taBriefing.error)}</p>` : ""}</details></section><section class="scene-card reference-events"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Próximos eventos</h2><button class="scene-link" onclick="taGo('economic')">Ver todos →</button></div>${events.length ? events.map((e) => `<button class="reference-event" onclick="taGo('economic')"><time>${esc(taDailyFormatTime(e.time))}</time><span class="reference-currency">${eliteAssetIcon(e.currency)} ${esc(e.currency)}</span><span>${esc(e.name)}</span><b class="impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${{ high: "Alto", medium: "Médio", low: "Baixo" }[e.impact] || "—"}</b></button>`).join("") : "<p>Sem próximo evento verificado disponível.</p><small>Consulte o calendário para conferir a cobertura da fonte.</small>"}</section><section class="scene-card reference-assets"><div class="reference-card-heading">${terminalIcon("ana")}<h2>Seus ativos em foco</h2><button class="scene-link" onclick="taAssetOpen()">Editar →</button></div><div class="reference-asset-grid">${
+    )}</div></div></div><div class="reference-right"><section class="scene-card reference-briefing scene-focus"><div class="reference-card-heading">${terminalIcon("rev")}<h2>Briefing do Dia</h2><button class="scene-link" onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando…" : ready ? "Atualizar foco com IA" : "Conectar IA"}</button></div><div class="reference-briefing-body"><div class="reference-brief-row"><span class="reference-brief-icon">${terminalIcon("dash")}</span><div><h3>${regime}</h3><div class="elite-momentum"><span>Semana <b class="${m.week.percent === null ? "" : cl(m.week.percent)}">${fmt(m.week.percent)}${m.week.estimated ? " *" : ""}</b></span><span>Mês <b class="${m.month.percent === null ? "" : cl(m.month.percent)}">${fmt(m.month.percent)}${m.month.estimated ? " *" : ""}</b></span></div><p>${esc(m.tip)}</p>${m.month.percent === null ? '<button class="scene-link" onclick="taGo(\'dash\');diaryConfigureBalance()">Ativar percentuais ↗</button>' : ""}</div></div><div class="reference-brief-row"><span class="reference-brief-icon focus">${terminalIcon("idea")}</span><div><h3>Foco de hoje</h3><p>${esc(valid ? taBriefing.result.action : insight.text)}</p><button class="scene-link" onclick="taGo('${plan ? "analyst" : "plan"}')">${plan ? "Validar próxima operação" : "Definir meu sistema"} ↗</button></div></div></div><details class="reference-method"><summary>Base do briefing</summary>${eliteMomentumView(m)}${valid ? taBriefing.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("") : `<p>${esc(insight.label)}. Sem inferir erros a partir de perdas ou prometer lucro.</p>`}${taBriefing.error ? `<p role="status">${esc(taBriefing.error)}</p>` : ""}</details></section><section class="scene-card reference-events"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Próximos eventos</h2><button class="scene-link" onclick="taGo('economic')">Ver todos →</button></div>${events.length ? events.map((e) => `<button class="reference-event" onclick="taGo('economic')"><time>${esc(taDailyFormatTime(e.time))}</time><span class="reference-currency">${eliteAssetIcon(e.currency)} ${esc(e.currency)}</span><span>${esc(e.name)}</span><b class="impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${{ high: "Alto", medium: "Médio", low: "Baixo" }[e.impact] || "—"}</b></button>`).join("") : "<p>Sem próximo evento verificado disponível.</p><small>Consulte o calendário para conferir a cobertura da fonte.</small>"}</section><section class="scene-card reference-assets"><div class="reference-card-heading">${terminalIcon("assets")}<h2>Seus ativos em foco</h2><button class="scene-link" onclick="taAssetOpen()">Editar →</button></div><div class="reference-asset-grid">${
     assets.length
       ? assets
           .map((symbol) => {
@@ -173,17 +173,52 @@ function eliteReferenceHome() {
 }
 function eliteAssetIcon(symbol) {
   const normalized = String(symbol)
-    .replace(/[^A-Za-z0-9]/g, "")
-    .toUpperCase();
+      .replace(/[^A-Za-z0-9]/g, "")
+      .toUpperCase(),
+    currencies = [
+      "USD",
+      "EUR",
+      "GBP",
+      "JPY",
+      "CHF",
+      "CAD",
+      "AUD",
+      "NZD",
+      "BRL",
+      "CNY",
+      "CNH",
+      "HKD",
+      "SGD",
+      "ZAR",
+      "MXN",
+      "NOK",
+      "SEK",
+      "TRY",
+      "PLN",
+    ];
   if (normalized.startsWith("XAU"))
     return `<span class="asset-gold" title="Ouro">${terminalIcon("gold")}</span>`;
   if (normalized.startsWith("XAG"))
     return `<span class="asset-silver" title="Prata">${terminalIcon("gold")}</span>`;
-  if (/^(BTC|ETH|SOL)/.test(normalized))
-    return `<span class="asset-crypto" title="Criptoativo">${terminalIcon("coin")}</span>`;
-  if (normalized.length >= 6)
+  if (/^(BTC|ETH|SOL|XRP|ADA|DOGE)/.test(normalized))
+    return `<span class="asset-crypto" title="Criptoativo">${terminalIcon("crypto")}</span>`;
+  if (/^(WTI|BRENT|USOIL|UKOIL|XTI|XBR)/.test(normalized))
+    return `<span class="asset-currency" title="Petróleo">${terminalIcon("oil")}</span>`;
+  if (
+    currencies.includes(normalized.slice(0, 3)) &&
+    currencies.includes(normalized.slice(3, 6)) &&
+    normalized.length === 6
+  )
     return `<span class="asset-fx" title="Par de moedas">FX</span>`;
-  return `<span class="asset-currency" title="Moeda">${terminalIcon("coin")}</span>`;
+  if (currencies.includes(normalized))
+    return `<span class="asset-currency" title="Moeda">${terminalIcon("coin")}</span>`;
+  if (
+    /^(SPX|SP500|US500|NAS|US100|NDX|DJI|US30|DAX|DE40|GER|UK100|FTSE|JP225|NIK|IBOV)/.test(
+      normalized,
+    )
+  )
+    return `<span class="asset-currency" title="Índice">${terminalIcon("index")}</span>`;
+  return `<span class="asset-currency" title="Ativo">${terminalIcon("stock")}</span>`;
 }
 let eliteTradeSearchRows = [];
 function eliteTradeSearchResults() {
@@ -219,7 +254,7 @@ function eliteTradeSearchResults() {
     shown
       .map(
         (t, i) =>
-          `<button class="elite-trade-result" onclick="eliteOpenSearchTrade(${i})"><span>${eliteAssetIcon(t.symbol || "")}</span><span><b>${esc(t.symbol || "Sem ativo")}</b><small>${esc(t.close.replace("T", " "))}${t.strategy ? " · " + esc(t.strategy) : ""}</small></span><span class="${rNumber(t.pnl) === null ? "mu" : cl(Number(t.pnl))}">${hideDashboardMoney ? "••••" : rNumber(t.pnl) === null ? "—" : money(Number(t.pnl))}</span><span>↗</span></button>`,
+          `<button class="elite-trade-result" onclick="eliteOpenSearchTrade(${i})"><span>${eliteAssetIcon(t.symbol || "")}</span><span><b>${esc(t.symbol || "Sem ativo")}</b><small>${esc(t.close.replace("T", " "))}${t.strategy ? " · " + esc(t.strategy) : ""}</small></span><span class="${rNumber(t.pnl) === null ? "mu" : cl(Number(t.pnl))}">${hideDashboardMoney ? "••••" : rNumber(t.pnl) === null ? "—" : money(Number(t.pnl))}</span><span>${terminalIcon("open")}</span></button>`,
       )
       .join("");
 }

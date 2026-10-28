@@ -88,6 +88,21 @@ const { chromium } = require("playwright"),
     );
     assert.equal(await p.locator(".reference-event").count(), 2);
     assert.equal(await p.locator(".reference-asset-grid article").count(), 3);
+    const icons = await p.evaluate(() => ({
+      missing: tabs.filter(([id]) => !terminalIcon(id)).map(([id]) => id),
+      gold: eliteAssetIcon("XAU/USD"), forex: eliteAssetIcon("EURUSD"),
+      stock: eliteAssetIcon("AAPL"), oil: eliteAssetIcon("USOIL"),
+      crypto: eliteAssetIcon("BTCUSD"), index: eliteAssetIcon("US500"),
+      unknown: terminalIcon("nonexistent"),
+    }));
+    assert.deepEqual(icons.missing, []);
+    assert.match(icons.gold, /data-icon="gold"/);
+    assert.match(icons.forex, /asset-fx/);
+    assert.match(icons.stock, /data-icon="stock"/);
+    assert.match(icons.oil, /data-icon="oil"/);
+    assert.match(icons.crypto, /data-icon="crypto"/);
+    assert.match(icons.index, /data-icon="index"/);
+    assert.equal(icons.unknown, "");
     const snapshot = await p.evaluate(() => JSON.stringify(S));
     await p.screenshot({
       path: "/tmp/elitex-reference-v2.png",

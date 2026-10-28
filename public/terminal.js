@@ -8,31 +8,51 @@ try {
   terminalCollapsed = localStorage.getItem("yfx-terminal-nav") === "collapsed";
 } catch {}
 function terminalIcon(name) {
+  // All pictograms share a 24px vector grid, rounded strokes and semantic names.
   const paths = {
-    home: "M3 10 12 3l9 7v10H3z M9 20v-7h6v7",
-    dash: "M3 18V6m0 12h18 M6 14l4-5 4 3 6-8",
-    trades: "M4 7h15m-4-4 4 4-4 4 M20 17H5m4-4-4 4 4 4",
-    cal: "M4 5h16v16H4z M4 10h16 M8 3v4 M16 3v4",
-    analyst: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14m5-2 6 6",
-    plan: "M5 3h14v18H5z M8 8h8 M8 12h8 M8 16h5",
+    home: "m3 10 9-7 9 7 M5 9v12h14V9 M9 21v-8h6v8",
+    dash: "M3 3v18h18 M6 15l4-5 4 3 6-8",
+    trades:
+      "M5 3h12a2 2 0 0 1 2 2v16H6a3 3 0 0 1 0-6h13 M5 3v12 M8 7h7 M8 11h5 M6 18h10",
+    cal: "M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2 M7 3v4 M17 3v4 M3 10h18 M7 14h2 M12 14h2 M7 18h2",
+    analyst:
+      "M3 3h13v14H3z M6 12V9 M9 12V6 M12 12v-2 M16 13a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M19 20l3 3",
+    search: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14 m5-2 6 6",
+    plan: "M9 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-3 M9 2h6v5H9z M8 12l2 2 5-5 M8 18h8",
     economic: "M4 4h16v17H4z M7 8h4v4H7z M14 8h3 M14 11h3 M7 16h10",
-    idea: "M9 18h6 M10 21h4 M8 14a6 6 0 1 1 8 0l-1 2H9z M12 1v1 M2 9h1 M21 9h1",
+    idea: "M9 18h6 M10 21h4 M8 14a6 6 0 1 1 8 0l-1 2H9z M12 1v1 M2 9h1 M21 9h1 M4 3l1 1 M20 3l-1 1",
     alert:
       "M6 18v-7a6 6 0 0 1 12 0v7 M4 18h16v3H4z M12 1v2 M3 5l2 2 M21 5l-2 2 M10 9h2v5",
-    gold: "M5 7h14l3 11H2z M5 7l3-4h8l3 4 M2 18l5-4h10l5 4 M7 14 8 3 M17 14 16 3",
-    coin: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M15 7h-4a2 2 0 0 0 0 5h2a2 2 0 0 1 0 5H9 M12 5v14",
-    ins: "M12 3v4 M12 17v4 M3 12h4 M17 12h4 M8 12l3 3 5-6",
-    rev: "M5 3h14v18H5z M8 7h8 M8 11h8 M8 15h5",
+    gold: "M4 9h16l2 10H2z M4 9l4-4h8l4 4 M8 5l-2 10 M16 5l2 10 M2 19l4-4h12l4 4",
+    coin: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12",
+    crypto: "m12 3 8 9-8 9-8-9z M4 12l8 4 8-4 M12 3v18",
+    assets: "M3 8h7l2 3h9v10H3z M3 8V5h7l2 3h7v3",
+    oil: "M7 5h10v15H7z M6 5h12 M6 20h12 M7 9h10 M7 16h10 M11 9l-2 4a3 3 0 0 0 6 0l-2-4",
+    stock: "M3 21V7l6 3V3h12v18z M13 7h4 M13 11h4 M13 15h4 M6 15v2",
+    index: "M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z",
+    ins: "M3 12h4l3-7 4 14 3-7h4",
+    rev: "M5 3h10l4 4v14H5z M14 3v5h5 M8 12l2 2 4-4 M8 18h8",
     ana: "M4 20V10h4v10 M10 20V4h4v16 M16 20V7h4v13",
-    pat: "M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
-    risk: "M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M12 8v5 M12 16v1",
+    pat: "M4 7h5l3 10h8 M4 17h5L12 7h8 M3 5v4 M21 5v4 M3 15v4 M21 15v4",
+    risk: "m12 3-9 4v6c0 4 9 8 9 8s9-4 9-8V7z M12 8v5 M12 16v1",
     str: "M5 21V3h14l-3 5 3 5H5",
-    share: "M7 17 20 4 M10 4h10v10 M4 7v13h13",
+    share: "M5 5h14v16H5z M8 3v4 M16 3v4 M5 10h14 M9 16l3-3 3 3 M12 13v6",
     settings:
       "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2",
+    menu: "M4 6h16 M4 12h16 M4 18h16",
+    contrast:
+      "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 3v18 M12 3a9 9 0 0 1 0 18z",
+    arrow: "M5 12h14 m-5-5 5 5-5 5",
+    open: "M6 18 18 6 M6 6h12v12",
+    tools: "M14 6a5 5 0 0 0-6 6l-5 5 4 4 5-5a5 5 0 0 0 6-6l-3 3-4-4z",
   };
-  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name] || paths.dash}"/></svg>`;
+  const path = paths[name];
+  // Missing mappings render no decoration instead of an unrelated chart.
+  return path
+    ? `<svg class="elite-icon" data-icon="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${path}"/></svg>`
+    : "";
 }
+
 function terminalToggleNav() {
   terminalCollapsed = !terminalCollapsed;
   try {
