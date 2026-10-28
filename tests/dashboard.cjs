@@ -36,7 +36,7 @@ const path=require('node:path');
  check('custom dates filter metrics, chart and calendar consistently',()=>{});
  assert.equal(await page.evaluate(()=>st(ft()).net),60);
  assert.match(await rr.innerText(),/2\.50/);
- assert.equal(await page.locator('.chart-point').count(),2);
+ assert.equal(await page.locator('.terminal-performance .chart-point').count(),2);
  assert.match(await page.locator('.calendar-summary').innerText(),/3 trades/);
  await page.locator('.cal button').filter({has:page.locator('b',{hasText:/^1$/})}).click();
  assert.equal(await page.locator('#daydlg .day-trade').count(),2);

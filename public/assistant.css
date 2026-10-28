@@ -1,13 +1,13 @@
 /* Trade Assistant: one restrained financial workspace, shared with the journal. */
 :root {
-  --bg: #0b1016;
-  --card: #121922;
-  --tx: #edf0f4;
-  --mu: #8c99a9;
-  --bd: #26303c;
-  --ac: #c8ad78;
-  --g: #70b49a;
-  --r: #d9828b;
+  --bg: #080a0d;
+  --card: #0b0d12;
+  --tx: #f2f4f7;
+  --mu: #a0a7b2;
+  --bd: #252a32;
+  --ac: #a0a7b2;
+  --g: #00d6a0;
+  --r: #f23645;
   color-scheme: dark;
 }
 body {
@@ -25,7 +25,7 @@ header {
   width: 248px;
   padding: 28px 18px 18px;
   gap: 0;
-  background: #0e141c;
+  background: #050505;
   border-color: var(--bd);
   height: 100dvh;
   overflow: hidden;
@@ -66,7 +66,7 @@ header nav {
 .ta-nav-group > small {
   padding: 0 12px 8px;
   font-size: 9px;
-  color: #68788c;
+  color: #69717d;
   letter-spacing: 1.8px;
   text-transform: uppercase;
 }
@@ -75,15 +75,15 @@ header nav {
   padding: 10px 11px;
   min-height: 38px;
   border-radius: 7px;
-  color: #8e9bac;
+  color: #a0a7b2;
 }
 .ta-nav-group button.on {
-  background: #c8ad7810;
-  border-color: #c8ad7840;
-  color: #dcc59b;
+  background: #a0a7b210;
+  border-color: #a0a7b240;
+  color: #f2f4f7;
 }
 .ta-nav-group button span {
-  color: #62758b;
+  color: #69717d;
 }
 .ta-nav-group button.on span {
   color: var(--ac);
@@ -120,7 +120,7 @@ h3 {
 }
 .card {
   padding: 24px;
-  border-color: #26303c;
+  border-color: #252a32;
   border-radius: 13px;
   background: var(--card);
   box-shadow: 0 7px 28px #0000000d;
@@ -152,8 +152,8 @@ label.b {
     transform 0.16s;
 }
 .b.s {
-  background: #141d28;
-  border-color: #2d3a49;
+  background: #14171d;
+  border-color: #252a32;
 }
 .b:hover {
   filter: brightness(1.12);
@@ -162,8 +162,8 @@ input,
 select,
 textarea {
   border-radius: 7px;
-  background: #0f1620;
-  border-color: #2b3746;
+  background: #080a0d;
+  border-color: #252a32;
   color: var(--tx);
   font-size: 13px;
   min-height: 39px;
@@ -194,16 +194,16 @@ label {
   min-width: 0;
 }
 dialog {
-  background: #141c26;
-  border-color: #334152;
+  background: #14171d;
+  border-color: #353c47;
   border-radius: 14px;
 }
 .muted-note {
   line-height: 1.8;
 }
 .badge {
-  color: #a3aebc;
-  border-color: #364252;
+  color: #a0a7b2;
+  border-color: #353c47;
   font-size: 10px;
 }
 .ta-link {
@@ -235,7 +235,7 @@ dialog {
 }
 .ta-home-heading p {
   font-size: 13px;
-  color: #b4becb;
+  color: #a0a7b2;
   line-height: 1.8;
   max-width: 750px;
   margin: 10px 0;
@@ -257,9 +257,9 @@ dialog {
 }
 .ta-session-card {
   background:
-    radial-gradient(ellipse at top right, #c8ad7808, transparent 70%),
+    radial-gradient(ellipse at top right, #a0a7b208, transparent 70%),
     var(--card);
-  border-color: #c8ad7838;
+  border-color: #a0a7b238;
 }
 .ta-session-title {
   display: flex;
@@ -279,7 +279,7 @@ dialog {
   font-variant-numeric: tabular-nums;
 }
 .ta-session-hours span {
-  color: #56677c;
+  color: #69717d;
   font-size: 24px;
   margin: 0 8px;
 }
@@ -295,7 +295,7 @@ dialog {
 }
 .ta-source {
   font-size: 10px;
-  color: #738298;
+  color: #69717d;
   margin: 18px 0 0;
   line-height: 1.8;
 }
@@ -368,16 +368,16 @@ dialog {
   margin-top: 10px;
 }
 .ta-event-high {
-  border-left: 2px solid #b98e51;
+  border-left: 2px solid #f0b85a;
   padding-left: 14px;
 }
 .ta-event-warning,
 .ta-caution {
-  background: #c8ad7809;
-  border: 1px solid #c8ad7830;
+  background: #a0a7b209;
+  border: 1px solid #a0a7b230;
   border-radius: 8px;
   padding: 12px 14px;
-  color: #d5b57d;
+  color: #f0b85a;
   font-size: 12px;
   line-height: 1.8;
   margin: 14px 0;
@@ -389,7 +389,7 @@ dialog {
   padding-left: 18px;
 }
 .ta-assistant-insight {
-  border-color: #c8ad7840;
+  border-color: #a0a7b240;
   padding-left: 26px;
 }
 .ta-assistant-insight > p {
@@ -409,7 +409,7 @@ dialog {
 .ta-quick-action {
   position: relative;
   text-align: left;
-  background: #111923;
+  background: #0b0d12;
   border: 1px solid var(--bd);
   border-radius: 10px;
   padding: 18px 20px;
@@ -434,15 +434,15 @@ dialog {
   color: var(--ac);
 }
 .ta-quick-action:hover {
-  border-color: #c8ad7860;
+  border-color: #a0a7b260;
 }
 .ta-week-snapshot .grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-bottom: 0;
 }
 .ta-week-snapshot .k {
-  background: #101720;
-  border-color: #27313e;
+  background: #0b0d12;
+  border-color: #252a32;
   padding: 16px;
 }
 .ta-week-snapshot .k b {
@@ -513,7 +513,7 @@ dialog {
   margin: 18px 0;
 }
 .ta-service-grid > div {
-  background: #0f1620;
+  background: #080a0d;
   border: 1px solid var(--bd);
   border-radius: 8px;
   padding: 15px;
@@ -542,7 +542,7 @@ dialog {
 .ta-criterion {
   border: 1px solid var(--bd);
   border-radius: 10px;
-  background: #101822;
+  background: #0b0d12;
   padding: 18px;
   margin: 16px 0;
   min-width: 0;
@@ -606,9 +606,9 @@ dialog {
   align-items: center;
   justify-content: center;
   min-height: 290px;
-  border: 1px dashed #c8ad7860;
+  border: 1px dashed #a0a7b260;
   border-radius: 10px;
-  background: #0f1620;
+  background: #080a0d;
   cursor: pointer;
   overflow: hidden;
   text-align: center;
@@ -646,7 +646,7 @@ dialog {
 }
 .ta-assessment {
   border: 1px solid var(--bd);
-  background: #0f1721;
+  background: #080a0d;
   border-radius: 10px;
   padding: 18px;
   min-width: 0;
@@ -958,7 +958,7 @@ dialog {
 .ta-connection-help {
   margin-top: 24px;
   padding: 20px;
-  border: 1px solid var(--bd, #30363d);
+  border: 1px solid var(--bd, #252a32);
   border-radius: 12px;
   line-height: 1.65;
   overflow-wrap: anywhere;

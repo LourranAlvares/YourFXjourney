@@ -169,3 +169,33 @@ quando presentes, converte campos vazios em indisponível, remove duplicatas e
 informa o intervalo `from`/`to` e a geração da fonte. Não assume histórico completo
 nem ausência de notícias fora da cobertura; não libera automaticamente regras
 operacionais de notícias. A classificação de impacto é a informada pela fonte.
+
+## Interface terminal
+
+A identidade visual usa preto e superfícies em camadas, valores financeiros
+verdes/vermelhos, navegação compacta recolhível, barra superior contextual e
+ícones SVG originais. A apresentação foi atualizada nas 15 rotas, formulários,
+modais, tooltips e calendários, incluindo o PNG de compartilhamento em tema escuro.
+Não há dependência de TradingView nem de Massive: são referências visuais,
+não novos provedores de dados, logos ou bibliotecas proprietárias.
+
+Os tokens ficam em `public/terminal.css`; componentes e interações em
+`public/terminal.js`. Os componentes são carregados após os módulos existentes e
+antes do primeiro render. A arquitetura HTML/JS e o armazenamento `yfx1` foram
+mantidos. A preferência da navegação usa sua própria chave, sem migrar trades.
+
+O Dashboard inclui gráfico de performance, drawdown, distribuição por ativo e
+sessão, tabela de operações recentes e calendário. Séries existentes continuam
+vindo de `chartData`, `st` e `grp`; zoom e navegação alteram somente a janela do
+gráfico. Controles de período continuam filtrando as métricas e calendários.
+O cursor/teclado/toque mostra os valores registrados. Escalas ficam à direita;
+zoom, navegação e reset são locais a cada gráfico. Arrastar permite navegar
+quando o gráfico está ampliado. Rótulos de séries sem datas usam o número do
+trade, nunca uma data inventada. O histórico possui ordenação por coluna sem
+alterar a ordem armazenada. Ocultar dinheiro também protege os painéis novos.
+
+Verificação: `npm test` para cálculos e backend; `npm run test:ui` para o terminal
+com Playwright disponível no ambiente de desenvolvimento. Opcionalmente defina
+`BROWSER_EXECUTABLE_PATH` para seu Chromium. O teste usa servidor local temporário,
+browser isolado e dados de teste que nunca são gravados no site de produção.
+`python3 scripts/build_standalone.py` mantém os novos módulos no HTML independente.
