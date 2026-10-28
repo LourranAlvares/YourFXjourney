@@ -13,3 +13,10 @@ await assert.rejects(p.economic(query()),e=>e.message.includes('HTTP '+status)&&
 const p=createProviders({env:{TRADE_ECONOMIC_PROVIDER:'forexfactory'},fetchFn:async()=>{throw Error('https://private/?apikey=secret')}});
 await assert.rejects(p.economic(query()),e=>e.code==='provider_unavailable'&&!e.message.includes('secret'));
 });
+test('weekly feed honors Retry-After and suppresses repeated requests across filters until pause ends',async()=>{
+let time=Date.parse('2026-10-28T12:00:00Z'),calls=0;
+const p=createProviders({env:{TRADE_ECONOMIC_PROVIDER:'forexfactory'},now:()=>new Date(time),fetchFn:async()=>{calls++;return calls===1?new Response('',{status:429,headers:{'Retry-After':'3600'}}):Response.json(rows)}});
+await assert.rejects(p.economic(query('USD')),e=>/60 min/.test(e.message));
+await assert.rejects(p.economic(query('GBP')),e=>/HTTP 429/.test(e.message));assert.equal(calls,1);
+time+=3600001;assert.equal((await p.economic(query('USD'))).events.length,1);assert.equal(calls,2);
+});

@@ -41,6 +41,7 @@ async function jsonFetch(fetchFn, url, options = {}, timeout = 15000) {
       signal: AbortSignal.timeout(timeout),
     });
   } catch (error) {
+    if (error instanceof APIError) throw error;
     fail(502, "provider_unavailable", error?.name === "TimeoutError" || error?.name === "AbortError"
       ? "A consulta ao provedor excedeu o tempo limite. Tente novamente mais tarde."
       : "Não foi possível conectar ao provedor a partir do servidor. Verifique a disponibilidade da fonte.");
@@ -134,7 +135,7 @@ function createProviders({
     calendarCache = ttlCache(5 * 60e3),
     marketCache = ttlCache(60e3),
     analysisCache = ttlCache(10 * 60e3, 30);
-  let activeAI = 0;
+  let activeAI = 0, weeklyBlockedUntil = 0;
   async function analysisFetch(options) {
     if (activeAI >= 2)
       fail(
@@ -174,7 +175,18 @@ function createProviders({
       fail(400, "invalid_currencies", "Moedas inválidas.");
     if (env.TRADE_ECONOMIC_PROVIDER === "forexfactory") {
       const feed = await weeklyFeedCache("thisweek", async () => {
-        const data = await jsonFetch(fetchFn, "https://nfs.faireconomy.media/ff_calendar_thisweek.json");
+        const pauseMessage = () => `O feed limitou as consultas (HTTP 429). Nova consulta permitida em cerca de ${Math.max(1, Math.ceil((weeklyBlockedUntil - +now()) / 60000))} min. Atualizar a página não reduz essa pausa.`;
+        if (+now() < weeklyBlockedUntil) fail(503, "provider_unavailable", pauseMessage());
+        const data = await jsonFetch(async (...args) => {
+          const response = await fetchFn(...args);
+          if (response.status === 429) {
+            const retry = response.headers?.get?.("retry-after");
+            const wait = retry && /^\d+$/.test(retry) ? Number(retry) * 1000 : retry ? Date.parse(retry) - +now() : NaN;
+            weeklyBlockedUntil = +now() + (Number.isFinite(wait) ? Math.max(60000, wait) : 30 * 60000);
+            fail(503, "provider_unavailable", pauseMessage());
+          }
+          return response;
+        }, "https://nfs.faireconomy.media/ff_calendar_thisweek.json");
         if (!Array.isArray(data) || !data.length || data.length > 5000)
           fail(502, "invalid_provider_response", "Feed semanal indisponível ou vazio. Não é possível confirmar os eventos.");
         const events = data.map(item => {
