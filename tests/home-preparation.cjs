@@ -194,14 +194,14 @@ const { createApp } = require("../server/index.cjs");
               .querySelector(".ta-home-overview")
               .getBoundingClientRect(),
             radar = document
-              .querySelector("#main>.ta-ready-card")
+              .querySelector(".elite-operational>.ta-ready-card")
               .getBoundingClientRect(),
             events = document
               .querySelector(".ta-home-events")
               .getBoundingClientRect();
           const cards = [
             ...document.querySelectorAll(
-              ".ta-session-card,.ta-market-card,.ta-assistant-insight,#main>.ta-ready-card,.ta-home-events",
+              ".ta-session-card,.ta-market-card,.ta-assistant-insight,.elite-operational>.ta-ready-card,.ta-home-events",
             ),
           ].map((e) => e.getBoundingClientRect());
           return (

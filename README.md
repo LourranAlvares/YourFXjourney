@@ -291,3 +291,8 @@ Os indicadores do histórico respeitam os filtros e reutilizam o drawdown atual.
 `node tests/currency-risk.cjs` verifica moedas, persistência, falha de armazenamento,
 privacidade, cálculo de planejamento, cobertura e preservação dos dados,
 responsividade e o módulo incorporado na versão standalone.
+
+### Assistente visual na Home
+A evolução usa um personagem SVG 2D original, articulado em cabeça, olhos, tronco e braços. Os estados working/attention/thinking/responding/return são controlados por interação e requisição real. Movimento reduzido desliga animações. Não é um modelo 3D nem um humano fotorealista: para atingir a referência fotográfica, ainda são necessários assets profissionais articulados ou GLB com rig, expressões e clipes de digitação/atenção. Nenhum processamento de mercado ocorre apenas por causa da animação decorativa.
+
+A conversa desta visita fica somente em memória (até vinte mensagens), sem alterar o histórico de operações. Usa a API de briefing existente, agora com pergunta opcional limitada a 1500 caracteres, CSRF e os mesmos limites de IA. O envio inclui pergunta, plano e fatos agregados; não envia prints nem todo o diário. As respostas são orientações curtas e seleção de fatos fornecidos, não um chat geral ou previsão de preço. Análise de prints continua no Trade Analyst. Sem credenciais ou autenticação, a interface informa indisponibilidade.
