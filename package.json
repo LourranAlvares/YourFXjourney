@@ -10,6 +10,7 @@
     "start": "node --env-file-if-exists=.env server/index.cjs",
     "test": "node tests/plan-engine.cjs && node tests/session-engine.cjs && node tests/daily-workspace.cjs && node --test server/tests/*.test.cjs",
     "build:offline": "python3 scripts/build_standalone.py",
-    "test:ui": "node tests/terminal-ui.cjs"
+    "test:ui": "node tests/terminal-ui.cjs",
+    "test:premium": "node tests/premium-ui.cjs"
   }
 }

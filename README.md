@@ -243,3 +243,30 @@ Textos secundários foram ampliados e os efeitos de blur do conteúdo removidos.
 O teste `node tests/asset-picker.cjs` usa navegador isolado, valida cancelamento,
 busca, teclado, limite, persistência, símbolo personalizado e preservação do
 histórico, com captura real de 3840×2160 pixels e layouts de 320 a 1920 CSS pixels.
+
+### Refinamento das interações
+
+Os módulos `public/premium.js` e `public/premium.css` aprimoram o terminal sem
+modificar a composição ou os cálculos. Ctrl + roda do mouse amplia o gráfico
+normal; na visualização ampliada, a roda também funciona sem Ctrl. A rolagem
+comum da página é preservada. Arrastar um gráfico com zoom desloca a janela;
+Tudo restaura o recorte completo. A ampliação usa os mesmos dados, com janela
+independente, fecha com Escape e mantém o foco de teclado. Zoom e pan não
+reinicializam a aplicação nem fazem chamadas aos provedores.
+
+As métricas principais abrem uma inspeção sob demanda com os trades filtrados
+(até 100 registros exibidos) e atalho ao histórico. Valores ocultos continuam
+ocultos na inspeção. Os tooltips do calendário em R usam somente o texto da
+projeção pública, sem valores monetários. A seleção do dia recebe feedback e
+meses/abas têm transições curtas. O indicador lateral acompanha a navegação.
+
+Iluminação pelo cursor e magnetismo leve são limitados a painéis e ações
+selecionados, executados somente por eventos e requestAnimationFrame. Movimentos
+reduzidos desativam esses efeitos. Números são sempre os valores finais calculados:
+a atualização usa fade, não contagem intermediária de resultados financeiros.
+Textos e dados não recebem blur persistente. Carregamento mostra estado real,
+sem estatísticas ou gráficos de demonstração.
+
+`node tests/premium-ui.cjs` verifica roda, arraste, tooltips, ampliação, resize,
+Escape, inspeção, privacidade e movimento reduzido usando servidor local e
+registros de teste isolados. Os testes não dependem de credenciais reais.

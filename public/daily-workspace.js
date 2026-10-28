@@ -323,7 +323,7 @@ function taDailyAvailability(kind, date) {
   if (!connection.ready)
     return `<p class="ta-unavailable">${esc(connection.text)}</p><button class="b s" onclick="taGo('settings')">Configurar conexão</button>`;
   if (state.status === "loading" || state.status === "idle")
-    return '<p class="mu" role="status">Consultando o provedor…</p>';
+    return '<div class="premium-loading" role="status" aria-live="polite"><span class="premium-loading-dot" aria-hidden="true"></span><p>Consultando o provedor…</p><div class="premium-loading-bars" aria-hidden="true"><i></i><i></i><i></i></div></div>';
   if (state.status === "error")
     return `<p class="ta-unavailable">${esc(state.error)}</p><button class="b s" onclick="taDailyRefresh()">Tentar novamente</button>`;
   if (

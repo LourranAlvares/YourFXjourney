@@ -1,0 +1,410 @@
+/* Interaction tokens complement the established EliteX surfaces and layout. */
+:root {
+  --motion-hover: 160ms;
+  --motion-panel: 260ms;
+  --motion-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.b,
+button,
+.ta-asset-option,
+.ta-asset-chip,
+input,
+select,
+textarea {
+  transition:
+    background-color var(--motion-hover) ease,
+    border-color var(--motion-hover) ease,
+    box-shadow var(--motion-hover) ease,
+    color var(--motion-hover) ease;
+}
+.b:active:not(:disabled),
+.ta-asset-option:active,
+.ta-asset-chip:active {
+  box-shadow: inset 0 2px 8px #0005;
+}
+.card {
+  transition:
+    border-color var(--motion-hover) ease,
+    box-shadow var(--motion-hover) ease;
+}
+.card:hover {
+  border-color: #3b5748;
+}
+.premium-lit-card {
+  position: relative;
+  isolation: isolate;
+}
+.premium-lit-card::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--motion-hover) ease;
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, 20%),
+    #00e6b50b,
+    transparent 80%
+  );
+}
+.premium-spotlight-active::before {
+  opacity: 1;
+}
+.premium-magnetic {
+  transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+  transition:
+    transform 180ms var(--motion-ease),
+    background-color var(--motion-hover) ease,
+    border-color var(--motion-hover) ease;
+}
+.premium-magnetic:focus-visible {
+  transform: none;
+}
+#nav {
+  position: relative;
+}
+.ta-nav-group button.on::before {
+  opacity: 0;
+}
+.premium-nav-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  border-radius: 3px;
+  background: var(--brand-emerald);
+  box-shadow: 0 0 8px #00e6b530;
+  pointer-events: none;
+  transition:
+    transform 240ms var(--motion-ease),
+    height 240ms var(--motion-ease);
+}
+.ta-nav-group button:hover {
+  box-shadow: inset 0 0 0 1px #78efbf18;
+}
+.primary-metrics .k[role="button"] {
+  position: relative;
+  cursor: pointer;
+  transition: background-color var(--motion-hover) ease;
+}
+.primary-metrics .k[role="button"]::after {
+  content: "↗";
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font: 12px var(--mono);
+  color: #88b9a2;
+  opacity: 0;
+  transition: opacity var(--motion-hover) ease;
+}
+.primary-metrics .k[role="button"]:hover,
+.primary-metrics .k[role="button"]:focus-visible {
+  background: #00e6b508;
+}
+.primary-metrics .k[role="button"]:hover::after,
+.primary-metrics .k[role="button"]:focus-visible::after {
+  opacity: 1;
+}
+.terminal-chart {
+  position: relative;
+}
+.terminal-chart-tools button {
+  transition:
+    background-color 140ms,
+    border-color 140ms,
+    color 140ms;
+}
+.terminal-chart-tools button:hover:enabled {
+  color: #d5fff0;
+  background: #143425;
+  border-color: #3e7e5a;
+}
+.terminal-chart-svg .terminal-crosshair circle {
+  transition:
+    cx 70ms linear,
+    cy 70ms linear;
+}
+.premium-dragging,
+.premium-dragging .terminal-chart-svg {
+  cursor: grabbing;
+  user-select: none;
+}
+.premium-chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+  max-width: min(330px, calc(100% - 16px));
+  padding: 11px 13px;
+  border: 1px solid #48715c;
+  border-radius: 10px;
+  background: #0b1812fa;
+  color: #d9ece2;
+  box-shadow: 0 8px 24px #0007;
+  font: 12px/1.7 var(--mono);
+  white-space: pre-line;
+}
+.premium-chart-tooltip[hidden] {
+  display: none;
+}
+.premium-context-tooltip {
+  position: fixed;
+  z-index: 40;
+  pointer-events: none;
+  max-width: min(320px, calc(100vw - 20px));
+  padding: 10px 12px;
+  border: 1px solid #3e624f;
+  border-radius: 9px;
+  background: #0c1813;
+  color: #d4e8dd;
+  font: 12px/1.65 var(--mono);
+  box-shadow: 0 5px 20px #0006;
+  overflow-wrap: anywhere;
+}
+.premium-context-tooltip[hidden] {
+  display: none;
+}
+#premium-chart-dialog {
+  width: 96vw;
+  max-width: 1600px;
+  max-height: 94dvh;
+  padding: 24px;
+  overflow: auto;
+}
+#premium-chart-dialog .terminal-chart {
+  margin: 0;
+}
+#premium-chart-dialog > .muted-note {
+  margin-bottom: 0;
+}
+#premium-metric-dialog {
+  max-width: 920px;
+}
+#premium-metric-dialog > .b {
+  margin-top: 16px;
+}
+.premium-metric-value {
+  font: 500 32px/1.4 var(--mono);
+  color: #def9eb;
+  margin: 16px 0 10px;
+}
+.terminal-trade-table tbody tr {
+  transition:
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+.terminal-trade-table tbody tr:hover,
+.terminal-trade-table tbody tr:focus-visible {
+  background: #00e6b50a;
+  box-shadow: inset 2px 0 #00e6b55a;
+}
+.th img,
+.day-trade img {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.th img:hover,
+.day-trade img:hover {
+  border-color: #4c9e74;
+  box-shadow: 0 3px 12px #0005;
+}
+.cd,
+.share-live-day {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+.cd:hover,
+.share-live-day:not(:disabled):hover {
+  border-color: #77b493;
+  box-shadow: inset 0 0 0 1px #a4ffd211;
+}
+.cd.sel {
+  box-shadow: inset 0 2px var(--brand-emerald);
+}
+.ta-assessment,
+.ta-rule,
+.ta-ready-step,
+.ta-quick-action {
+  transition:
+    border-color 160ms,
+    background-color 160ms,
+    box-shadow 160ms;
+}
+.ta-assessment:hover,
+.ta-rule:hover {
+  border-color: #43624f;
+}
+.ta-assessment details > summary:hover {
+  color: #c9ffe6;
+}
+.ta-tabs button,
+.ins-tabs button,
+.ta-asset-groups button {
+  transition:
+    background-color 160ms,
+    border-color 160ms,
+    color 160ms;
+}
+.premium-loading {
+  padding: 18px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: var(--secondary);
+}
+.premium-loading > p {
+  margin: 0;
+  font-size: 14px;
+}
+.premium-loading-dot {
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  background: #6ab894;
+  animation: premium-breathe 1.6s ease-in-out infinite;
+}
+.premium-loading-bars {
+  flex-basis: 100%;
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+.premium-loading-bars i {
+  height: 8px;
+  border-radius: 6px;
+  background: #54736120;
+}
+.premium-loading-bars i:nth-child(2) {
+  width: 75%;
+}
+.premium-loading-bars i:nth-child(3) {
+  width: 45%;
+}
+@keyframes premium-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.premium-analysis-pending button[type="submit"] {
+  border-color: #00e6b55a;
+  box-shadow: inset 0 0 0 1px #00e6b51a;
+}
+dialog[open] {
+  animation: premium-dialog-in 220ms var(--motion-ease);
+}
+@keyframes premium-dialog-in {
+  from {
+    opacity: 0.65;
+    translate: 0 5px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (max-width: 760px) {
+  .premium-nav-marker {
+    display: none;
+  }
+  .ta-nav-group button.on::before {
+    opacity: 1;
+  }
+  .premium-chart-tooltip {
+    font-size: 11px;
+    padding: 9px;
+  }
+  .premium-context-tooltip {
+    font-size: 11px;
+  }
+  #premium-chart-dialog {
+    width: 96vw;
+    padding: 14px;
+  }
+  #premium-chart-dialog .section-head h2 {
+    font-size: 17px;
+  }
+  .terminal-chart-tools {
+    flex-wrap: wrap;
+  }
+  .premium-metric-value {
+    font-size: 27px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .premium-magnetic {
+    transform: none !important;
+  }
+  .premium-lit-card::before {
+    display: none;
+  }
+  .premium-loading-dot {
+    animation: none;
+  }
+  dialog[open] {
+    animation: none;
+  }
+  .premium-nav-marker,
+  .terminal-chart-svg .terminal-crosshair circle {
+    transition: none;
+  }
+}
+.cd.premium-selected,
+.share-live-day.premium-selected {
+  outline: 1px solid var(--brand-emerald);
+  outline-offset: -1px;
+  box-shadow: inset 0 2px #00e6b57d;
+}
+.insight-tabs button {
+  position: relative;
+  transition:
+    background-color 160ms,
+    border-color 160ms,
+    color 160ms;
+}
+.insight-tabs button[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  border-radius: 2px;
+  background: var(--brand-emerald);
+  animation: premium-tab-in 200ms var(--motion-ease);
+}
+@keyframes premium-tab-in {
+  from {
+    opacity: 0.3;
+    scale: 0.6 1;
+  }
+  to {
+    opacity: 1;
+    scale: 1 1;
+  }
+}
+.ta-analysis-result {
+  animation: premium-result-in 240ms var(--motion-ease);
+}
+@keyframes premium-result-in {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insight-tabs button[aria-selected="true"]::after,
+  .ta-analysis-result {
+    animation: none;
+  }
+}

@@ -59,8 +59,10 @@ function terminalBackdrop() {
   document.body.prepend(layer);
 }
 function terminalBeginRender() {
+  if (typeof premiumBeforeRender === "function") premiumBeforeRender();
   terminalBackdrop();
   terminalCharts.clear();
+  if (typeof premiumKeepExpanded === "function") premiumKeepExpanded();
   terminalChartSequence = 0;
   document.body.classList.toggle("terminal-collapsed", terminalCollapsed);
   document.body.dataset.workspace = tab;
@@ -129,6 +131,7 @@ function terminalDrawChart(model) {
   model.geometry = { W, L, T, B, R, x, y, visible };
   const describe = (p) =>
     `${p.date} · ${label}: ${format(p.value)}${p.net != null ? " · P&L diário: " + money(p.net) : ""}${p.n != null ? " · " + p.n + " trades" : ""}${p.r != null ? " · " + p.r.toFixed(2) + "R" : ""}${p.coverage != null ? " · " + p.coverage + " com risco" : ""}`;
+  model.describe = describe;
   let grid = "";
   for (let i = 0; i <= 4; i++) {
     const v = min + ((max - min) * i) / 4,
@@ -163,10 +166,10 @@ function terminalDrawChart(model) {
   const marks = visible
     .map(
       (p, i) =>
-        `<circle class="chart-point" cx="${x(i)}" cy="${y(p.value)}" r="8" fill="transparent" tabindex="0" role="img" aria-label="${esc(describe(p))}" data-terminal-point="${i}" data-info="${esc(describe(p))}"><title>${esc(describe(p))}</title></circle>`,
+        `<circle class="chart-point" cx="${x(i)}" cy="${y(p.value)}" r="8" fill="transparent" tabindex="0" role="img" aria-label="${esc(describe(p))}" data-terminal-point="${i}" data-info="${esc(describe(p))}"></circle>`,
     )
     .join("");
-  return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar</div>`;
+  return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
 }
 function terminalAfterRender() {
   document.querySelectorAll("[data-terminal-chart]").forEach((element) => {
@@ -179,6 +182,14 @@ function terminalAfterRender() {
 function terminalChartAction(id, action) {
   const model = terminalCharts.get(id);
   if (!model) return;
+  if (action === "expand") {
+    premiumExpandChart(id);
+    return;
+  }
+  if (action === "in" || action === "out") {
+    premiumZoom(id, action === "in" ? 0.65 : 1.6);
+    return;
+  }
   const s = model.state,
     n = s.end - s.start,
     total = model.data.length,
@@ -209,16 +220,22 @@ function terminalChartAction(id, action) {
     s.start = s.end - n;
   }
   const element = document.querySelector(`[data-terminal-chart="${id}"]`);
-  if (element) element.innerHTML = terminalDrawChart(model);
+  if (element) premiumRedrawChart(model, element);
 }
 function terminalInspect(root, index) {
   const model = terminalCharts.get(root.dataset.terminalChart);
   if (!model?.geometry) return;
+  const svg = root.querySelector("svg");
+  if (model.inspectedSVG === svg && model.inspectedIndex === index) return;
+  model.inspectedSVG = svg;
+  model.inspectedIndex = index;
   const { visible, x, y } = model.geometry;
   index = Math.max(0, Math.min(visible.length - 1, index));
   const point = root.querySelectorAll(".chart-point")[index];
   if (!point) return;
-  root.querySelector(".chart-readout").textContent = point.dataset.info;
+  const readout = root.querySelector(".chart-readout");
+  if (readout.textContent !== point.dataset.info)
+    readout.textContent = point.dataset.info;
   const cross = root.querySelector(".terminal-crosshair");
   cross.setAttribute("visibility", "visible");
   cross.querySelector(".terminal-cross-x").setAttribute("x1", x(index));
@@ -246,41 +263,6 @@ document.addEventListener("focusin", (event) => {
       point.closest("[data-terminal-chart]"),
       +point.dataset.terminalPoint,
     );
-});
-document.addEventListener("pointermove", (event) => {
-  const svg = event.target.closest(".terminal-chart-svg");
-  if (!svg) return;
-  const root = svg.closest("[data-terminal-chart]"),
-    model = terminalCharts.get(root.dataset.terminalChart);
-  if (!model?.geometry) return;
-  const rect = svg.getBoundingClientRect(),
-    { W, L, R, visible } = model.geometry;
-  terminalInspect(
-    root,
-    Math.round(
-      ((((event.clientX - rect.left) / rect.width) * W - L) / (R - L)) *
-        (visible.length - 1),
-    ),
-  );
-});
-let terminalDrag = null;
-document.addEventListener("pointerdown", (event) => {
-  const svg = event.target.closest(".terminal-chart-svg");
-  if (svg && event.button === 0)
-    terminalDrag = {
-      id: svg.closest("[data-terminal-chart]").dataset.terminalChart,
-      x: event.clientX,
-    };
-});
-document.addEventListener("pointerup", (event) => {
-  if (!terminalDrag) return;
-  const delta = event.clientX - terminalDrag.x;
-  if (Math.abs(delta) > 35)
-    terminalChartAction(terminalDrag.id, delta > 0 ? "previous" : "next");
-  terminalDrag = null;
-});
-document.addEventListener("pointercancel", () => {
-  terminalDrag = null;
 });
 function terminalPerformanceChart(ts) {
   const canBalance = S.balanceConfirmed && !F.sym && !F.strat,
