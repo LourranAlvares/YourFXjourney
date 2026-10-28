@@ -79,6 +79,7 @@ function terminalChart(
     format = money,
     label = "Performance",
     daily = false,
+    includeZero = true,
     readout = false,
   } = {},
 ) {
@@ -96,6 +97,7 @@ function terminalChart(
     format,
     label,
     daily,
+    includeZero,
     readout,
     state: windowState,
   };
@@ -121,13 +123,20 @@ function terminalDrawChart(model) {
     T = 20,
     B = H - 34,
     R = W - 114;
-  const lo = Math.min(0, ...visible.map((p) => p.value)),
-    hi = Math.max(0, ...visible.map((p) => p.value)),
-    span = hi - lo || 1,
+  const lo = Math.min(
+      ...(model.includeZero === false ? [] : [0]),
+      ...visible.map((p) => p.value),
+    ),
+    hi = Math.max(
+      ...(model.includeZero === false ? [] : [0]),
+      ...visible.map((p) => p.value),
+    ),
+    span = hi - lo || Math.max(1, Math.abs(hi) * 0.01),
     min = lo - span * 0.08,
     max = hi + span * 0.08;
   const x = (i) => (n === 1 ? (L + R) / 2 : L + (i / (n - 1)) * (R - L)),
     y = (v) => B - ((v - min) / (max - min)) * (B - T);
+  const areaBase = Math.max(T, Math.min(B, y(0)));
   model.geometry = { W, L, T, B, R, x, y, visible };
   const describe = (p) =>
     `${p.date} · ${label}: ${format(p.value)}${p.net != null ? " · P&L diário: " + money(p.net) : ""}${p.n != null ? " · " + p.n + " trades" : ""}${p.r != null ? " · " + p.r.toFixed(2) + "R" : ""}${p.coverage != null ? " · " + p.coverage + " com risco" : ""}`;
@@ -162,14 +171,14 @@ function terminalDrawChart(model) {
           return `<rect x="${x(i) - width / 2}" y="${Math.min(y(0), y(p.value))}" width="${width}" height="${Math.max(1, Math.abs(y(p.value) - y(0)))}" fill="${p.value < 0 ? "var(--r)" : "var(--g)"}" opacity=".75"/>`;
         })
         .join("")
-    : `<polygon points="${x(0)},${y(0)} ${points} ${x(n - 1)},${y(0)}" fill="${color}" opacity=".045"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.6" vector-effect="non-scaling-stroke"/>`;
+    : `<polygon points="${x(0)},${areaBase} ${points} ${x(n - 1)},${areaBase}" fill="${color}" opacity=".045"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.6" vector-effect="non-scaling-stroke"/>`;
   const marks = visible
     .map(
       (p, i) =>
         `<circle class="chart-point" cx="${x(i)}" cy="${y(p.value)}" r="8" fill="transparent" tabindex="0" role="img" aria-label="${esc(describe(p))}" data-terminal-point="${i}" data-info="${esc(describe(p))}"></circle>`,
     )
     .join("");
-  return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
+  return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${areaBase}" y2="${areaBase}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
 }
 function terminalAfterRender() {
   document.querySelectorAll("[data-terminal-chart]").forEach((element) => {
@@ -265,13 +274,16 @@ document.addEventListener("focusin", (event) => {
     );
 });
 function terminalPerformanceChart(ts) {
-  const canBalance = S.balanceConfirmed && !F.sym && !F.strat,
+  const canBalance = S.balanceConfirmed,
     canR = ts.some((t) => t.risk > 0);
   if ((chartMode === "balance" && !canBalance) || (chartMode === "r" && !canR))
     chartMode = "pnl";
-  const data = chartData(ts, chartMode),
+  const data =
+      chartMode === "balance"
+        ? accountHistoryCurve()
+        : chartData(ts, chartMode),
     isR = chartMode === "r";
-  return `<section class="card terminal-performance"><div class="section-head"><div><div class="eyebrow">Performance da conta</div><h2>Evolução dos resultados</h2><p>${chartMode === "balance" ? "Saldo inicial confirmado + resultados fechados; não representa equity em tempo real." : "Resultados fechados · período selecionado"}</p></div><label><span class="sr-only">Visualização do gráfico</span><select aria-label="Visualização do gráfico" onchange="chartMode=this.value;R()">${Object.entries(
+  return `<section class="card terminal-performance"><div class="section-head"><div><div class="eyebrow">Performance da conta</div><h2>Evolução dos resultados</h2><p>${chartMode === "balance" ? "Histórico completo: saldo inicial + resultados fechados. Não inclui posições abertas, depósitos ou saques. Escala vertical ajustada para mostrar a variação do saldo." : "Resultados fechados · período selecionado"}</p></div><button class="b s" onclick="chartMode='balance';R()" ${canBalance ? "" : "disabled"}>Saldo desde o início</button>${!canBalance ? '<button class="b s" onclick="diaryConfigureBalance()">Configurar saldo inicial abaixo</button>' : ""}<label><span class="sr-only">Visualização do gráfico</span><select aria-label="Visualização do gráfico" onchange="chartMode=this.value;R()">${Object.entries(
     chartNames,
   )
     .map(
@@ -280,7 +292,7 @@ function terminalPerformanceChart(ts) {
     )
     .join(
       "",
-    )}</select></label></div>${data.length ? terminalChart(data, { id: "performance", height: 400, label: chartNames[chartMode], format: isR ? (v) => v.toFixed(2) + "R" : money, daily: chartMode === "daily", readout: true }) : '<div class="empty-chart"><b>A sua performance começa aqui</b><span>Adicione ou importe trades para visualizar os resultados.</span><button class="b s" onclick="taGo(\'trades\')">Abrir Trades</button></div>'}<div class="chart-foot"><span>${isR ? "R inclui apenas trades com risco informado." : "Datas e horários seguem os registros originais, sem conversão de fuso."}</span><span>${ts.length} trades</span></div></section>`;
+    )}</select></label></div>${data.length ? terminalChart(data, { id: "performance", height: 400, label: chartNames[chartMode], format: isR ? (v) => v.toFixed(2) + "R" : money, daily: chartMode === "daily", includeZero: chartMode !== "balance", readout: true }) : '<div class="empty-chart"><b>A sua performance começa aqui</b><span>Adicione ou importe trades para visualizar os resultados.</span><button class="b s" onclick="taGo(\'trades\')">Abrir Trades</button></div>'}<div class="chart-foot"><span>${isR ? "R inclui apenas trades com risco informado." : "Datas e horários seguem os registros originais, sem conversão de fuso."}</span><span>${chartMode === "balance" ? S.trades.filter((t) => t.close && rNumber(t.pnl) !== null).length : ts.length} trades${(chartMode === "balance" ? S.trades : ts).some((t) => t.est) ? " · contém P&L estimado *" : ""}</span></div></section>`;
 }
 function terminalLine(values, height = 170, dates = []) {
   return terminalChart(

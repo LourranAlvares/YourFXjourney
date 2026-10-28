@@ -84,7 +84,7 @@ function premiumAfterRender() {
   premiumRoute = tab;
   document
     .querySelectorAll(
-      ".terminal-performance,.ta-assistant-insight,.ta-ready-card",
+      "#main .card",
     )
     .forEach((e) => e.classList.add("premium-lit-card"));
   document

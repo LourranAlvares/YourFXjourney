@@ -200,7 +200,7 @@ function taConnectionHelp() {
 }
 function taNav() {
   const groups = [
-    ["Principal", ["home", "analyst", "trades", "dash", "cal"]],
+    ["Principal", ["home", "analyst", "trades", "dash"]],
     ["Ferramentas", ["plan", "economic", "ins", "rev"]],
     ["Performance", ["ana", "pat", "risk", "str", "share"]],
     ["Conta", ["settings"]],
