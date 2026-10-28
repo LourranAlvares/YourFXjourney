@@ -579,7 +579,8 @@ function taDailyReadyCard() {
   ];
   return `<section class="card ta-ready-card"><div class="section-head"><div><div class="eyebrow">Preparação em poucos cliques</div><h2>Seu radar de hoje</h2></div><button type="button" class="b s" onclick="taAssetOpen()">${profile.instruments.length ? "Editar ativos" : "Escolher ativos"}</button></div><div class="ta-radar-assets">${profile.instruments.length ? profile.instruments.map((symbol) => `<span class="badge">${esc(symbol)}</span>`).join("") : "<p>Selecione os ativos que você acompanha, sem digitar símbolos.</p>"}</div><div class="ta-ready-steps">${rows.map((row) => `<div class="ta-ready-step"><span class="ta-ready-state ${row.ready ? "ready" : ""}" aria-hidden="true">${row.ready ? "✓" : "○"}</span><div><b>${row.label}</b><small>${esc(row.detail)}</small></div><button class="b s" onclick="taGo('${row.tab}')">${row.action}</button></div>`).join("")}</div><div class="ta-ready-recent">${recent ? `<div><span>Último fechamento registrado</span><b>${esc(recent.symbol || "Ativo não informado")} <span class="${recent.pnl < 0 ? "r" : recent.pnl > 0 ? "g" : ""}">${money(recent.pnl)}</span></b><small>${esc(recent.close.replace("T", " "))} · consulte o diário antes da próxima decisão.</small></div><button class="b s" onclick="taGo('trades')">Ver histórico</button>` : '<div><b>Já tem um histórico ou plano salvo?</b><small>Traga seu backup anterior para personalizar a preparação.</small></div><label class="b s">Restaurar backup<input type="file" accept=".json" hidden onchange="rb(this.files[0])"></label>'}</div></section>`;
 }
-function vHome() {
+function vHome(){return vHomeDetails()}
+function vHomeDetails() {
   const profile = taDailyProfile(),
     parts = taDailyParts(),
     hour = Number(parts.hour),

@@ -199,6 +199,12 @@ function taConnectionHelp() {
   <button class="b s" onclick="taRetryConnection()">Verificar conexão novamente</button></div>`;
 }
 function taNav() {
+  if(tab==='home'){
+    const primary=['home','dash','trades','economic','plan','ana','risk','settings'];
+    const button=id=>`<button class="${id==='home'?'on':''}" ${id==='home'?'aria-current="page"':''} title="${esc(tabs.find(t=>t[0]===id)?.[1]||id)}" onclick="taGo('${id}')"><span aria-hidden="true">${terminalIcon(id)}</span>${esc(tabs.find(t=>t[0]===id)?.[1]||id)}</button>`;
+    return `<div class="ta-nav-group">${primary.map(button).join('')}<details class="scene-more-nav"><summary>Mais ferramentas</summary>${tabs.filter(([id])=>!primary.includes(id)).map(([id])=>button(id)).join('')}</details></div>`;
+  }
+
   const groups = [
     ["Principal", ["home", "analyst", "trades", "dash"]],
     ["Ferramentas", ["plan", "economic", "ins", "rev"]],

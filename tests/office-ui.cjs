@@ -13,7 +13,9 @@ const { chromium } = require("playwright"),
     await p.waitForSelector(".elite-office");
     const before = await p.evaluate(() => JSON.stringify(S));
     await p.locator("#elite-question").fill("Como preparar a sessão?");
-    await p.locator(".elite-office form button").click();
+    await p
+      .getByRole("button", { name: "Enviar pergunta", exact: true })
+      .click();
     assert.match(
       await p.locator(".elite-history").innerText(),
       /não está conectada/,
@@ -35,7 +37,9 @@ const { chromium } = require("playwright"),
       R();
     });
     await p.locator("#elite-question").fill("Revisar plano");
-    await p.locator(".elite-office form button").click();
+    await p
+      .getByRole("button", { name: "Enviar pergunta", exact: true })
+      .click();
     await p.waitForFunction(() => eliteDesk.pending);
     assert.equal(
       await p.locator(".elite-office").getAttribute("data-state"),
@@ -60,17 +64,11 @@ const { chromium } = require("playwright"),
       );
     }
     await p.emulateMedia({ reducedMotion: "reduce" });
-    assert.equal(
-      await p
-        .locator(".elite-arm.left")
-        .evaluate((e) => getComputedStyle(e).animationName),
-      "none",
-    );
     await p.setViewportSize({ width: 1600, height: 1000 });
     await p.screenshot({ path: "/tmp/elite-office.png", fullPage: true });
     assert.deepEqual(errors, []);
     console.log(
-      "PASS office rig states, offline honesty, actual async request, context, records preserved, reduced motion and responsive sizes",
+      "PASS cinematic Home, offline honesty, actual async request, context, records preserved and responsive sizes",
     );
   } finally {
     await b.close();

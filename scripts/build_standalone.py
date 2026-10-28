@@ -11,5 +11,6 @@ source=source.replace('<link rel="stylesheet" href="public/terminal.css">', '<st
 source=source.replace('<link rel="stylesheet" href="public/premium.css">', '<style>'+(root/'public/premium.css').read_text()+'</style>')
 source=source.replace('src="public/elitex-mark.png"','src="data:image/png;base64,'+base64.b64encode((root/'public/elitex-mark.png').read_bytes()).decode()+'"')
 source=source.replace('<script>','<script id="ocr-embedded-assets" type="application/json">'+json.dumps(assets,separators=(',',':'))+'</script>\n<script>',1)
+source=source.replace('elitex-office-scene.png','data:image/png;base64,'+base64.b64encode((root/'public/elitex-office-scene.png').read_bytes()).decode())
 out=root/'YourFXjourney-standalone.html';out.write_text(source)
 print('Standalone:',out,round(out.stat().st_size/1024/1024,1),'MB')
