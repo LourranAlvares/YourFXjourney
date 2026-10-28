@@ -332,7 +332,7 @@ function eliteAnalysisView(input) {
     )
     .join(
       "",
-    )}</div><div class="elite-analysis-grid"><section class="card elite-analysis-comparison"><div class="section-head"><div><div class="eyebrow">Onde estão os resultados</div><h2>Comparar por ${label.toLowerCase()}</h2></div><span class="badge">${rows.length} grupo(s)</span></div><div class="elite-analysis-switch" aria-label="Comparar resultados por">${eliteAnalysisDimensions.map(([id, title, icon]) => `<button class="b s" aria-pressed="${id === eliteAnalysisDimension}" onclick="eliteAnalysisDimension='${id}';R()">${terminalIcon(icon)}${title}</button>`).join("")}</div>${eliteAnalysisRows(rows.slice(0, 6))}${rows.length > 6 ? `<details class="elite-analysis-more"><summary>Ver os outros ${rows.length - 6} grupos</summary>${eliteAnalysisRows(rows.slice(6))}</details>` : ""}<small class="muted-note">Ordenado pelo resultado líquido. * Menos de 10 trades: amostra pequena.</small></section><aside class="card elite-analysis-highlights"><div class="section-head"><h2>Leitura rápida</h2>${terminalIcon("ana")}</div>${observation(best, "Maior resultado do período")}${rows.length > 1 ? observation(worst, "Menor resultado do período") : "<p>Há apenas um grupo para comparar.</p>"}<button class="b s" onclick="taGo('ins')">Revisar minha execução ${terminalIcon("arrow")}</button></aside></div>${eliteAnalysisSummary(ts)}<details class="card elite-analysis-method"><summary>Como interpretar estes dados</summary><p>Esta análise usa os trades fechados nos filtros acima. Resultado líquido é a soma do P&L registrado${ts.some((t) => t.est) ? "; há valores estimados no período" : ""}. Acerto é a proporção de trades com P&L positivo, incluindo os empates no total. Profit factor divide lucro bruto por perda bruta.</p><p>Dias, horários e sessões usam somente a entrada registrada, no fuso do arquivo. Se ela não foi informada, o grupo aparece como “Entrada não informada”. Os grupos de sessão são faixas horárias fixas, sem ajuste de horário de verão. Grupos pequenos não comprovam padrões nem justificam mudar seu risco.</p><p>Para investigar erros e cumprimento do sistema, use o Raio-X do Trader.</p></details></section>`;
+    )}</div><div class="elite-analysis-grid"><div class="elite-analysis-main"><section class="card elite-analysis-comparison"><div class="section-head"><div><div class="eyebrow">Onde estão os resultados</div><h2>Comparar por ${label.toLowerCase()}</h2></div><span class="badge">${rows.length} grupo(s)</span></div><div class="elite-analysis-switch" aria-label="Comparar resultados por">${eliteAnalysisDimensions.map(([id, title, icon]) => `<button class="b s" aria-pressed="${id === eliteAnalysisDimension}" onclick="eliteAnalysisDimension='${id}';R()">${terminalIcon(icon)}${title}</button>`).join("")}</div>${eliteAnalysisRows(rows.slice(0, 6))}${rows.length > 6 ? `<details class="elite-analysis-more"><summary>Ver os outros ${rows.length - 6} grupos</summary>${eliteAnalysisRows(rows.slice(6))}</details>` : ""}<small class="muted-note">Ordenado pelo resultado líquido. * Menos de 10 trades: amostra pequena.</small></section>${eliteAnalysisSummary(ts)}</div><aside class="card elite-analysis-highlights"><div class="section-head"><h2>Leitura rápida</h2>${terminalIcon("ana")}</div>${observation(best, "Maior resultado do período")}${rows.length > 1 ? observation(worst, "Menor resultado do período") : "<p>Há apenas um grupo para comparar.</p>"}<button class="b s" onclick="taGo('ins')">Revisar minha execução ${terminalIcon("arrow")}</button></aside></div><details class="card elite-analysis-method"><summary>Como interpretar estes dados</summary><p>Esta análise usa os trades fechados nos filtros acima. Resultado líquido é a soma do P&L registrado${ts.some((t) => t.est) ? "; há valores estimados no período" : ""}. Acerto é a proporção de trades com P&L positivo, incluindo os empates no total. Profit factor divide lucro bruto por perda bruta.</p><p>Dias, horários e sessões usam somente a entrada registrada, no fuso do arquivo. Se ela não foi informada, o grupo aparece como “Entrada não informada”. Os grupos de sessão são faixas horárias fixas, sem ajuste de horário de verão. Grupos pequenos não comprovam padrões nem justificam mudar seu risco.</p><p>Para investigar erros e cumprimento do sistema, use o Raio-X do Trader.</p></details></section>`;
 }
 
 let eliteAnalysisCoach = { pending: false, key: null, result: null, error: "" };
@@ -402,6 +402,8 @@ function eliteAnalysisCoachModel(rows) {
     plan,
     profile: { timezone: taProfile().timezone, session: taProfile().session },
     facts,
+    question:
+      "Resuma o foco deste trader com tom acolhedor, bondoso, sereno e respeitoso. Reconheça o que os fatos sustentam e indique um próximo passo claro. Não presuma emoções ou disciplina, não minimize perdas, não prometa resultados. Use somente os fatos e o plano fornecidos.",
   };
   return { positive, attention, action, input, key: JSON.stringify(input) };
 }
@@ -409,10 +411,10 @@ function eliteAnalysisSummary(rows) {
   const m = eliteAnalysisCoachModel(rows),
     valid = eliteAnalysisCoach.key === m.key && eliteAnalysisCoach.result,
     ready = taConnection.authenticated && taConnection.services?.ai;
-  return `<section class="card elite-analysis-coach"><div class="section-head"><div><div class="eyebrow">Assistente EliteX</div><h2>Seu resumo e próximo foco</h2><p>O que observar no período selecionado.</p></div>${ready ? `<button class="b s" onclick="eliteGenerateAnalysisSummary()" ${eliteAnalysisCoach.pending ? "disabled" : ""}>${eliteAnalysisCoach.pending ? "Preparando resumo…" : valid ? "Atualizar resumo com IA" : "Resumir com IA"}</button>` : '<button class="b s" onclick="taGo(\'settings\')">Conectar IA</button>'}</div><div class="elite-analysis-coach-grid">${[
-    ["dash", "Pontos positivos", m.positive],
-    ["alert", "Pontos de atenção", m.attention],
-    ["idea", "Próximo passo", m.action],
+  return `<section class="card elite-analysis-coach" aria-labelledby="elite-analysis-summary-title"><div class="section-head"><div><div class="eyebrow">Seu assistente EliteX</div><h2 id="elite-analysis-summary-title">Resumo</h2></div>${ready ? `<button class="b s" onclick="eliteGenerateAnalysisSummary()" ${eliteAnalysisCoach.pending ? "disabled" : ""}>${eliteAnalysisCoach.pending ? "Preparando…" : "Atualizar resumo"}</button>` : '<button class="b s" onclick="taGo(\'settings\')">Conectar IA</button>'}</div><p class="elite-coach-welcome">Vamos olhar para este período com calma. Seu resultado ajuda a entender o caminho; o próximo passo é cuidar da qualidade das suas decisões.</p>${valid ? `<div class="elite-analysis-ai" role="status"><p>${esc(eliteAnalysisCoach.result.action)}</p></div>` : `<p class="muted-note" role="status">${eliteAnalysisCoach.pending ? "A IA está preparando uma orientação a partir dos seus registros…" : ready ? "O resumo com IA será preparado automaticamente para este período." : "Conecte a IA para receber sua síntese personalizada. A leitura dos registros continua disponível abaixo."}</p>`}<div class="elite-analysis-coach-grid">${[
+    ["dash", "O que está funcionando", m.positive],
+    ["alert", "O que merece atenção", m.attention],
+    ["idea", "Seu próximo foco", m.action],
   ]
     .map(
       ([icon, title, text]) =>
@@ -420,13 +422,14 @@ function eliteAnalysisSummary(rows) {
     )
     .join(
       "",
-    )}</div>${valid ? `<div class="elite-analysis-ai" role="status"><h3>${terminalIcon("ins")} Síntese da IA</h3><p>${esc(eliteAnalysisCoach.result.action)}</p><details><summary>Fatos usados pela IA</summary>${eliteAnalysisCoach.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("")}</details></div>` : '<p class="muted-note">Resumo local calculado a partir dos registros. A síntese por IA fica disponível ao gerar acima.</p>'}${eliteAnalysisCoach.key === m.key && eliteAnalysisCoach.error ? `<p class="r" role="status">${esc(eliteAnalysisCoach.error)}</p>` : ""}<small>O envio para IA inclui o plano e fatos agregados deste período; não inclui prints nem os textos completos do diário.</small></section>`;
+    )}</div>${eliteAnalysisCoach.key === m.key && eliteAnalysisCoach.error ? `<p class="r" role="status">${esc(eliteAnalysisCoach.error)}</p>` : ""}<details class="elite-coach-source"><summary>Base deste resumo e privacidade</summary><p>Leitura local calculada sobre os filtros selecionados. A IA recebe apenas o plano e fatos agregados; não recebe prints nem os textos completos do diário.</p>${valid ? eliteAnalysisCoach.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("") : ""}</details></section>`;
 }
 async function eliteGenerateAnalysisSummary() {
   if (eliteAnalysisCoach.pending) return;
   const rows = ft().filter((t) => t.close && rNumber(t.pnl) !== null);
   if (!rows.length) return;
   const m = eliteAnalysisCoachModel(rows);
+  eliteAnalysisAutoAttempted.add(m.key);
   eliteAnalysisCoach = { pending: true, key: m.key, result: null, error: "" };
   R();
   try {
@@ -452,6 +455,10 @@ async function eliteGenerateAnalysisSummary() {
         ...result,
         facts: result.facts.map((f) => byId.get(f.id)),
       };
+    if (eliteAnalysisCoach.result)
+      eliteAnalysisCache.set(m.key, eliteAnalysisCoach.result);
+    if (eliteAnalysisCache.size > 8)
+      eliteAnalysisCache.delete(eliteAnalysisCache.keys().next().value);
   } catch (e) {
     eliteAnalysisCoach.error =
       e.message + " O resumo local continua disponível.";
@@ -459,4 +466,46 @@ async function eliteGenerateAnalysisSummary() {
     eliteAnalysisCoach.pending = false;
     if (tab === "ana") R();
   }
+}
+
+// Debounce automatic summaries, reuse this session's results and never retry errors in a loop.
+let eliteAnalysisAutoTimer;
+const eliteAnalysisAutoAttempted = new Set(),
+  eliteAnalysisCache = new Map();
+function eliteEnsureAnalysisSummary() {
+  clearTimeout(eliteAnalysisAutoTimer);
+  if (
+    tab !== "ana" ||
+    eliteAnalysisCoach.pending ||
+    !taConnection.authenticated ||
+    !taConnection.services?.ai
+  )
+    return;
+  const rows = ft().filter((t) => t.close && rNumber(t.pnl) !== null);
+  if (!rows.length) return;
+  const key = eliteAnalysisCoachModel(rows).key;
+  if (eliteAnalysisCache.has(key)) {
+    if (eliteAnalysisCoach.key !== key || !eliteAnalysisCoach.result) {
+      eliteAnalysisCoach = {
+        pending: false,
+        key,
+        result: eliteAnalysisCache.get(key),
+        error: "",
+      };
+      eliteAnalysisAutoTimer = setTimeout(() => {
+        if (tab === "ana") R();
+      }, 0);
+    }
+    return;
+  }
+  if (eliteAnalysisAutoAttempted.has(key)) return;
+  eliteAnalysisAutoTimer = setTimeout(() => {
+    if (
+      tab === "ana" &&
+      taConnection.authenticated &&
+      taConnection.services?.ai &&
+      !eliteAnalysisCoach.pending
+    )
+      eliteGenerateAnalysisSummary();
+  }, 800);
 }

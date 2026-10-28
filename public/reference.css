@@ -1343,3 +1343,46 @@ body.elitex-unified textarea {
     gap: 4px;
   }
 }
+/* Summary belongs to the comparison column, directly after the active breakdown. */
+.elite-analysis-main {
+  min-width: 0;
+}
+.elite-analysis-main > .card {
+  padding: 22px;
+  margin: 0;
+}
+.elite-analysis-main > .elite-analysis-coach {
+  margin-top: 18px;
+}
+.elite-analysis-main .elite-analysis-coach-grid {
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+.elite-coach-welcome {
+  color: #c6dedc;
+  line-height: 1.7;
+}
+.elite-analysis-coach .elite-analysis-ai p {
+  line-height: 1.75;
+}
+.elite-coach-source {
+  font-size: 12px;
+  margin-top: 14px;
+  color: #93adb4;
+}
+.elite-coach-source summary {
+  cursor: pointer;
+}
+@media (max-width: 1100px) {
+  .elite-analysis-grid > .elite-analysis-main {
+    order: 0;
+  }
+  .elite-analysis-highlights {
+    order: 1;
+  }
+}
+@media (max-width: 520px) {
+  .elite-analysis-main > .card {
+    padding: 16px;
+  }
+}

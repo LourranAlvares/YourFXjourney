@@ -26,8 +26,10 @@ const { createApp } = require("../server/index.cjs");
       r.fulfill({ json: { events: [] } }),
     );
     let sent,
+      calls = 0,
       invalid = false;
     await p.route("**/api/briefing", (r) => {
+      calls++;
       sent = r.request().postDataJSON();
       r.fulfill({
         json: {
@@ -131,13 +133,19 @@ const { createApp } = require("../server/index.cjs");
       await p.locator(".elite-analysis-coach-grid > section").count(),
       3,
     );
-    assert.match(
-      await p.locator(".elite-analysis-coach").innerText(),
-      /Resumo local calculado/,
+    assert.equal(
+      await p.locator(".elite-analysis-coach h2").innerText(),
+      "Resumo",
     );
-    await p
-      .getByRole("button", { name: "Resumir com IA", exact: true })
-      .click();
+    assert(
+      await p
+        .locator(".elite-analysis-coach")
+        .evaluate((e) =>
+          e.previousElementSibling.classList.contains(
+            "elite-analysis-comparison",
+          ),
+        ),
+    );
     await p.waitForSelector(".elite-analysis-ai");
     assert.equal(
       sent.facts.find((f) => f.id === "performance").text.includes("80.00"),
@@ -148,6 +156,9 @@ const { createApp } = require("../server/index.cjs");
       await p.locator(".elite-analysis-ai").innerText(),
       /Confira os critérios/,
     );
+    assert.equal(calls, 1);
+    assert.match(sent.question, /acolhedor/);
+    invalid = true;
     await p.evaluate(() => {
       F.sym = "ASSET1";
       R();
@@ -157,11 +168,9 @@ const { createApp } = require("../server/index.cjs");
       await p.locator(".elite-analysis-coach").innerText(),
       /Nenhum ativo teve resultado positivo/,
     );
-    invalid = true;
-    await p
-      .getByRole("button", { name: "Resumir com IA", exact: true })
-      .click();
-    await p.waitForFunction(() => !eliteAnalysisCoach.pending);
+    await p.waitForFunction(() =>
+      eliteAnalysisCoach.error.includes("não corresponde aos fatos"),
+    );
     assert.equal(await p.locator(".elite-analysis-ai").count(), 0);
     assert.match(
       await p.locator(".elite-analysis-coach").innerText(),
@@ -171,6 +180,8 @@ const { createApp } = require("../server/index.cjs");
       F.sym = "";
       R();
     });
+    await p.waitForSelector(".elite-analysis-ai");
+    assert.equal(calls, 2);
     assert.equal(await p.evaluate(() => JSON.stringify(S)), snapshot);
     for (const width of [320, 390, 760, 1024, 1536, 1920]) {
       await p.setViewportSize({ width, height: 1000 });

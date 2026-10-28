@@ -26,7 +26,8 @@ function terminalIcon(name) {
     gold: "M4 9h16l2 10H2z M4 9l4-4h8l4 4 M8 5l-2 10 M16 5l2 10 M2 19l4-4h12l4 4",
     coin: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12",
     crypto: "m12 3 8 9-8 9-8-9z M4 12l8 4 8-4 M12 3v18",
-    bitcoin: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M8 7h6a2.5 2.5 0 0 1 0 5H9h5a2.5 2.5 0 0 1 0 5H8 M9 7v10 M11 5v2 M14 5v2 M11 17v2 M14 17v2",
+    bitcoin:
+      "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M8 7h6a2.5 2.5 0 0 1 0 5H9h5a2.5 2.5 0 0 1 0 5H8 M9 7v10 M11 5v2 M14 5v2 M11 17v2 M14 17v2",
     assets: "M3 8h7l2 3h9v10H3z M3 8V5h7l2 3h7v3",
     oil: "M7 5h10v15H7z M6 5h12 M6 20h12 M7 9h10 M7 16h10 M11 9l-2 4a3 3 0 0 0 6 0l-2-4",
     stock: "M3 21V7l6 3V3h12v18z M13 7h4 M13 11h4 M13 15h4 M6 15v2",
@@ -211,6 +212,8 @@ function terminalDrawChart(model) {
   return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${areaBase}" y2="${areaBase}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
 }
 function terminalAfterRender() {
+  if (typeof eliteEnsureAnalysisSummary === "function")
+    eliteEnsureAnalysisSummary();
   if (typeof eliteUpdateProfile === "function") eliteUpdateProfile();
   const nav = document.querySelector("#nav");
   if (nav && innerWidth > 760) {
