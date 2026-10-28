@@ -532,6 +532,53 @@ function taDailyPreparation(week, insight) {
   <div class="ta-preparation-events"><span>Atenção no dia</span>${!available ? "<p>Calendário ainda não confirmado. Confira a fonte antes de executar.</p>" : events.length ? events.map((e) => `<p><b>${esc(taDailyFormatTime(e.time))}</b> ${esc(e.currency)} · ${esc(e.name)}</p>`).join("") : "<p>Sem novos eventos de alto impacto retornados para este recorte de hoje. Isso não garante ausência de notícias.</p>"}<button class="b s" onclick="taGo('economic')">Conferir calendário</button></div>
   </div>`;
 }
+function taDailyReadyCard() {
+  const profile = taDailyProfile(),
+    plan = taCurrentPlan(),
+    connection = typeof taConnection === "object" ? taConnection : {},
+    state = taDailyRequestState("events", taDailyDate());
+  const calendarReady =
+    state.status === "success" && !taDailyAvailability("events", taDailyDate());
+  const recent = S.trades
+    .filter(
+      (t) =>
+        typeof t.close === "string" &&
+        day(t) <= taDailyDate() &&
+        typeof t.pnl === "number" &&
+        Number.isFinite(t.pnl),
+    )
+    .sort((a, b) => b.close.localeCompare(a.close))[0];
+  const rows = [
+    {
+      label: "Plano operacional",
+      ready: !!plan,
+      detail: plan
+        ? plan.name + " · v" + plan.version
+        : "Defina seus critérios antes de avaliar uma entrada.",
+      action: plan ? "Revisar" : "Criar plano",
+      tab: "plan",
+    },
+    {
+      label: "Acesso aos serviços",
+      ready: connection.authenticated === true,
+      detail: connection.authenticated
+        ? "Sessão autenticada no servidor."
+        : "Entre para consultar mercado e serviços online.",
+      action: connection.authenticated ? "Ver conexão" : "Entrar",
+      tab: "settings",
+    },
+    {
+      label: "Agenda do dia",
+      ready: calendarReady,
+      detail: calendarReady
+        ? "Consulta recebida · confira a cobertura e os horários."
+        : "Consulta ainda não confirmada. Confira antes de executar.",
+      action: "Conferir",
+      tab: "economic",
+    },
+  ];
+  return `<section class="card ta-ready-card"><div class="section-head"><div><div class="eyebrow">Preparação em poucos cliques</div><h2>Seu radar de hoje</h2></div><button type="button" class="b s" onclick="taAssetOpen()">${profile.instruments.length ? "Editar ativos" : "Escolher ativos"}</button></div><div class="ta-radar-assets">${profile.instruments.length ? profile.instruments.map((symbol) => `<span class="badge">${esc(symbol)}</span>`).join("") : "<p>Selecione os ativos que você acompanha, sem digitar símbolos.</p>"}</div><div class="ta-ready-steps">${rows.map((row) => `<div class="ta-ready-step"><span class="ta-ready-state ${row.ready ? "ready" : ""}" aria-hidden="true">${row.ready ? "✓" : "○"}</span><div><b>${row.label}</b><small>${esc(row.detail)}</small></div><button class="b s" onclick="taGo('${row.tab}')">${row.action}</button></div>`).join("")}</div><div class="ta-ready-recent">${recent ? `<div><span>Último fechamento registrado</span><b>${esc(recent.symbol || "Ativo não informado")} <span class="${recent.pnl < 0 ? "r" : recent.pnl > 0 ? "g" : ""}">${money(recent.pnl)}</span></b><small>${esc(recent.close.replace("T", " "))} · consulte o diário antes da próxima decisão.</small></div><button class="b s" onclick="taGo('trades')">Ver histórico</button>` : '<div><b>Já tem um histórico ou plano salvo?</b><small>Traga seu backup anterior para personalizar a preparação.</small></div><label class="b s">Restaurar backup<input type="file" accept=".json" hidden onchange="rb(this.files[0])"></label>'}</div></section>`;
+}
 function vHome() {
   const profile = taDailyProfile(),
     parts = taDailyParts(),
@@ -559,7 +606,7 @@ function vHome() {
           : "Sua próxima sessão começa " +
             taDailyTimeLeft(session.startAt) +
             ". Prepare o plano com calma.";
-  return `<div class="ta-home-heading"><div><div class="eyebrow">EliteX · preparação diária</div><h1>${greeting}${profile.name ? ", " + esc(profile.name) : ""}.</h1><p>${esc(sessionCopy)}${event ? " " + esc(event.currency) + " tem evento de alto impacto " + esc(taDailyTimeLeft(event.time)) + "." : ""}</p><span class="muted-note">${esc(new Intl.DateTimeFormat("pt-PT", { dateStyle: "full", timeZone: profile.timezone }).format(new Date()))} · ${esc(profile.timezone)}</span></div><button class="b s" onclick="taDailyRefresh()" ${taDailyState.refreshing ? "disabled" : ""}>${taDailyState.refreshing ? "Atualizando…" : "Atualizar briefing"}</button></div><div class="ta-home-overview"><section class="card ta-session-card"><div class="eyebrow">Seu horário, seu processo</div><h2>Sua sessão de trading</h2>${session.configured ? `<div class="ta-session-title"><strong>${esc(session.label || profile.session.label)}</strong><span class="badge">${{ active: "Ativa", upcoming: "Próxima", finished: "Finalizada" }[session.status]}</span></div><div class="ta-session-hours">${esc(profile.session.start)} <span>—</span> ${esc(profile.session.end)}</div><p>${esc(taDailySessionCountdown(session))}</p><p class="muted-note">${esc(profile.session.timezone)} · ${esc(profile.session.days.map((n) => ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][n - 1]).join(", "))}</p><p class="muted-note">No seu fuso: ${esc(taDailyFormatTime(session.startAt))}–${esc(taDailyFormatTime(session.endAt))}</p>` : '<p class="ta-unavailable">Sua sessão ainda não foi configurada.</p>'}<button class="b s" onclick="taGo('settings')">${session.configured ? "Ajustar sessão" : "Configurar sessão"}</button>${taDailyPreparation(week, insight)}</section><div class="ta-preparation-right">${taDailyMarketCard()}<section class="card ta-assistant-insight"><div class="eyebrow">Seu assistente</div><div class="section-head"><h2>Um foco para hoje</h2><span class="badge">${esc(insight.label)}</span></div>${typeof taBriefingHasResult === "function" && taBriefingHasResult() ? "" : `<p>${esc(insight.text)}</p><p class="muted-note">${esc(insight.action)}</p>`}${typeof taBriefingView === "function" ? taBriefingView() : ""}<button class="b s" onclick="taGo('${taCurrentPlan() ? "analyst" : "plan"}')">${taCurrentPlan() ? "Analisar próximo setup" : "Criar meu plano"}</button></section></div></div>${taDailyCalendarCard()}<div class="ta-quick-actions">${[
+  return `<div class="ta-home-heading"><div><div class="eyebrow">EliteX · preparação diária</div><h1>${greeting}${profile.name ? ", " + esc(profile.name) : ""}.</h1><p>${esc(sessionCopy)}${event ? " " + esc(event.currency) + " tem evento de alto impacto " + esc(taDailyTimeLeft(event.time)) + "." : ""}</p><span class="muted-note">${esc(new Intl.DateTimeFormat("pt-PT", { dateStyle: "full", timeZone: profile.timezone }).format(new Date()))} · ${esc(profile.timezone)}</span></div><button class="b s" onclick="taDailyRefresh()" ${taDailyState.refreshing ? "disabled" : ""}>${taDailyState.refreshing ? "Atualizando…" : "Atualizar briefing"}</button></div><div class="ta-home-overview"><section class="card ta-session-card"><div class="eyebrow">Seu horário, seu processo</div><h2>Sua sessão de trading</h2>${session.configured ? `<div class="ta-session-title"><strong>${esc(session.label || profile.session.label)}</strong><span class="badge">${{ active: "Ativa", upcoming: "Próxima", finished: "Finalizada" }[session.status]}</span></div><div class="ta-session-hours">${esc(profile.session.start)} <span>—</span> ${esc(profile.session.end)}</div><p>${esc(taDailySessionCountdown(session))}</p><p class="muted-note">${esc(profile.session.timezone)} · ${esc(profile.session.days.map((n) => ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][n - 1]).join(", "))}</p><p class="muted-note">No seu fuso: ${esc(taDailyFormatTime(session.startAt))}–${esc(taDailyFormatTime(session.endAt))}</p>` : '<p class="ta-unavailable">Sua sessão ainda não foi configurada.</p>'}<button class="b s" onclick="taGo('settings')">${session.configured ? "Ajustar sessão" : "Configurar sessão"}</button>${taDailyPreparation(week, insight)}</section><div class="ta-preparation-right">${taDailyMarketCard()}<section class="card ta-assistant-insight"><div class="eyebrow">Seu assistente</div><div class="section-head"><h2>Um foco para hoje</h2><span class="badge">${esc(insight.label)}</span></div>${typeof taBriefingHasResult === "function" && taBriefingHasResult() ? "" : `<p>${esc(insight.text)}</p><p class="muted-note">${esc(insight.action)}</p>`}${typeof taBriefingView === "function" ? taBriefingView() : ""}<button class="b s" onclick="taGo('${taCurrentPlan() ? "analyst" : "plan"}')">${taCurrentPlan() ? "Analisar próximo setup" : "Criar meu plano"}</button></section>${taDailyReadyCard()}</div></div>${taDailyCalendarCard()}<div class="ta-quick-actions">${[
     ["analyst", "Analisar setup", "Evidências e regras"],
     ["plan", "Meu Trading Plan", "Sua estratégia documentada"],
     ["trades", "Trading Journal", "Operações e registros"],

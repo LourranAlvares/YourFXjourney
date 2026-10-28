@@ -2624,3 +2624,575 @@ textarea:focus {
     display: none;
   }
 }
+/* Reading scale and optical clarity: content is rendered directly, without blur or CSS zoom. */
+:root,
+:root[data-theme="dark"] {
+  --sidebar-width: 264px;
+  --secondary: #bac6c0;
+  --muted: #9aa8a1;
+}
+body {
+  font-size: 16px;
+  line-height: 1.55;
+}
+.elitex-logo {
+  filter: none;
+  width: 78px;
+  height: 62px;
+}
+.elitex-brand-tagline {
+  font-size: 10px;
+  letter-spacing: 0.25px;
+}
+.elitex-brand-name {
+  font-size: 25px;
+  letter-spacing: 2px;
+}
+header {
+  box-shadow: none;
+}
+.ta-nav-group button {
+  font-size: 15px;
+  min-height: 46px;
+}
+.ta-nav-group > small {
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.terminal-topbar {
+  backdrop-filter: none;
+  background: #080e0b;
+}
+.terminal-connection,
+.terminal-breadcrumb {
+  font-size: 12px;
+}
+.card {
+  background: #0b110e;
+  box-shadow: inset 0 1px #8cefc909;
+}
+.card .card {
+  background: #090e0c;
+}
+.page-top p,
+.section-head p,
+.ta-home-heading > div > p {
+  font-size: 14px;
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.section-head h2,
+.card h2 {
+  font-size: 19px;
+}
+.page-top h2,
+.ta-home-heading h1 {
+  font-size: 34px;
+}
+.muted-note,
+.ta-source,
+.ta-preparation-caption {
+  font-size: 13px;
+  line-height: 1.7;
+}
+.b,
+label.b {
+  font-size: 14px !important;
+  min-height: 42px;
+}
+.b.s,
+label.b.s {
+  font-weight: 550 !important;
+}
+input,
+select,
+textarea {
+  font-size: 15px;
+}
+.fg label,
+.ta-two-columns > label,
+.ta-login > label {
+  font-size: 14px;
+}
+.badge {
+  font-size: 12px;
+}
+.k small {
+  font-size: 14px;
+}
+.k small:last-child {
+  font-size: 12px;
+}
+.k b {
+  font-size: 29px;
+}
+.ta-preparation-stats small {
+  font-size: 12px;
+}
+.ta-preparation-stats b {
+  font-size: 17px;
+}
+.ta-preparation-heading > span,
+.ta-preparation-focus > span,
+.ta-preparation-events > span {
+  font-size: 12px;
+  letter-spacing: 0.35px;
+}
+.ta-personal-profile b,
+.ta-preparation-plan > b {
+  font-size: 16px;
+}
+.ta-personal-profile small {
+  font-size: 13px;
+}
+.ta-personal-profile .b,
+.ta-preparation-heading button {
+  font-size: 13px !important;
+}
+.ta-preparation-plan li strong {
+  font-size: 14px;
+}
+.ta-preparation-plan li span,
+.ta-plan-risk-note {
+  font-size: 13px;
+}
+.ta-preparation-focus p,
+.ta-preparation-events p {
+  font-size: 14px;
+}
+.ta-preparation-focus small {
+  font-size: 12px;
+}
+.ta-market-instrument b {
+  font-size: 15px;
+}
+.ta-market-instrument p,
+.ta-event-info strong {
+  font-size: 14px;
+}
+.ta-event-info .muted-note,
+.ta-event-values {
+  font-size: 13px;
+}
+.ta-quick-action b {
+  font-size: 15px;
+}
+.ta-quick-action small {
+  font-size: 13px;
+}
+.chart-readout,
+.terminal-chart-caption,
+.chart-foot {
+  font-size: 12px;
+}
+.terminal-axis {
+  font-size: 13px;
+}
+.terminal-chart-label {
+  font-size: 13px;
+}
+th {
+  font-size: 12px;
+}
+td {
+  font-size: 14px;
+}
+.ta-preparation-right {
+  gap: 14px;
+}
+.ta-preparation-right > .card {
+  margin-bottom: 0;
+}
+.ta-ready-card {
+  min-width: 0;
+}
+.ta-ready-card .section-head {
+  gap: 12px;
+}
+.ta-radar-assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0 0 16px;
+}
+.ta-radar-assets .badge {
+  font: 13px var(--mono);
+  padding: 7px 10px;
+  color: #c6f6e4;
+  background: #00e6b508;
+  border-color: #00e6b52c;
+}
+.ta-radar-assets p {
+  font-size: 14px;
+  color: var(--secondary);
+  margin: 0;
+}
+.ta-ready-steps {
+  display: grid;
+  gap: 0;
+}
+.ta-ready-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--bd);
+}
+.ta-ready-state {
+  width: 23px;
+  flex-shrink: 0;
+  color: #b6bdb9;
+  font-size: 18px;
+}
+.ta-ready-state.ready {
+  color: var(--g);
+}
+.ta-ready-step > div {
+  flex: 1;
+  min-width: 0;
+}
+.ta-ready-step b {
+  font-size: 14px;
+  display: block;
+  font-weight: 550;
+}
+.ta-ready-step small {
+  font-size: 13px;
+  display: block;
+  line-height: 1.65;
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+.ta-ready-step .b {
+  font-size: 12px !important;
+  min-height: 34px;
+  padding: 7px 10px;
+  flex-shrink: 0;
+}
+.ta-ready-recent {
+  border: 1px solid #32493c;
+  background: #0d1812;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+}
+.ta-ready-recent > div {
+  flex: 1;
+  min-width: 0;
+}
+.ta-ready-recent > div > span {
+  display: block;
+  font-size: 12px;
+  color: var(--secondary);
+}
+.ta-ready-recent b {
+  display: block;
+  font-size: 14px;
+}
+.ta-ready-recent small {
+  display: block;
+  font-size: 12px;
+  line-height: 1.65;
+  margin-top: 4px;
+}
+.ta-ready-recent .b {
+  font-size: 12px !important;
+  min-height: 34px;
+  flex-shrink: 0;
+}
+/* One-click watchlist picker, used in settings and in the Home dialog. */
+.ta-asset-picker {
+  border: 1px solid var(--bd);
+  border-radius: 15px;
+  padding: 18px;
+  background: #09100c;
+  margin: 20px 0;
+  min-width: 0;
+}
+.ta-asset-picker-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+.ta-asset-picker-heading b {
+  font-size: 17px;
+}
+.ta-asset-picker-heading p {
+  font-size: 13px;
+  color: var(--secondary);
+  margin: 4px 0 0;
+}
+.ta-asset-picker-heading > [data-asset-count] {
+  font: 13px var(--mono);
+  color: var(--g);
+  padding: 5px 8px;
+  background: #00e6b50b;
+  border-radius: 8px;
+}
+.ta-asset-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+  min-height: 32px;
+}
+.ta-asset-chip {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 34px;
+  border-radius: 9px;
+  background: #143326;
+  color: #c6f6e4;
+  border: 1px solid #2f7253;
+  padding: 5px 10px;
+  font: 13px var(--mono);
+  cursor: pointer;
+}
+.ta-asset-chip span {
+  font-size: 17px;
+  color: #a7cdb9;
+}
+.ta-asset-search-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--secondary);
+}
+.ta-asset-search-label input {
+  width: 100%;
+  min-height: 42px;
+  font-size: 15px;
+}
+.ta-asset-groups {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+.ta-asset-groups button {
+  background: #111b16;
+  border: 1px solid var(--bd);
+  border-radius: 9px;
+  padding: 7px 12px;
+  min-height: 36px;
+  font-size: 13px;
+  color: var(--secondary);
+  cursor: pointer;
+}
+.ta-asset-groups button[aria-pressed="true"] {
+  color: #c5ffe9;
+  background: #123c2c;
+  border-color: #346f51;
+}
+.ta-asset-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  max-height: 310px;
+  overflow: auto;
+  scrollbar-width: thin;
+  padding: 2px;
+}
+.ta-asset-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  min-height: 68px;
+  border: 1px solid #263b2f;
+  border-radius: 11px;
+  background: #0d1711;
+  padding: 10px 12px;
+  color: var(--tx);
+  cursor: pointer;
+  min-width: 0;
+}
+.ta-asset-option:hover {
+  background: #162b1f;
+  border-color: #4f8163;
+}
+.ta-asset-option.selected {
+  background: #103724;
+  border-color: #00e6b56b;
+}
+.ta-asset-option span {
+  min-width: 0;
+}
+.ta-asset-option b {
+  font: 14px var(--mono);
+  display: block;
+}
+.ta-asset-option small {
+  display: block;
+  font-size: 12px;
+  color: var(--secondary);
+  line-height: 1.5;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+.ta-asset-option i {
+  font-style: normal;
+  color: var(--g);
+  font-size: 19px;
+  flex-shrink: 0;
+}
+.ta-asset-custom {
+  margin-top: 14px;
+}
+.ta-asset-custom summary {
+  font-size: 13px;
+}
+.ta-asset-custom > div {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ta-asset-custom input {
+  min-width: 0;
+  flex: 1;
+}
+.ta-asset-feedback {
+  font-size: 13px;
+  color: var(--warning);
+  margin: 10px 0 0;
+  min-height: 20px;
+}
+#ta-assets-dialog {
+  max-width: 760px;
+}
+.ta-asset-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.ta-asset-dialog-actions .b {
+  min-width: 150px;
+}
+@media (max-width: 1250px) {
+  .ta-asset-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) and (min-width: 761px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+  .elitex-logo {
+    width: 50px;
+    height: 50px;
+  }
+  .elitex-brand-name {
+    font-size: 21px;
+  }
+  .elitex-brand-tagline {
+    font-size: 9px;
+  }
+  .ta-nav-group button {
+    font-size: 14px;
+  }
+}
+@media (max-width: 760px) {
+  body {
+    font-size: 15px;
+  }
+  .elitex-logo {
+    width: 64px;
+    height: 52px;
+  }
+  .elitex-brand-tagline {
+    font-size: 10px;
+  }
+  .ta-nav-group button {
+    font-size: 14px;
+  }
+  .ta-ready-step {
+    gap: 8px;
+  }
+  .ta-ready-step b {
+    font-size: 14px;
+  }
+  .ta-ready-step small {
+    font-size: 12px;
+  }
+  .ta-ready-step .b {
+    font-size: 11px !important;
+    padding: 6px 8px;
+  }
+  .ta-ready-recent {
+    flex-wrap: wrap;
+  }
+  .ta-ready-recent > div {
+    flex-basis: 100%;
+  }
+  .ta-asset-picker {
+    padding: 12px;
+  }
+  .ta-asset-options {
+    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 310px;
+  }
+  .ta-asset-option {
+    padding: 9px 8px;
+    min-height: 74px;
+  }
+  .ta-asset-option b {
+    font-size: 13px;
+  }
+  .ta-asset-option small {
+    font-size: 11px;
+  }
+  .ta-asset-groups {
+    gap: 5px;
+  }
+  .ta-asset-groups button {
+    font-size: 12px;
+    padding: 6px 9px;
+  }
+  .ta-asset-picker-heading b {
+    font-size: 16px;
+  }
+  .ta-preparation-stats b {
+    font-size: 15px;
+  }
+  .ta-preparation-stats small {
+    font-size: 12px;
+  }
+  .ta-preparation-focus small,
+  .ta-preparation-caption {
+    font-size: 12px;
+  }
+  .ta-personal-profile small {
+    font-size: 12px;
+  }
+  .ta-home-heading h1,
+  .page-top h2 {
+    font-size: 29px;
+  }
+  .ta-home-heading > div > p {
+    font-size: 14px;
+  }
+  .ta-preparation-events p,
+  .ta-preparation-focus p {
+    font-size: 14px;
+  }
+  .ta-asset-custom > div {
+    flex-wrap: wrap;
+  }
+  .terminal-topbar {
+    backdrop-filter: none;
+  }
+}
+
+.elitex-brand-name {
+  text-shadow: none;
+}

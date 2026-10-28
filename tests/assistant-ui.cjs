@@ -35,7 +35,12 @@ const { chromium } = require("playwright"),
   });
   await p.locator("#ta-name").fill("Lohan");
   await p.locator("#ta-zone").fill("Europe/London");
-  await p.locator("#ta-assets").fill("EURUSD, GBPUSD");
+  await p
+    .getByRole("button", { name: "Selecionar EURUSD", exact: true })
+    .click();
+  await p
+    .getByRole("button", { name: "Selecionar GBPUSD", exact: true })
+    .click();
   await p.locator("#ta-session-enabled").check();
   await p.getByRole("button", { name: "Salvar rotina", exact: true }).click();
   assert.match(

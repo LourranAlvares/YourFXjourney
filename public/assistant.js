@@ -251,7 +251,7 @@ function taSessionPreset(label) {
 function vSettings() {
   const p = taProfile(),
     connected = taConnection.services || {};
-  return `<section class="card ta-settings"><div class="section-head"><div><div class="eyebrow">Seu ritmo de trading</div><h2>Perfil e rotina</h2><p>Os horários da sessão seguem seu fuso, inclusive no horário de verão.</p></div><span class="badge">${esc(taApiState())}</span></div><form onsubmit="event.preventDefault();taSaveProfile()"><div class="fg">${taInput("Seu nome", "ta-name", p.name, "text", 'maxlength="60"')}${taInput("Seu fuso IANA", "ta-zone", p.timezone, "text", 'list="ta-zones" required')}${taInput("Instrumentos acompanhados (separados por vírgula)", "ta-assets", p.instruments.join(", "), "text", 'placeholder="EURUSD, GBPUSD" maxlength="300"')}</div><datalist id="ta-zones">${["Europe/London", "America/New_York", "America/Sao_Paulo", "Asia/Tokyo", "Europe/Lisbon", "Etc/UTC"].map((z) => `<option>${z}</option>`).join("")}</datalist><div class="ta-section-divider"></div><label class="ta-check"><input id="ta-session-enabled" type="checkbox" ${p.session.enabled ? "checked" : ""}> Ativar minha sessão de trading</label><div class="fg">${taSelect(
+  return `<section class="card ta-settings"><div class="section-head"><div><div class="eyebrow">Seu ritmo de trading</div><h2>Perfil e rotina</h2><p>Os horários da sessão seguem seu fuso, inclusive no horário de verão.</p></div><span class="badge">${esc(taApiState())}</span></div><form onsubmit="event.preventDefault();taSaveProfile()"><div class="fg">${taInput("Seu nome", "ta-name", p.name, "text", 'maxlength="60"')}${taInput("Seu fuso IANA", "ta-zone", p.timezone, "text", 'list="ta-zones" required')}</div>${taAssetPicker(p.instruments)}<datalist id="ta-zones">${["Europe/London", "America/New_York", "America/Sao_Paulo", "Asia/Tokyo", "Europe/Lisbon", "Etc/UTC"].map((z) => `<option>${z}</option>`).join("")}</datalist><div class="ta-section-divider"></div><label class="ta-check"><input id="ta-session-enabled" type="checkbox" ${p.session.enabled ? "checked" : ""}> Ativar minha sessão de trading</label><div class="fg">${taSelect(
     "Sessão",
     "ta-session-label",
     p.session.label,
@@ -302,6 +302,11 @@ function taSaveProfile() {
   ) {
     $("#ta-profile-error").textContent =
       "Confira os fusos, dias, horários e janelas de notícia. Início e fim devem ser diferentes.";
+    return;
+  }
+  if (taAssetRead(document.querySelector(".ta-asset-picker")).length > 5) {
+    $("#ta-profile-error").textContent =
+      "Selecione até 5 ativos para acompanhar.";
     return;
   }
   const profile = {

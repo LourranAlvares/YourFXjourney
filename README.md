@@ -225,3 +225,21 @@ navegação e na exportação compartilhável quando a marca está ativada. A ve
 standalone incorpora o PNG. Os candles decorativos distinguem alta e baixa
 por cor com opacidade reduzida. A marca não altera a chave `yfx1`, backups,
 nomes de variáveis de integração ou histórico de trades.
+
+### Escolha rápida de ativos e radar diário
+
+O catálogo pesquisável de Forex, metais e cripto permite selecionar até cinco
+instrumentos sem digitar símbolos. A seleção está em Configurações e no botão
+Editar ativos do Radar na Home. Esse limite corresponde à consulta de mercado
+existente. Também há entrada opcional de símbolo personalizado; disponibilidade
+e cotas dependem do provedor, não do catálogo. A seleção só persiste ao salvar;
+cancelar preserva a lista anterior e os trades. Valores equivalentes como
+EUR/USD são normalizados para EURUSD ao salvar, sem modificar operações.
+
+O Radar reutiliza o plano, a autenticação e o estado do calendário, com atalhos
+funcionais e o último fechamento registrado. Sem histórico, oferece restauração
+de backup. Não cria saldo, posições abertas ou inferências comportamentais.
+Textos secundários foram ampliados e os efeitos de blur do conteúdo removidos.
+O teste `node tests/asset-picker.cjs` usa navegador isolado, valida cancelamento,
+busca, teclado, limite, persistência, símbolo personalizado e preservação do
+histórico, com captura real de 3840×2160 pixels e layouts de 320 a 1920 CSS pixels.
