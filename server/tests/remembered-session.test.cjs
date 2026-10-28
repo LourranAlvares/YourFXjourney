@@ -84,3 +84,38 @@ test("remembered cookie survives server restart, validates password and signatur
     await app.close();
   }
 });
+
+test("valid remembered sessions near expiry renew automatically with matching CSRF", async () => {
+  const crypto = require("node:crypto"),
+    password = "synthetic renewal password",
+    app = await instance(password);
+  try {
+    const key = crypto.scryptSync(
+        password,
+        "EliteX remembered session v1||local",
+        32,
+      ),
+      sign = (text) =>
+        crypto.createHmac("sha256", key).update(text).digest("base64url"),
+      unsigned =
+        crypto.randomBytes(32).toString("base64url") +
+        "." +
+        (Date.now() + 86400000),
+      cookie = "trade_session=" + unsigned + "." + sign(unsigned);
+    const response = await fetch(app.base + "/api/status", {
+        headers: { cookie },
+      }),
+      status = await response.json(),
+      renewed = response.headers.get("set-cookie")?.split(";")[0];
+    assert.equal(status.authenticated, true);
+    assert(renewed);
+    assert.notEqual(renewed, cookie);
+    const logout = await fetch(app.base + "/api/logout", {
+      method: "POST",
+      headers: { cookie: renewed, "x-csrf-token": status.csrf },
+    });
+    assert.equal(logout.status, 200);
+  } finally {
+    await app.close();
+  }
+});

@@ -190,8 +190,19 @@ function createApp(options = {}) {
       if (!trustOrigin(req))
         throw new APIError(403, "invalid_origin", "Origem não autorizada.");
       if (url.pathname.startsWith("/api/")) {
-        const current = session(req);
+        let current = session(req);
         if (req.method === "GET" && url.pathname === "/api/status") {
+          if (current && current.expires - Date.now() < 7 * 24 * 3600e3) {
+            const id = current.token.split(".")[0],
+              expires = Date.now() + sessionSeconds * 1000,
+              unsigned = id + "." + expires;
+            current = {
+              token: unsigned + "." + sessionSignature(unsigned),
+              expires,
+              csrf: sessionSignature("csrf|" + unsigned),
+            };
+            res.setHeader("set-cookie", cookie(current.token, sessionSeconds));
+          }
           json(res, 200, {
             authenticated: !!current,
             csrf: current?.csrf || null,

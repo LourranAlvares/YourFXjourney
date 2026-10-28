@@ -142,35 +142,87 @@ async function taApi(path, options = {}) {
     clearTimeout(timer);
   }
 }
-async function taCheckConnection() {
-  if (taStatusChecked) return;
+let taConnectionFlight = null,
+  taReconnectTimer = 0,
+  taReconnectAttempts = 0,
+  taLastStatusAt = 0;
+async function taCheckConnection(force = false) {
+  if (taConnectionFlight) return taConnectionFlight;
+  if (taStatusChecked && !force) return;
   taStatusChecked = true;
-  try {
-    const s = await taApi("/api/status");
+  taConnection.connecting = true;
+  const connectionLabel = document.querySelector(".terminal-connection-label");
+  if (connectionLabel) connectionLabel.textContent = "Conectando ao servidor…";
+  taConnectionFlight = (async () => {
+    try {
+      const s = await taApi("/api/status");
+      if (
+        typeof s.authenticated !== "boolean" ||
+        typeof s.authConfigured !== "boolean" ||
+        !s.services ||
+        typeof s.services !== "object"
+      )
+        throw Error("Resposta de conexão inválida.");
+      taConnection = {
+        ...s,
+        available: true,
+        connecting: false,
+        errorCode: s.authConfigured ? null : "auth_unconfigured",
+      };
+      taCsrf = s.csrf || "";
+      taLastStatusAt = Date.now();
+      taReconnectAttempts = 0;
+      clearTimeout(taReconnectTimer);
+      if (s.authenticated && typeof taEnsureDailyData === "function")
+        taEnsureDailyData();
+    } catch (e) {
+      taStatusChecked = false;
+      taConnection = {
+        available: false,
+        authenticated: false,
+        connecting: false,
+        services: {},
+        error: e.message,
+        errorCode: e.code || "backend_unavailable",
+      };
+      if (
+        location.protocol !== "file:" &&
+        (!e.status || e.status >= 500) &&
+        taReconnectAttempts < 3
+      ) {
+        const delay = [2000, 6000, 15000][taReconnectAttempts++];
+        clearTimeout(taReconnectTimer);
+        taReconnectTimer = setTimeout(() => taCheckConnection(true), delay);
+      }
+    }
     if (
-      typeof s.authenticated !== "boolean" ||
-      typeof s.authConfigured !== "boolean" ||
-      !s.services ||
-      typeof s.services !== "object"
+      ["home", "settings", "economic", "analyst"].includes(tab) &&
+      !document.activeElement?.closest(".ta-login")
     )
-      throw new Error("Resposta de conexão inválida.");
-    taConnection = {
-      ...s,
-      available: true,
-      errorCode: s.authConfigured ? null : "auth_unconfigured",
-    };
-    taCsrf = s.csrf || "";
-  } catch (e) {
-    taConnection = {
-      available: false,
-      authenticated: false,
-      services: {},
-      error: e.message,
-      errorCode: e.code || "backend_unavailable",
-    };
+      R();
+  })();
+  try {
+    return await taConnectionFlight;
+  } finally {
+    taConnectionFlight = null;
   }
-  if (["home", "settings", "economic", "analyst"].includes(tab)) R();
 }
+function taResumeConnection() {
+  if (
+    location.protocol !== "file:" &&
+    document.visibilityState !== "hidden" &&
+    Date.now() - taLastStatusAt > 60000
+  )
+    taCheckConnection(true);
+}
+window.addEventListener("online", () => {
+  taReconnectAttempts = 0;
+  taCheckConnection(true);
+});
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) taCheckConnection(true);
+});
+document.addEventListener("visibilitychange", taResumeConnection);
 async function taRetryConnection() {
   taStatusChecked = false;
   if (typeof taDailyReset === "function") taDailyReset();
@@ -178,6 +230,7 @@ async function taRetryConnection() {
   if (typeof taEnsureDailyData === "function") taEnsureDailyData();
 }
 function taApiState() {
+  if (taConnection.connecting) return "Conectando ao servidor…";
   if (location.protocol === "file:") return "Arquivo HTML local";
   if (!taConnection.available) return "Servidor indisponível";
   if (!taConnection.authConfigured) return "Servidor sem configuração";
@@ -199,10 +252,23 @@ function taConnectionHelp() {
   <button class="b s" onclick="taRetryConnection()">Verificar conexão novamente</button></div>`;
 }
 function taNav() {
-  if(tab==='home'){
-    const primary=['home','dash','trades','economic','plan','ana','risk','settings'];
-    const button=id=>`<button class="${id==='home'?'on':''}" ${id==='home'?'aria-current="page"':''} title="${esc(tabs.find(t=>t[0]===id)?.[1]||id)}" onclick="taGo('${id}')"><span aria-hidden="true">${terminalIcon(id)}</span>${esc(tabs.find(t=>t[0]===id)?.[1]||id)}</button>`;
-    return `<div class="ta-nav-group">${primary.map(button).join('')}<details class="scene-more-nav"><summary>Mais ferramentas</summary>${tabs.filter(([id])=>!primary.includes(id)).map(([id])=>button(id)).join('')}</details></div>`;
+  if (tab === "home") {
+    const primary = [
+      "home",
+      "dash",
+      "trades",
+      "economic",
+      "plan",
+      "ana",
+      "risk",
+      "settings",
+    ];
+    const button = (id) =>
+      `<button class="${id === "home" ? "on" : ""}" ${id === "home" ? 'aria-current="page"' : ""} title="${esc(tabs.find((t) => t[0] === id)?.[1] || id)}" onclick="taGo('${id}')"><span aria-hidden="true">${terminalIcon(id)}</span>${esc(tabs.find((t) => t[0] === id)?.[1] || id)}</button>`;
+    return `<div class="ta-nav-group">${primary.map(button).join("")}<details class="scene-more-nav"><summary>Mais ferramentas</summary>${tabs
+      .filter(([id]) => !primary.includes(id))
+      .map(([id]) => button(id))
+      .join("")}</details></div>`;
   }
 
   const groups = [
@@ -337,20 +403,41 @@ function taSaveProfile() {
     taGo("home");
   }
 }
+let taLoginBusy = false;
 async function taLogin() {
+  if (taLoginBusy) return;
+  const password = $("#ta-password")?.value;
+  if (!password) return;
+  taLoginBusy = true;
+  document
+    .querySelectorAll(".ta-login button")
+    .forEach((b) => (b.disabled = true));
   try {
+    if (taConnectionFlight) await taConnectionFlight;
     const d = await taApi("/api/login", {
       method: "POST",
-      body: JSON.stringify({ password: $("#ta-password").value }),
+      body: JSON.stringify({ password }),
     });
     taCsrf = d.csrf;
     taStatusChecked = false;
-    await taCheckConnection();
+    await taCheckConnection(true);
+    if (!taConnection.authenticated)
+      throw new Error(
+        taConnection.error ||
+          "O navegador não manteve a sessão. Permita cookies para este site e tente novamente.",
+      );
     if (typeof taDailyReset === "function") taDailyReset();
     R();
   } catch (e) {
-    $("#ta-login-error").textContent = e.message;
-    $("#ta-password").value = "";
+    const errorNode = $("#ta-login-error"),
+      passwordNode = $("#ta-password");
+    if (errorNode) errorNode.textContent = e.message;
+    if (passwordNode) passwordNode.value = "";
+  } finally {
+    taLoginBusy = false;
+    document
+      .querySelectorAll(".ta-login button")
+      .forEach((b) => (b.disabled = false));
   }
 }
 async function taLogout() {

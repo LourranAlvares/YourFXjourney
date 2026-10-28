@@ -1287,5 +1287,50 @@ body:has(.elite-scene) .terminal-market-backdrop {
     margin-left: 72px;
   }
 }
-.scene-more-nav{font-size:11px;text-align:center;margin-top:12px;color:#9eb7b1}.scene-more-nav summary{cursor:pointer;padding:12px 2px}
-@media(min-width:1101px){.elite-scene{background-size:110% auto;background-position:right top}}
+.scene-more-nav {
+  font-size: 11px;
+  text-align: center;
+  margin-top: 12px;
+  color: #9eb7b1;
+}
+.scene-more-nav summary {
+  cursor: pointer;
+  padding: 12px 2px;
+}
+@media (min-width: 1101px) {
+  .elite-scene {
+    background-size: 110% auto;
+    background-position: right top;
+  }
+}
+.scene-composer .scene-login {
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  padding: 14px;
+}
+.scene-login > div {
+  flex: 1 1 240px;
+}
+.scene-login small {
+  display: block;
+  color: #9db8b0;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.scene-login input {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.scene-composer .scene-login > .b {
+  width: auto;
+  font-size: 14px;
+  min-height: 40px;
+}
+.scene-login > p {
+  width: 100%;
+  margin: 0;
+  color: #ff95a7;
+}
+.scene-login > p:empty {
+  display: none;
+}
