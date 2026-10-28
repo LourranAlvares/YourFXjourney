@@ -280,12 +280,12 @@ function vSettings() {
     ],
   )}${taInput("Fuso da sessão", "ta-session-zone", p.session.timezone, "text", 'list="ta-zones" required')}${taInput("Início", "ta-session-start", p.session.start, "time", "required")}${taInput("Fim", "ta-session-end", p.session.end, "time", "required")}</div><p class="muted-note">Os dias abaixo representam o dia em que a sessão começa; sessões que atravessam a meia-noite são suportadas.</p><div class="ta-weekdays">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((d, i) => `<label><input type="checkbox" data-ta-day="${i + 1}" ${p.session.days.includes(i + 1) ? "checked" : ""}> ${d}</label>`).join("")}</div><div class="fg">${taInput("Cautela antes da notícia (min)", "ta-news-before", p.newsBeforeMinutes, "number", 'min="0" max="240" required')}${taInput("Cautela após a notícia (min)", "ta-news-after", p.newsAfterMinutes, "number", 'min="0" max="240" required')}</div><p id="ta-profile-error" role="status" class="muted-note"></p><button class="b" type="submit">Salvar rotina</button></form></section><section class="card"><div class="eyebrow">Conexões protegidas</div><h2>IA e dados de mercado</h2><p class="muted-note">A análise multimodal e os provedores ao vivo usam credenciais exclusivamente no servidor. O diário, plano e imagens continuam neste navegador. Cada navegador mantém seu próprio histórico; use backup para transferir dados.</p><div class="ta-service-grid">${[
     ["ai", "IA · OpenAI"],
-    ["economicCalendar", connected.economicProvider === "forexfactory" ? "Calendário econômico · Forex Factory (semanal)" : "Calendário econômico · Financial Modeling Prep"],
+    ["economicCalendar", connected.economicProvider === "showmytrades" ? "Calendário econômico · ShowMyTrades" : connected.economicProvider === "forexfactory" ? "Calendário econômico · Forex Factory (semanal)" : "Calendário econômico · Financial Modeling Prep"],
     ["marketConditions", "Dados de mercado · Twelve Data"],
   ]
     .map(
       ([key, label]) =>
-        `<div><span>${label}</span><b>${connected[key] ? (key === "economicCalendar" && connected.economicProvider === "forexfactory" ? "Feed sem chave · validação na consulta" : "Chave configurada · validação na consulta") : "Chave não configurada"}</b></div>`,
+        `<div><span>${label}</span><b>${connected[key] ? (key === "economicCalendar" && ["forexfactory", "showmytrades"].includes(connected.economicProvider) ? "Feed sem chave · validação na consulta" : "Chave configurada · validação na consulta") : "Chave não configurada"}</b></div>`,
     )
     .join(
       "",

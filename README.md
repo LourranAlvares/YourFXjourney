@@ -152,3 +152,20 @@ fica indisponível. Esse feed limitado nunca libera automaticamente uma restriç
 de notícias do Trading Plan. A disponibilidade externa e as condições de
 reutilização não são garantidas; confira a fonte antes de redistribuir dados.
 Para retornar à FMP, use `TRADE_ECONOMIC_PROVIDER=fmp` e uma chave com acesso.
+
+## ShowMyTrades (calendário público)
+
+No Render → Environment, altere `TRADE_ECONOMIC_PROVIDER` para `showmytrades`
+e salve com deploy. Não exige chave nesta integração. Endpoint fixo:
+https://showmytrades.com/api/public/calendar/v1 . O adaptador foi construído
+contra o exemplo de resposta fornecido pelo usuário; a disponibilidade externa
+no Render precisa ser confirmada depois do deploy. Documentação indicada na
+resposta: https://showmytrades.com/docs/api/economic-calendar . Não há garantia
+contratual de gratuidade ou disponibilidade nesta integração.
+
+O servidor compartilha cache de 5 minutos entre filtros e respeita Retry-After
+em respostas 429. Usa `time` ISO com fuso (não `ts`), preserva campos de valores
+quando presentes, converte campos vazios em indisponível, remove duplicatas e
+informa o intervalo `from`/`to` e a geração da fonte. Não assume histórico completo
+nem ausência de notícias fora da cobertura; não libera automaticamente regras
+operacionais de notícias. A classificação de impacto é a informada pela fonte.

@@ -326,7 +326,7 @@ function taDailyAvailability(kind, date) {
   if (state.status === "error")
     return `<p class="ta-unavailable">${esc(state.error)}</p><button class="b s" onclick="taDailyRefresh()">Tentar novamente</button>`;
   if (kind === "events" && state.data?.coverageFrom && (date < state.data.coverageFrom || date > state.data.coverageTo))
-    return '<p class="ta-unavailable">Esta data está fora dos dias cobertos pelo feed semanal disponível. Não é possível confirmar os eventos deste dia.</p>';
+    return '<p class="ta-unavailable">Esta data está fora dos dias cobertos pelo provedor disponível. Não é possível confirmar os eventos deste dia.</p>';
   return "";
 }
 function taDailyEventList(events, compact = false) {

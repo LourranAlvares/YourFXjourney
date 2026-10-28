@@ -131,11 +131,12 @@ function createProviders({
   now = () => new Date(),
   engine,
 }) {
-  const weeklyFeedCache = ttlCache(30 * 60e3, 1),
+  const showCalendarCache = ttlCache(5 * 60e3, 1),
+    weeklyFeedCache = ttlCache(30 * 60e3, 1),
     calendarCache = ttlCache(5 * 60e3),
     marketCache = ttlCache(60e3),
     analysisCache = ttlCache(10 * 60e3, 30);
-  let activeAI = 0, weeklyBlockedUntil = 0;
+  let activeAI = 0, weeklyBlockedUntil = 0, showBlockedUntil = 0;
   async function analysisFetch(options) {
     if (activeAI >= 2)
       fail(
@@ -156,7 +157,7 @@ function createProviders({
     }
   }
   async function economic(query) {
-    if (env.TRADE_ECONOMIC_PROVIDER !== "forexfactory" && !env.TRADE_ECONOMIC_KEY)
+    if (!["forexfactory", "showmytrades"].includes(env.TRADE_ECONOMIC_PROVIDER) && !env.TRADE_ECONOMIC_KEY)
       fail(
         503,
         "service_unavailable",
@@ -173,6 +174,44 @@ function createProviders({
         .filter(Boolean);
     if (currencies.length > 30 || currencies.some((c) => !/^[A-Z]{3}$/.test(c)))
       fail(400, "invalid_currencies", "Moedas inválidas.");
+    if (env.TRADE_ECONOMIC_PROVIDER === "showmytrades") {
+      const feed = await showCalendarCache("calendar", async () => {
+        const paused = () => `ShowMyTrades limitou as consultas (HTTP 429). Aguarde cerca de ${Math.max(1, Math.ceil((showBlockedUntil - +now()) / 60000))} min.`;
+        if (+now() < showBlockedUntil) fail(503, "provider_unavailable", paused());
+        const data = await jsonFetch(async (...args) => {
+          const response = await fetchFn(...args);
+          if (response.status === 429) {
+            const retry = response.headers?.get?.("retry-after"), wait = retry && /^\d+$/.test(retry) ? Number(retry)*1000 : retry ? Date.parse(retry)-+now() : NaN;
+            showBlockedUntil = +now() + (Number.isFinite(wait) ? Math.max(60000,wait) : 15*60000);
+            fail(503,"provider_unavailable",paused());
+          }
+          return response;
+        }, "https://showmytrades.com/api/public/calendar/v1");
+        const iso = value => typeof value === "string" && /(Z|[+-]\d{2}:\d{2})$/.test(value) ? providerDate(value) : null;
+        const start = iso(data?.from), end = iso(data?.to), generated = iso(data?.generated_at);
+        if (!start || !end || start > end || !generated || !Array.isArray(data.events) || data.events.length > 5000 || data.count !== data.events.length)
+          fail(502,"invalid_provider_response","ShowMyTrades retornou cobertura ou formato inválido.");
+        const seen = new Set(), events = [];
+        for (const item of data.events) {
+          const time = iso(item?.time), currency = string(item?.currency,10).trim().toUpperCase(), name = string(item?.title,200).trim();
+          if (!time || time < start || time > end || !/^[A-Z]{3}$/.test(currency) || !name)
+            fail(502,"invalid_provider_response","ShowMyTrades retornou um evento sem horário, moeda ou nome verificável.");
+          if (["cancelled","canceled"].includes(item.status)) continue;
+          const id = crypto.createHash("sha256").update(time+currency+name).digest("hex").slice(0,20);
+          if (seen.has(id)) continue;
+          seen.add(id);
+          const value = v => v === "" || v === undefined ? null : scalar(v);
+          events.push({id,time,currency,name,impact:["high","medium","low"].includes(item.impact)?item.impact:"unknown",previous:value(item.previous),forecast:value(item.forecast),actual:value(item.actual)});
+        }
+        return {events:events.sort((a,b)=>a.time.localeCompare(b.time)), coverageStart:start, coverageEnd:end, generatedAt:generated, asOf:now().toISOString()};
+      });
+      return {...feed, events:feed.events.filter(e=>e.time.slice(0,10)>=from && e.time.slice(0,10)<=to && (!currencies.length || e.currency === "ALL" || currencies.includes(e.currency))),
+        complete:false, source:"Economic calendar by ShowMyTrades", timezone:zone,
+        coverageFrom:SessionEngine.zonedParts(new Date(feed.coverageStart),zone).date,
+        coverageTo:SessionEngine.zonedParts(new Date(feed.coverageEnd),zone).date,
+        notice:`Cobertura parcial de ${feed.coverageStart} até ${feed.coverageEnd}. Dados gerados em ${feed.generatedAt}. Cache de 5 minutos; datas fora desse intervalo não estão disponíveis. Fonte: https://showmytrades.com/tools/economic-calendar`
+      };
+    }
     if (env.TRADE_ECONOMIC_PROVIDER === "forexfactory") {
       const feed = await weeklyFeedCache("thisweek", async () => {
         const pauseMessage = () => `O feed limitou as consultas (HTTP 429). Nova consulta permitida em cerca de ${Math.max(1, Math.ceil((weeklyBlockedUntil - +now()) / 60000))} min. Atualizar a página não reduz essa pausa.`;
