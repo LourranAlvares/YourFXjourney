@@ -78,6 +78,26 @@ const { createApp } = require("../server/index.cjs");
     console.log(
       "PASS larger sidebar and text, rounded surfaces, animated OLED background and reduced-motion preference",
     );
+    await page.locator(".elitex-logo").evaluate((img) => img.decode());
+    assert.match(await page.title(), /EliteX/);
+    assert.match(await page.locator("header h1").innerText(), /ELITEX/);
+    const rise = await page
+      .locator(".ambient-rise line")
+      .first()
+      .evaluate((e) => getComputedStyle(e).stroke);
+    const fall = await page
+      .locator(".ambient-fall line")
+      .first()
+      .evaluate((e) => getComputedStyle(e).stroke);
+    assert.notEqual(rise, fall);
+    assert.ok(
+      await page
+        .locator(".terminal-market-backdrop svg")
+        .evaluate((e) => parseFloat(getComputedStyle(e).opacity) < 0.25),
+    );
+    console.log(
+      "PASS EliteX mark loads, identity matches and rising/falling ambient candles have distinct restrained colors",
+    );
     const snapshot = await page.evaluate(() => JSON.stringify(S));
     assert.equal(await page.locator(".primary-metrics .k").count(), 7);
     assert.equal(
@@ -231,6 +251,11 @@ const { createApp } = require("../server/index.cjs");
     await page.waitForFunction(() => typeof terminalChart === "function");
     await page.evaluate(() => taGo("dash"));
     assert.equal(await page.locator(".terminal-performance").count(), 1);
+    await page.locator(".elitex-logo").evaluate((img) => img.decode());
+    assert.match(
+      await page.locator(".elitex-logo").getAttribute("src"),
+      /^data:image\/png;base64,/,
+    );
     assert.deepEqual(errors, []);
     console.log(
       "PASS all 15 routes at 320–1920px, responsive navigation, identical store and standalone modules",

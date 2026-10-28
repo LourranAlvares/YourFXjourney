@@ -2359,3 +2359,268 @@ dialog {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* EliteX identity: emerald light, rose-red contrast and metallic graphite. */
+:root,
+:root[data-theme="dark"] {
+  --brand-emerald: #00e6b5;
+  --brand-rose: #ff3b70;
+  --g: #00dba5;
+  --r: #f24b6c;
+  --positive: #00dba5;
+  --negative: #f24b6c;
+  --border: #24332f;
+  --bd: var(--border);
+  --hover: #16251f;
+  --elevated: #111c19;
+  --ac: var(--brand-emerald);
+}
+body::before {
+  background:
+    radial-gradient(ellipse at 76% 5%, #00e6b513, transparent 44%),
+    radial-gradient(ellipse at 40% 90%, #ff3b700a, transparent 46%),
+    radial-gradient(ellipse at 95% 62%, #5b7b7710, transparent 42%);
+}
+header {
+  background: linear-gradient(175deg, #07110e 0%, #040706 46%, #070609 100%);
+  border-right-color: #1d342c;
+}
+header h1::before,
+header h1::after {
+  display: none;
+}
+header h1.elitex-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 0;
+  margin: 0 0 28px;
+  padding: 0 2px;
+  min-height: 66px;
+}
+.elitex-logo {
+  height: 58px;
+  width: 70px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px #00e6b519);
+}
+.elitex-brand-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.elitex-brand-name {
+  font-size: 23px;
+  line-height: 1;
+  letter-spacing: 3px;
+  font-weight: 650;
+  color: #e5ebec;
+  text-shadow: 0 1px #ffffff35;
+}
+.elitex-brand-name span {
+  color: var(--brand-emerald);
+}
+.elitex-brand-tagline {
+  font: 8px/1.6 var(--mono);
+  letter-spacing: 0.8px;
+  color: #9bafaa;
+  white-space: nowrap;
+}
+.terminal-wordmark {
+  color: #c7dad3;
+}
+.terminal-wordmark strong {
+  font-weight: 600;
+  color: var(--brand-emerald);
+}
+.ta-nav-group button:hover {
+  background: #00e6b508;
+  color: #dbf8ef;
+}
+.ta-nav-group button.on {
+  color: #b9f8e7;
+  background: linear-gradient(110deg, #00e6b512, #101b17);
+  border-color: #00e6b53b;
+  box-shadow:
+    inset 0 1px #aaffdf0c,
+    0 4px 20px #0003;
+}
+.ta-nav-group button.on::before {
+  background: var(--brand-emerald);
+  box-shadow: 0 0 12px #00e6b54a;
+}
+.ta-nav-group button.on span {
+  color: var(--brand-emerald);
+}
+.card {
+  border-color: #28352f;
+  box-shadow:
+    inset 0 1px #8cefc909,
+    0 10px 36px #0003;
+  background: linear-gradient(145deg, #0b1210f7, #0b0d12f7 65%);
+}
+.terminal-performance,
+.ta-session-card {
+  border-top-color: #00e6b54a;
+}
+.ta-assistant-insight {
+  border-top-color: #ff3b7038;
+}
+.b,
+label.b {
+  color: #03130d;
+  background: linear-gradient(125deg, #65f6d0, #00d8aa);
+  border-color: #74f5d15e;
+  box-shadow:
+    inset 0 1px #dcfff040,
+    0 3px 16px #00e6b50b;
+}
+.b:hover,
+label.b:hover {
+  background: linear-gradient(125deg, #8cffe0, #23ebbf);
+}
+.b.s,
+label.b.s {
+  background: #111d18;
+  color: #d7e9e1;
+  border-color: #30473c;
+  box-shadow: inset 0 1px #ffffff05;
+}
+.b.s:hover,
+label.b.s:hover {
+  background: #192c23;
+  border-color: #508069;
+}
+.b.d {
+  background: #3a1221;
+  color: #ffb5cb;
+  border-color: #7f2946;
+}
+:focus-visible {
+  outline-color: var(--brand-emerald);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #00e6b57d;
+}
+.eyebrow {
+  color: #91b6a9;
+}
+.terminal-chart {
+  border-color: #22332c;
+  background: #070c0a;
+}
+.terminal-gridline {
+  stroke: #284034;
+}
+.terminal-crosshair line {
+  stroke: #8ed9bd;
+}
+.terminal-connection {
+  border-color: #294337;
+  background: #0a1510;
+}
+.terminal-connection i.connected {
+  box-shadow: 0 0 9px #00e6b55c;
+}
+.terminal-market-backdrop svg {
+  opacity: 0.19;
+}
+.ambient-rise line {
+  stroke: #00dba5;
+}
+.ambient-rise rect {
+  stroke: #00dba5;
+  fill: #00dba54d;
+}
+.ambient-fall line {
+  stroke: #ec4264;
+}
+.ambient-fall rect {
+  stroke: #ec4264;
+  fill: #ec42643d;
+}
+.ambient-price-track polyline {
+  stroke: #1b8b6d;
+  opacity: 0.7;
+}
+.ta-profile-avatar {
+  background: linear-gradient(140deg, #174736, #0c1a14);
+  border-color: #368161;
+  box-shadow: 0 0 18px #00e6b50a;
+  color: #c9ffe9;
+}
+.ta-preparation-focus {
+  border-color: #00e6b52b;
+  background: #00e6b506;
+}
+.ta-preparation-plan li {
+  border-left-color: #00e6b55e;
+}
+.cd.gb2,
+.share-live-day.positive {
+  background: #00dba50a;
+  border-color: #00dba530;
+}
+.cd.rb2,
+.share-live-day.negative {
+  background: #f24b6c0a;
+  border-color: #f24b6c30;
+}
+.cd.today {
+  box-shadow: inset 0 2px #00e6b580;
+}
+.cd.sel {
+  outline-color: var(--brand-emerald);
+}
+.terminal-collapsed header h1.elitex-brand {
+  justify-content: center;
+  padding: 0;
+  min-height: 56px;
+  margin-bottom: 20px;
+}
+.terminal-collapsed .elitex-logo {
+  width: 48px;
+  height: 48px;
+}
+.terminal-collapsed .elitex-brand-copy {
+  display: none;
+}
+@media (max-width: 900px) and (min-width: 761px) {
+  .elitex-logo {
+    width: 49px;
+    height: 48px;
+  }
+  .elitex-brand-name {
+    font-size: 19px;
+    letter-spacing: 2px;
+  }
+  .elitex-brand-tagline {
+    font-size: 7px;
+    letter-spacing: 0.3px;
+  }
+}
+@media (max-width: 760px) {
+  header h1.elitex-brand {
+    margin-bottom: 15px;
+    min-height: 56px;
+  }
+  .elitex-logo {
+    height: 50px;
+    width: 58px;
+  }
+  .elitex-brand-name {
+    font-size: 23px;
+  }
+  .elitex-brand-tagline {
+    font-size: 8px;
+  }
+  .terminal-market-backdrop svg {
+    opacity: 0.14;
+  }
+  .terminal-collapsed header h1.elitex-brand {
+    display: none;
+  }
+}

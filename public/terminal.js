@@ -67,7 +67,7 @@ function terminalBeginRender() {
 }
 function terminalTopbar() {
   const title = tabs.find((t) => t[0] === tab)?.[1] || "Início";
-  return `<div class="terminal-topbar"><div class="terminal-breadcrumb"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">☰</button><span class="terminal-wordmark">YOURFX<span> / </span></span><span>${esc(title)}</span></div><div class="terminal-top-status"><span class="terminal-storage" title="Trades e planos permanecem no armazenamento deste navegador">Dados neste navegador</span><button class="terminal-connection" onclick="taGo('settings')"><i class="${taConnection.authenticated ? "connected" : ""}"></i>${esc(taApiState())}</button></div></div>`;
+  return `<div class="terminal-topbar"><div class="terminal-breadcrumb"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">☰</button><span class="terminal-wordmark">ELITE<strong>X</strong><span> / </span></span><span>${esc(title)}</span></div><div class="terminal-top-status"><span class="terminal-storage" title="Trades e planos permanecem no armazenamento deste navegador">Dados neste navegador</span><button class="terminal-connection" onclick="taGo('settings')"><i class="${taConnection.authenticated ? "connected" : ""}"></i>${esc(taApiState())}</button></div></div>`;
 }
 function terminalChart(
   data,

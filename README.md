@@ -214,3 +214,14 @@ O gráfico ambiente é SVG abstrato, sem preços, rótulos nem conexão de merca
 É decorativo, ignorado por leitores de tela e sem captura de cliques. A animação
 respeita movimento reduzido. `node tests/home-preparation.cjs` verifica resumo,
 cores, dados ausentes, segurança de texto e responsividade com dados isolados.
+
+### Identidade EliteX
+
+A marca visível usa EliteX, com esmeralda, vermelho rosado e grafite metálico
+inspirados no logo fornecido pelo usuário. O símbolo em `public/elitex-mark.png`
+é uma adaptação com fundo transparente preparada a partir da referência; o
+arquivo original gerado foi preservado no ambiente. O símbolo aparece na
+navegação e na exportação compartilhável quando a marca está ativada. A versão
+standalone incorpora o PNG. Os candles decorativos distinguem alta e baixa
+por cor com opacidade reduzida. A marca não altera a chave `yfx1`, backups,
+nomes de variáveis de integração ou histórico de trades.
