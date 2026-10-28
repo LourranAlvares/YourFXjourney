@@ -199,3 +199,18 @@ com Playwright disponível no ambiente de desenvolvimento. Opcionalmente defina
 `BROWSER_EXECUTABLE_PATH` para seu Chromium. O teste usa servidor local temporário,
 browser isolado e dados de teste que nunca são gravados no site de produção.
 `python3 scripts/build_standalone.py` mantém os novos módulos no HTML independente.
+
+### Preparação pessoal na Home
+
+A sessão inclui perfil e autenticação do servidor (não login de corretora),
+fechamentos registrados na data atual, cobertura das avaliações dentro do plano,
+critérios obrigatórios do plano e foco determinístico com base nos registros.
+Eventos são resumidos somente quando a consulta está disponível. Não há inferência
+de emoções, saldo ou posições abertas. O briefing com IA continua separado,
+rotulado e acionado pelo usuário. Volatilidade baixa é vermelha, moderada âmbar e
+alta verde; as cores descrevem intensidade, sem indicar direção ou entrada.
+
+O gráfico ambiente é SVG abstrato, sem preços, rótulos nem conexão de mercado.
+É decorativo, ignorado por leitores de tela e sem captura de cliques. A animação
+respeita movimento reduzido. `node tests/home-preparation.cjs` verifica resumo,
+cores, dados ausentes, segurança de texto e responsividade com dados isolados.

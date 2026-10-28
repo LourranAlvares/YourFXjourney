@@ -37,7 +37,29 @@ function terminalToggleNav() {
   } catch {}
   R();
 }
+function terminalBackdrop() {
+  if (document.querySelector(".terminal-market-backdrop")) return;
+  const layer = document.createElement("div");
+  layer.className = "terminal-market-backdrop";
+  layer.setAttribute("aria-hidden", "true");
+  layer.setAttribute("role", "presentation");
+  const candles = Array.from({ length: 48 }, (_, i) => {
+    const x = i * 40 + 8,
+      center = 150 + Math.sin(i * 0.55) * 56 + Math.cos(i * 0.19) * 30,
+      body = 12 + ((i * 13) % 35),
+      up = i % 3 !== 0;
+    return `<g class="ambient-candle ${up ? "ambient-rise" : "ambient-fall"}"><line x1="${x}" x2="${x}" y1="${center - body - 20}" y2="${center + body + 18}"/><rect x="${x - 6}" y="${center - body / 2}" width="12" height="${body}" rx="2"/></g>`;
+  }).join("");
+  const points = Array.from(
+    { length: 97 },
+    (_, i) =>
+      `${i * 20},${230 + Math.sin(i * 0.23) * 48 + Math.cos(i * 0.11) * 24 - i * 0.6}`,
+  ).join(" ");
+  layer.innerHTML = `<svg viewBox="0 0 1920 400" preserveAspectRatio="none" focusable="false"><g class="ambient-market-track">${candles}<g transform="translate(1920 0)">${candles}</g></g><g class="ambient-price-track"><polyline points="${points}"/><polyline points="${points}" transform="translate(1920 0)"/></g></svg>`;
+  document.body.prepend(layer);
+}
 function terminalBeginRender() {
+  terminalBackdrop();
   terminalCharts.clear();
   terminalChartSequence = 0;
   document.body.classList.toggle("terminal-collapsed", terminalCollapsed);
