@@ -278,3 +278,59 @@ function eliteOpenTradeSearch() {
   d.showModal();
   d.querySelector("input").focus();
 }
+
+// Compact performance analysis: one comparison at a time, with details on demand.
+let eliteAnalysisDimension = "asset";
+const eliteAnalysisDimensions = [
+  ["asset", "Ativo", "assets"],
+  ["weekday", "Dia da semana", "cal"],
+  ["session", "Sessão", "clock"],
+  ["hour", "Horário", "clock"],
+  ["strategy", "Estratégia", "str"],
+  ["setup", "Setup", "analyst"],
+];
+function eliteAnalysisGroups(ts) {
+  const entry = (t) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(t.open || ""),
+    key =
+      {
+        asset: (t) => t.symbol || "Não informado",
+        weekday: (t) => (entry(t) ? WD[dow(t)] : "Entrada não informada"),
+        session: (t) => (entry(t) ? sess(t) : "Entrada não informada"),
+        hour: (t) => (entry(t) ? hh(t) + ":00" : "Entrada não informada"),
+        strategy: (t) => t.strategy || "Não informada",
+        setup: (t) => t.setup || "Não informado",
+      }[eliteAnalysisDimension] || ((t) => t.symbol || "Não informado");
+  return Object.entries(grp(ts, key))
+    .map(([name, stats]) => ({ name, ...stats }))
+    .sort((a, b) => b.net - a.net || a.name.localeCompare(b.name));
+}
+function eliteAnalysisRows(rows) {
+  return `<div class="table-wrap"><table class="elite-analysis-table"><thead><tr><th>Grupo</th><th>Trades</th><th>Resultado</th><th>Acerto</th></tr></thead><tbody>${rows.map((g) => `<tr><td>${esc(g.name)}</td><td>${g.n}${g.n < 10 ? '<sup title="Amostra pequena">*</sup>' : ""}</td><td class="${cl(g.net)}">${signed(g.net)}</td><td>${g.wr.toFixed(1)}%</td></tr>`).join("")}</tbody></table></div>`;
+}
+function eliteAnalysisView(input) {
+  const ts = input.filter((t) => t.close && rNumber(t.pnl) !== null);
+  if (!ts.length)
+    return `<section class="card"><h2>Sem operações neste período</h2><p>Altere os filtros ou registre suas operações no diário para comparar os resultados.</p><button class="b" onclick="taGo('trades')">Abrir diário</button></section>`;
+  const s = st(ts),
+    rows = eliteAnalysisGroups(ts),
+    best = rows[0],
+    worst = rows.at(-1),
+    label = eliteAnalysisDimensions.find(
+      ([id]) => id === eliteAnalysisDimension,
+    )[1],
+    observation = (g, title) =>
+      `<div class="elite-analysis-observation"><small>${title}</small><h3>${esc(g.name)}</h3><b class="${cl(g.net)}">${signed(g.net)}</b><p>${g.n} trade(s) · ${g.wr.toFixed(1)}% de acerto</p>${g.n < 10 ? "<small>Amostra pequena: não conclua um padrão.</small>" : "<small>Resultado histórico, sem previsão de retorno.</small>"}</div>`;
+  return `<section class="elite-analysis-page"><div class="elite-analysis-summary" aria-label="Resumo do período">${[
+    ["Resultado líquido", signed(s.net), cl(s.net)],
+    ["Trades fechados", String(s.n), ""],
+    ["Taxa de acerto", s.wr.toFixed(1) + "%", ""],
+    ["Profit factor", Number.isFinite(s.pf) ? s.pf.toFixed(2) : "∞", ""],
+  ]
+    .map(
+      ([title, value, color]) =>
+        `<div><small>${title}</small><b class="${color}">${value}</b></div>`,
+    )
+    .join(
+      "",
+    )}</div><div class="elite-analysis-grid"><section class="card elite-analysis-comparison"><div class="section-head"><div><div class="eyebrow">Onde estão os resultados</div><h2>Comparar por ${label.toLowerCase()}</h2></div><span class="badge">${rows.length} grupo(s)</span></div><div class="elite-analysis-switch" aria-label="Comparar resultados por">${eliteAnalysisDimensions.map(([id, title, icon]) => `<button class="b s" aria-pressed="${id === eliteAnalysisDimension}" onclick="eliteAnalysisDimension='${id}';R()">${terminalIcon(icon)}${title}</button>`).join("")}</div>${eliteAnalysisRows(rows.slice(0, 6))}${rows.length > 6 ? `<details class="elite-analysis-more"><summary>Ver os outros ${rows.length - 6} grupos</summary>${eliteAnalysisRows(rows.slice(6))}</details>` : ""}<small class="muted-note">Ordenado pelo resultado líquido. * Menos de 10 trades: amostra pequena.</small></section><aside class="card elite-analysis-highlights"><div class="section-head"><h2>Leitura rápida</h2>${terminalIcon("ana")}</div>${observation(best, "Maior resultado do período")}${rows.length > 1 ? observation(worst, "Menor resultado do período") : "<p>Há apenas um grupo para comparar.</p>"}<button class="b s" onclick="taGo('ins')">Revisar minha execução ${terminalIcon("arrow")}</button></aside></div><details class="card elite-analysis-method"><summary>Como interpretar estes dados</summary><p>Esta análise usa os trades fechados nos filtros acima. Resultado líquido é a soma do P&L registrado${ts.some((t) => t.est) ? "; há valores estimados no período" : ""}. Acerto é a proporção de trades com P&L positivo, incluindo os empates no total. Profit factor divide lucro bruto por perda bruta.</p><p>Dias, horários e sessões usam somente a entrada registrada, no fuso do arquivo. Se ela não foi informada, o grupo aparece como “Entrada não informada”. Os grupos de sessão são faixas horárias fixas, sem ajuste de horário de verão. Grupos pequenos não comprovam padrões nem justificam mudar seu risco.</p><p>Para investigar erros e cumprimento do sistema, use o Raio-X do Trader.</p></details></section>`;
+}
