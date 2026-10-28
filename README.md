@@ -302,3 +302,8 @@ A Home ativa passa a usar uma cena fotorealista original gerada para o EliteX, c
 
 ### Recuperação automática da conexão
 A abertura consulta o status automaticamente; falhas de rede/5xx recebem até três novas tentativas espaçadas. Eventos online, retorno à aba e restauração pelo histórico revalidam a sessão, com requisições concorrentes agrupadas. Falhas de autenticação/origem não provocam tentativas cegas. Um formulário de primeira conexão aparece diretamente na Home quando o servidor está configurado e não há cookie válido. Senhas nunca são armazenadas em localStorage nem embutidas no site.
+
+### Padrão visual unificado e foco diário
+Todas as rotas compartilham navegação compacta, superfícies grafite com transparência discreta, bordas esmeralda e controles arredondados. “Mais ferramentas” preserva o estado aberto entre rotas e mantém botões com largura idêntica, com rolagem no menu. Os cálculos e o armazenamento não mudam. A Home mostra o foco local calculado por `taDailyInsight`, respeitando amostras e cobertura de erros/aderência declarados, e permite atualizar a orientação usando a API de briefing existente. Evidências permanecem acessíveis em detalhes recolhíveis.
+
+O personagem fotográfico recebe movimento de presença em 2,5D por uma camada localizada com máscara suave, sem mover a interface. Não é rig 3D, movimento real de mãos ou expressão facial. Em telas pequenas e com preferência por movimento reduzido, essa animação é desativada.

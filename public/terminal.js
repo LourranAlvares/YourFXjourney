@@ -1,5 +1,6 @@
 /* Original terminal components. Financial calculations remain in the journal. */
 const terminalCharts = new Map();
+const terminalNavState = { top: 0, route: null };
 let terminalChartSequence = 0;
 const terminalWindows = new Map();
 let terminalCollapsed = false;
@@ -59,7 +60,9 @@ function terminalBackdrop() {
   document.body.prepend(layer);
 }
 function terminalBeginRender() {
+  terminalNavState.top = document.querySelector("#nav")?.scrollTop || 0;
   if (typeof premiumBeforeRender === "function") premiumBeforeRender();
+  document.body.classList.add("elitex-unified");
   terminalBackdrop();
   terminalCharts.clear();
   if (typeof premiumKeepExpanded === "function") premiumKeepExpanded();
@@ -181,6 +184,21 @@ function terminalDrawChart(model) {
   return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${areaBase}" y2="${areaBase}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
 }
 function terminalAfterRender() {
+  const nav = document.querySelector("#nav");
+  if (nav && innerWidth > 760) {
+    nav.scrollTop = terminalNavState.top;
+    if (terminalNavState.route !== tab) {
+      const active = nav.querySelector('[aria-current="page"]');
+      if (active) {
+        const a = active.getBoundingClientRect(),
+          n = nav.getBoundingClientRect();
+        if (a.top < n.top) nav.scrollTop -= n.top - a.top;
+        else if (a.bottom > n.bottom) nav.scrollTop += a.bottom - n.bottom;
+      }
+    }
+  }
+  terminalNavState.route = tab;
+
   document.querySelectorAll("[data-terminal-chart]").forEach((element) => {
     const model = terminalCharts.get(element.dataset.terminalChart);
     if (!model) return;

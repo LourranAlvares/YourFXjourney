@@ -251,38 +251,24 @@ function taConnectionHelp() {
   <p>Seu Trading Plan continua salvo e orienta o foco e a revisão dos setups. Salvar o plano não ativa os provedores automaticamente.</p>
   <button class="b s" onclick="taRetryConnection()">Verificar conexão novamente</button></div>`;
 }
+let eliteMoreNavOpen = false;
 function taNav() {
-  if (tab === "home") {
-    const primary = [
-      "home",
-      "dash",
-      "trades",
-      "economic",
-      "plan",
-      "ana",
-      "risk",
-      "settings",
-    ];
-    const button = (id) =>
-      `<button class="${id === "home" ? "on" : ""}" ${id === "home" ? 'aria-current="page"' : ""} title="${esc(tabs.find((t) => t[0] === id)?.[1] || id)}" onclick="taGo('${id}')"><span aria-hidden="true">${terminalIcon(id)}</span>${esc(tabs.find((t) => t[0] === id)?.[1] || id)}</button>`;
-    return `<div class="ta-nav-group">${primary.map(button).join("")}<details class="scene-more-nav"><summary>Mais ferramentas</summary>${tabs
-      .filter(([id]) => !primary.includes(id))
-      .map(([id]) => button(id))
-      .join("")}</details></div>`;
-  }
-
-  const groups = [
-    ["Principal", ["home", "analyst", "trades", "dash"]],
-    ["Ferramentas", ["plan", "economic", "ins", "rev"]],
-    ["Performance", ["ana", "pat", "risk", "str", "share"]],
-    ["Conta", ["settings"]],
+  const primary = [
+    "home",
+    "dash",
+    "trades",
+    "economic",
+    "plan",
+    "ana",
+    "risk",
+    "settings",
   ];
-  return groups
-    .map(
-      ([title, ids]) =>
-        `<div class="ta-nav-group"><small>${title}</small>${ids.map((id) => `<button class="${tab === id ? "on" : ""}" ${tab === id ? 'aria-current="page"' : ""} title="${esc(tabs.find((t) => t[0] === id)?.[1] || id)}" aria-label="${esc(tabs.find((t) => t[0] === id)?.[1] || id)}" onclick="taGo('${id}')"><span aria-hidden="true">${terminalIcon(id)}</span>${esc(tabs.find((t) => t[0] === id)?.[1] || id)}</button>`).join("")}</div>`,
-    )
-    .join("");
+  const extra = tabs.filter(([id]) => !primary.includes(id));
+  const button = (id) => {
+    const label = tabs.find((t) => t[0] === id)?.[1] || id;
+    return `<button class="${id === tab ? "on" : ""}" ${id === tab ? 'aria-current="page"' : ""} aria-label="${esc(label)}" title="${esc(label)}" onclick="taGo('${id}')"><span aria-hidden="true">${terminalIcon(id)}</span><span class="elite-nav-label">${esc(label)}</span></button>`;
+  };
+  return `<div class="ta-nav-group">${primary.map(button).join("")}<details class="scene-more-nav" ${eliteMoreNavOpen || extra.some(([id]) => id === tab) ? "open" : ""} ontoggle="eliteMoreNavOpen=this.open"><summary>Mais ferramentas</summary><div class="elite-nav-extra">${extra.map(([id]) => button(id)).join("")}</div></details></div>`;
 }
 function taInput(label, id, value = "", type = "text", extra = "") {
   return `<label>${esc(label)}<input ${id ? `id="${id}"` : ""} type="${type}" value="${esc(value ?? "")}" ${extra}></label>`;
@@ -994,6 +980,7 @@ async function taGenerateBriefing() {
   const input = taBriefingInput(),
     key = taBriefingKey(input);
   taBriefing = { key, pending: true, result: null, error: "" };
+  if (typeof eliteState === "function") eliteState("thinking");
   R();
   try {
     const result = await taApi("/api/briefing", {
@@ -1016,6 +1003,10 @@ async function taGenerateBriefing() {
       " O foco local baseado nos seus registros continua disponível.";
   } finally {
     taBriefing.pending = false;
-    if (tab === "home") R();
+    if (tab === "home") {
+      R();
+      if (typeof eliteState === "function")
+        eliteState(taBriefing.error ? "attention" : "responding");
+    }
   }
 }

@@ -2,6 +2,7 @@
 const eliteDesk = { state: "working", messages: [], pending: false, timer: 0 };
 function eliteState(state) {
   eliteDesk.state = state;
+  document.querySelector(".elite-scene")?.setAttribute("data-state", state);
   document.querySelector(".elite-office")?.setAttribute("data-state", state);
   const label = document.querySelector("#elite-state");
   if (label)
@@ -85,18 +86,7 @@ function vHome() {
     market = taDailyRequestState("market"),
     instruments = market.data?.instruments || [],
     ready = taConnection.authenticated && taConnection.services?.ai;
-  return `<section class="elite-scene" aria-label="Escritório EliteX"><div class="scene-greeting"><div class="scene-brand">ELITE<span>X</span></div><h1>${greeting},<br><span>${esc(profile.name || "trader")}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><aside class="scene-prompt"><p>✦ Seu <strong>Assistente Forex</strong></p><h2>Como posso ajudar hoje?</h2>${[
-    ["analyst", "Analisar um gráfico"],
-    ["economic", "Resumo de notícias"],
-    ["plan", "Revisar meu plano"],
-  ]
-    .map(
-      ([id, label]) =>
-        `<button onclick="taGo('${id}')">${terminalIcon(id)}<span>${label}</span><span>↗</span></button>`,
-    )
-    .join(
-      "",
-    )}</aside><div class="scene-cards"><section class="scene-card"><div class="section-head"><h2>Seus ativos</h2><button class="scene-link" onclick="taAssetOpen()">Editar ↗</button></div>${
+  return `<section class="elite-scene" data-state="${eliteDesk.state}" aria-label="Escritório EliteX"><div class="scene-character-motion" aria-hidden="true"></div><div class="scene-greeting"><div class="scene-brand">ELITE<span>X</span></div><h1>${greeting},<br><span>${esc(profile.name || "trader")}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div>${eliteFocusPanel()}<div class="scene-cards"><section class="scene-card"><div class="section-head"><h2>Seus ativos</h2><button class="scene-link" onclick="taAssetOpen()">Editar ↗</button></div>${
     instruments.length
       ? instruments
           .slice(0, 3)
@@ -129,4 +119,11 @@ function eliteConnectionGate() {
   )
     return "";
   return `<form class="ta-login scene-login" onsubmit="event.preventDefault();taLogin()"><div><b>Conecte este navegador uma vez</b><small>Nas próximas visitas, sua conexão será restaurada automaticamente.</small></div><label class="sr-only" for="ta-password">Senha do servidor pessoal</label><input id="ta-password" name="password" type="password" autocomplete="current-password" required placeholder="Senha do servidor"><button class="b" type="submit">Conectar</button><p id="ta-login-error" role="status"></p></form>`;
+}
+
+function eliteFocusPanel() {
+  const insight = taDailyInsight(taDailyWeekStats()),
+    valid = taBriefingHasResult(),
+    ready = taConnection.authenticated && taConnection.services?.ai;
+  return `<aside class="scene-prompt scene-focus"><p>✦ Seu <strong>Assistente Forex</strong></p><h2>Seu foco antes de operar</h2><p class="scene-focus-text">${esc(valid ? taBriefing.result.action : insight.text)}</p>${!valid && insight.action ? `<small>${esc(insight.action)}</small>` : ""}<div class="scene-focus-actions"><button onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando insight…" : ready ? "Atualizar foco com IA" : "Conectar IA"} ↗</button><button onclick="taGo('ins')">Revisar meus padrões ↗</button></div><details><summary>${valid ? "Base da orientação · IA" : "Base da orientação · registros locais"}</summary>${valid ? taBriefing.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("") : `<p>${esc(insight.label)}. Observações baseadas somente no plano e nos registros disponíveis, com limites de amostra. Ausência de registro não significa ausência de erro.</p>`}</details>${taBriefing.error ? `<small role="status">${esc(taBriefing.error)}</small>` : ""}</aside>`;
 }

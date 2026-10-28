@@ -1334,3 +1334,379 @@ body:has(.elite-scene) .terminal-market-backdrop {
 .scene-login > p:empty {
   display: none;
 }
+/* Unified EliteX shell on every route. */
+body.elitex-unified {
+  background: #03090c;
+  color: #eaf1f4;
+}
+body.elitex-unified .terminal-market-backdrop {
+  display: none;
+}
+body.elitex-unified::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(100deg, #020a0ee8, #061317ed),
+    url("elitex-office-scene.png") center/cover no-repeat;
+}
+body.elitex-unified main {
+  min-height: 100dvh;
+  background: transparent;
+}
+body.elitex-unified .terminal-topbar {
+  height: 60px;
+  background: #061013f2;
+  border-bottom: 1px solid #214b43;
+  backdrop-filter: none;
+}
+body.elitex-unified header {
+  background: linear-gradient(180deg, #061412, #03090cf5);
+  border-right: 1px solid #21493f;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+body.elitex-unified .elitex-brand-copy {
+  display: none;
+}
+body.elitex-unified header h1 {
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 8px 4px;
+  margin-bottom: 20px;
+}
+body.elitex-unified header h1 img {
+  width: 78px;
+  margin: 0;
+  flex-shrink: 0;
+}
+body.elitex-unified #nav {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scroll-behavior: auto;
+}
+body.elitex-unified .ta-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+body.elitex-unified #nav button {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 70px;
+  gap: 7px;
+  padding: 10px 3px;
+  margin: 0;
+  text-align: center;
+  white-space: normal;
+  font-size: 11px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  flex-shrink: 0;
+  color: #b2c8c5;
+}
+body.elitex-unified #nav button > span {
+  margin: 0;
+  display: block;
+  width: auto;
+  max-width: 100%;
+  color: inherit;
+}
+body.elitex-unified #nav button > span:first-child {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+body.elitex-unified #nav button svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+body.elitex-unified #nav .elite-nav-label {
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+body.elitex-unified #nav button.on {
+  border-color: #00b59475;
+  background: linear-gradient(120deg, #004e3e55, #10252a66);
+  color: #00e6b5;
+}
+body.elitex-unified .scene-more-nav {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin: 5px 0 0;
+  border: 0;
+  text-align: center;
+}
+body.elitex-unified .scene-more-nav summary {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 9px 3px;
+  border: 1px solid #24473f;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #b7d4ce;
+  cursor: pointer;
+  list-style: none;
+}
+body.elitex-unified .scene-more-nav summary::after {
+  content: "⌄";
+  margin-left: 5px;
+}
+.scene-more-nav[open] > summary::after {
+  transform: rotate(180deg);
+}
+body.elitex-unified .elite-nav-extra {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 5px;
+  padding-top: 6px;
+}
+body.elitex-unified .sidebar-note {
+  display: none;
+}
+body.elitex-unified .card,
+body.elitex-unified .filter-bar,
+body.elitex-unified .primary-metrics {
+  background: linear-gradient(125deg, #07161bec, #0a1118f5);
+  border: 1px solid #33535099;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px #0002;
+}
+body.elitex-unified input,
+body.elitex-unified select,
+body.elitex-unified textarea {
+  background-color: #07141a;
+  border-color: #2a494b;
+  border-radius: 12px;
+  color: #e7f3ef;
+}
+body.elitex-unified dialog {
+  background: linear-gradient(140deg, #0b2024, #080e17);
+  border: 1px solid #367568;
+  border-radius: 24px;
+}
+body.elitex-unified .b {
+  border-radius: 12px;
+}
+.elitex-unified .page-top {
+  margin-top: 26px;
+}
+.elitex-unified .page-top h2 {
+  font-size: 32px;
+  letter-spacing: -0.7px;
+}
+body.elitex-unified .terminal-gridline {
+  stroke: #26413f;
+}
+.elitex-unified .table-wrap {
+  border-radius: 15px;
+}
+@media (min-width: 1201px) {
+  body.elitex-unified:not(.terminal-collapsed) {
+    --sidebar-width: 112px;
+  }
+  body.elitex-unified header {
+    width: var(--sidebar-width);
+    padding: 22px 8px 12px;
+  }
+  body.elitex-unified #main {
+    margin-left: var(--sidebar-width);
+  }
+  body.elitex-unified.terminal-collapsed {
+    --sidebar-width: 72px;
+  }
+}
+@media (min-width: 761px) and (max-width: 1200px) {
+  body.elitex-unified:not(.terminal-collapsed) {
+    --sidebar-width: 104px;
+  }
+  body.elitex-unified header {
+    width: var(--sidebar-width);
+    padding: 18px 6px 10px;
+  }
+  body.elitex-unified #main {
+    margin-left: var(--sidebar-width);
+  }
+  body.elitex-unified.terminal-collapsed {
+    --sidebar-width: 72px;
+  }
+}
+@media (max-width: 760px) {
+  body.elitex-unified header {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    padding: 10px 12px;
+  }
+  body.elitex-unified header h1 {
+    margin: 0 0 8px;
+  }
+  body.elitex-unified header h1 img {
+    width: 60px;
+  }
+  body.elitex-unified #nav {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-gutter: auto;
+  }
+  body.elitex-unified .ta-nav-group {
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  body.elitex-unified #nav button {
+    width: 84px;
+    min-height: 70px;
+    flex-shrink: 0;
+  }
+  body.elitex-unified .scene-more-nav {
+    width: 108px;
+    margin: 0;
+  }
+  body.elitex-unified .elite-nav-extra {
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    padding-top: 6px;
+  }
+  body.elitex-unified .scene-more-nav[open] {
+    width: max-content;
+  }
+  body.elitex-unified main,
+  body.elitex-unified #main {
+    margin-left: 0;
+  }
+  body.elitex-unified .page-top h2 {
+    font-size: 27px;
+  }
+}
+.scene-focus .scene-focus-text {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 16px 0 10px;
+}
+.scene-focus > small {
+  display: block;
+  color: #b1c6c0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.scene-focus-actions {
+  display: grid;
+  gap: 5px;
+  margin-top: 14px;
+}
+.scene-focus-actions button {
+  margin-top: 0;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.scene-focus details {
+  font-size: 11px;
+  color: #a0bbb2;
+  margin-top: 13px;
+}
+.scene-focus details p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+.scene-focus summary {
+  cursor: pointer;
+}
+.scene-character-motion {
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  mask-image: radial-gradient(
+    ellipse 18% 28% at 65% 34%,
+    #000 55%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 18% 28% at 65% 34%,
+    #000 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: 65% 45%;
+  animation: elitePhotoPresence 8s ease-in-out infinite;
+  will-change: transform;
+}
+.elite-scene > .scene-greeting,
+.elite-scene > .scene-prompt,
+.elite-scene > .scene-cards,
+.elite-scene > .scene-composer {
+  position: relative;
+  z-index: 1;
+}
+@keyframes elitePhotoPresence {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  45% {
+    transform: translateY(-1px) rotate(0.12deg);
+  }
+  70% {
+    transform: translateY(-0.3px) rotate(-0.06deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-character-motion {
+    animation: none;
+    will-change: auto;
+  }
+}
+@media (max-width: 760px) {
+  .scene-character-motion {
+    animation: none;
+    will-change: auto;
+  }
+}
+.elite-scene[data-state="attention"] .scene-character-motion,
+.elite-scene[data-state="responding"] .scene-character-motion {
+  animation-play-state: paused;
+  transform: translateY(-0.8px) rotate(-0.1deg);
+  transition: transform 900ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-character-motion {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+.scene-more-nav summary::-webkit-details-marker {
+  display: none;
+}
