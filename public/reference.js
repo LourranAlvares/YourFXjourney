@@ -200,6 +200,8 @@ function eliteAssetIcon(symbol) {
     return `<span class="asset-gold" title="Ouro">${terminalIcon("gold")}</span>`;
   if (normalized.startsWith("XAG"))
     return `<span class="asset-silver" title="Prata">${terminalIcon("gold")}</span>`;
+  if (normalized.startsWith("BTC"))
+    return `<span class="asset-crypto" title="Bitcoin">${terminalIcon("bitcoin")}</span>`;
   if (/^(BTC|ETH|SOL|XRP|ADA|DOGE)/.test(normalized))
     return `<span class="asset-crypto" title="Criptoativo">${terminalIcon("crypto")}</span>`;
   if (/^(WTI|BRENT|USOIL|UKOIL|XTI|XBR)/.test(normalized))

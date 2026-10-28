@@ -100,7 +100,7 @@ const { chromium } = require("playwright"),
     assert.match(icons.forex, /asset-fx/);
     assert.match(icons.stock, /data-icon="stock"/);
     assert.match(icons.oil, /data-icon="oil"/);
-    assert.match(icons.crypto, /data-icon="crypto"/);
+    assert.match(icons.crypto, /data-icon="bitcoin"/);
     assert.match(icons.index, /data-icon="index"/);
     assert.equal(icons.unknown, "");
     const snapshot = await p.evaluate(() => JSON.stringify(S));
