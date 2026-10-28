@@ -45,7 +45,7 @@ body{font-size:14px;letter-spacing:.01em}button,input,select{min-height:38px}but
 .clear-history-button{color:var(--r)!important;border-color:color-mix(in srgb,var(--r) 45%,var(--bd))!important}
 
 .share-r-needed{display:flex;gap:18px;align-items:center;justify-content:space-between;border:1px solid #a0a7b255;background:#a0a7b208;padding:18px;border-radius:10px;margin-bottom:24px}.share-r-needed p{font-size:12px;color:var(--mu);margin:8px 0 0}.share-r-needed .b{flex-shrink:0}.share-risk-bulk{padding:16px;border:1px solid var(--bd);border-radius:8px;margin:18px 0}.share-risk-bulk summary{cursor:pointer;font-weight:600;color:var(--ac)}.share-risk-bulk>label{display:flex;flex-direction:column;gap:8px;margin:16px 0;font-size:12px}.share-risk-bulk>.shot-review{flex-direction:row}.share-r-table{max-height:40vh;overflow:auto;margin:16px 0}.share-r-table>label{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bd);font-size:12px}.share-r-table input{width:130px}@media(max-width:760px){.share-r-needed{flex-direction:column;align-items:stretch}.share-r-table>label{flex-wrap:wrap}.share-live-day b{font-size:18px}}
-</style><link rel="stylesheet" href="public/assistant.css"><link rel="stylesheet" href="public/terminal.css"><link rel="stylesheet" href="public/premium.css"></head><body>
+</style><link rel="stylesheet" href="public/assistant.css"><link rel="stylesheet" href="public/terminal.css"><link rel="stylesheet" href="public/premium.css"><link rel="stylesheet" href="public/reference.css"></head><body>
 <header><h1 class="elitex-brand"><img class="elitex-logo" src="public/elitex-mark.png" alt=""><span class="elitex-brand-copy"><span class="elitex-brand-name">ELITE<span>X</span></span><span class="elitex-brand-tagline">DOMINE SEU PROCESSO.<br>ELEVE SUA PERFORMANCE.</span></span></h1><nav id="nav"></nav></header><main id="main"></main>
 <dialog id="ta-dialog" aria-label="Detalhes do Trading Plan"></dialog><dialog id="dlg" aria-label="Editor de trade"></dialog><dialog id="clear-history-dlg" aria-labelledby="clear-history-title"></dialog><dialog id="sharedlg" aria-label="Exportação do calendário"></dialog><dialog id="daydlg" aria-label="Atividade do dia"></dialog>
 <script>
@@ -311,4 +311,5 @@ const sidebarNote=document.createElement('div');sidebarNote.className='sidebar-n
 <script src="public/mt5-import.js"></script>
 <script src="public/office.js"></script>
 <script src="public/trader-review.js"></script>
+<script src="public/reference.js"></script>
 <script>R();taCheckConnection();setInterval(()=>{if(['home','economic'].includes(tab)&&!document.querySelector('dialog[open]')&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))R()},60000);</script></body></html>

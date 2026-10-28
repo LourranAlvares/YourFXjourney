@@ -70,7 +70,7 @@ function terminalBeginRender() {
   document.body.classList.toggle("terminal-collapsed", terminalCollapsed);
   document.body.dataset.workspace = tab;
 }
-function terminalTopbar() {
+function terminalLegacyTopbar() {
   const title = tabs.find((t) => t[0] === tab)?.[1] || "Início";
   return `<div class="terminal-topbar"><div class="terminal-breadcrumb"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">☰</button><span class="terminal-wordmark">ELITE<strong>X</strong><span> / </span></span><span>${esc(title)}</span></div><div class="terminal-top-status">${accountCurrencyControl()}<span class="terminal-storage" title="Trades e planos permanecem no armazenamento deste navegador">Dados neste navegador</span><button class="terminal-connection" onclick="taGo('settings')"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
 }
@@ -184,6 +184,7 @@ function terminalDrawChart(model) {
   return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${areaBase}" y2="${areaBase}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
 }
 function terminalAfterRender() {
+  if(typeof eliteUpdateProfile==='function')eliteUpdateProfile();
   const nav = document.querySelector("#nav");
   if (nav && innerWidth > 760) {
     nav.scrollTop = terminalNavState.top;

@@ -12,7 +12,9 @@ const { chromium } = require("playwright"),
     await p.goto("http://127.0.0.1:" + app.server.address().port);
     await p.waitForSelector(".elite-function-actions");
     assert.equal(await p.locator("#elite-question").count(), 0);
-    await p.getByRole("button", { name: /EliteX Analyst Meu trade/ }).click();
+    await p
+      .getByRole("button", { name: "EliteX Analyst", exact: true })
+      .click();
     assert.equal(await p.evaluate(() => tab), "analyst");
     assert.match(await p.locator("#main").innerText(), /Defina as regras/);
     await p.evaluate(() => {

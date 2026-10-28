@@ -32,38 +32,7 @@ function eliteDaySummary() {
 }
 
 /* Reference-led Home. All detailed tools remain available through navigation. */
-function vHome() {
-  const profile = taDailyProfile(),
-    hour = Number(taDailyParts().hour),
-    greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite",
-    session = taDailySession(),
-    plan = taCurrentPlan(),
-    event = taDailyEvents().find((e) => taDailyEventTime(e) >= Date.now()),
-    market = taDailyRequestState("market"),
-    instruments = market.data?.instruments || [],
-    ready = taConnection.authenticated && taConnection.services?.ai;
-  return `<section class="elite-scene" data-state="${eliteDesk.state}" aria-label="Escritório EliteX"><div class="scene-character-motion" aria-hidden="true"></div><div class="scene-greeting"><div class="scene-brand">ELITE<span>X</span></div><h1>${greeting},<br><span>${esc(profile.name || "trader")}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div>${eliteFocusPanel()}<div class="scene-cards"><section class="scene-card"><div class="section-head"><h2>Seus ativos</h2><button class="scene-link" onclick="taAssetOpen()">Editar ↗</button></div>${
-    instruments.length
-      ? instruments
-          .slice(0, 3)
-          .map(
-            (i) =>
-              `<div class="scene-market-row"><b>${esc(i.symbol)}</b><span class="ta-volatility-${["low", "moderate", "high"].includes(i.volatility) ? i.volatility : "unknown"}">${{ low: "Baixa", moderate: "Moderada", high: "Alta" }[i.volatility] || "Indisponível"}</span></div>`,
-          )
-          .join("")
-      : `<p>${profile.instruments.length ? profile.instruments.map(esc).join(" · ") : "Selecione os ativos que acompanha."}</p><small>${taConnection.authenticated ? "Volatilidade aguardando consulta." : "Conecte os serviços para consultar a volatilidade."}</small>`
-  }<small>Volatilidade observada · sem indicação de direção</small></section><section class="scene-card"><div class="section-head"><h2>Próximo evento</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ↗</button></div>${event ? `<div class="scene-event"><b>${esc(taDailyFormatTime(event.time))}</b><span>${esc(event.currency)}</span></div><p>${esc(event.name)}</p>` : "<p>Confira a agenda econômica.</p><small>Sem próximo evento verificado disponível nesta consulta.</small>"}</section><section class="scene-card"><div class="section-head"><h2>Visão do dia</h2><button class="scene-link" onclick="taGo('dash')">↗</button></div><dl><div><dt>Sessão</dt><dd>${session.configured ? esc(profile.session.start + "–" + profile.session.end) : '<button class="scene-link" onclick="taGo(\'settings\')">Configurar</button>'}</dd></div><div><dt>Trading Plan</dt><dd>${plan ? "Ativo · v" + esc(plan.version) : '<button class="scene-link" onclick="taGo(\'plan\')">Criar plano</button>'}</dd></div><div><dt>Limite diário</dt><dd>${plan?.risk?.maxDaily ? money(plan.risk.maxDaily) : "Não definido"}</dd></div></dl></section></div><div class="elite-office scene-composer" data-state="${eliteDesk.state}">${eliteConnectionGate()}<div class="elite-function-heading"><div><h2>Seu assistente de trading</h2><p>Escolha o que precisa revisar.</p></div><span id="elite-state">${ready ? "IA configurada" : "Ferramentas disponíveis"}</span></div><div class="scene-bottom-actions elite-function-actions">${[
-    ["analyst", "EliteX Analyst", "Meu trade segue meu sistema?"],
-    ["ins", "Raio-X do Trader", "Meus padrões e pontos de atenção"],
-    ["economic", "Calendário", "Eventos e cautelas do dia"],
-    ["plan", "Meu sistema", "Regras que orientam as análises"],
-  ]
-    .map(
-      ([id, label, note]) =>
-        `<button onclick="eliteState('attention');taGo('${id}')">${terminalIcon(id)}<span><b>${label}</b><small>${note}</small></span></button>`,
-    )
-    .join("")}</div></div></section>`;
-}
+function vHome(){return eliteReferenceHome()}
 
 function eliteConnectionGate() {
   if (

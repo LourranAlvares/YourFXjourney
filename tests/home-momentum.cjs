@@ -53,9 +53,9 @@ const { chromium } = require("playwright"),
     assert.equal(m.streak, 2);
     assert.match(m.tip, /2 perdas seguidas/);
     assert.match(m.tip, /Confirmar fechamento/);
-    assert.match(await p.locator(".elite-momentum").innerText(), /-2,50%/);
-    assert.match(await p.locator(".elite-momentum").innerText(), /6,36%/);
-    assert(!/[£$€]|R\$/.test(await p.locator(".elite-momentum").innerText()));
+    assert.match(await p.locator(".reference-briefing-body .elite-momentum").innerText(), /-2,50%/);
+    assert.match(await p.locator(".reference-briefing-body .elite-momentum").innerText(), /6,36%/);
+    assert(!/[£$€]|R\$/.test(await p.locator(".reference-briefing-body .elite-momentum").innerText()));
     const stored = await p.evaluate(() => JSON.stringify(S));
     assert.equal(await p.evaluate(() => JSON.stringify(S)), stored);
     let facts = await p.evaluate(() => taBriefingInput().facts);
@@ -78,10 +78,9 @@ const { chromium } = require("playwright"),
       await p.evaluate(() => eliteMomentumModel().month.percent),
       null,
     );
-    assert.match(await p.locator(".elite-momentum").innerText(), /—/);
-    await p.locator(".elite-momentum-method summary").click();
+    assert.match(await p.locator(".reference-briefing-body .elite-momentum").innerText(), /—/);
     await p
-      .getByRole("button", { name: "Configurar saldo inicial", exact: false })
+      .getByRole("button", { name: "Ativar percentuais", exact: false })
       .click();
     assert.equal(await p.evaluate(() => tab), "dash");
     assert(await p.locator("#account-baseline").isVisible());
@@ -91,7 +90,7 @@ const { chromium } = require("playwright"),
       taGo("home");
     });
     assert.equal(await p.evaluate(() => eliteMomentumModel().month.percent), 0);
-    assert.match(await p.locator(".elite-momentum").innerText(), /0,00%/);
+    assert.match(await p.locator(".reference-briefing-body .elite-momentum").innerText(), /0,00%/);
     await p.evaluate(() => {
       S.balance = 0;
       R();
