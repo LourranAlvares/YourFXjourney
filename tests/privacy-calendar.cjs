@@ -1,14 +1,16 @@
 const { chromium } = require("playwright"),
   assert = require("node:assert/strict"),
-  path = require("node:path");
+  { createApp } = require("../server/index.cjs");
 (async () => {
+  const app = createApp({ env: {} });
+  await new Promise((r) => app.server.listen(0, "127.0.0.1", r));
   const b = await chromium.launch({
       executablePath: process.env.BROWSER_EXECUTABLE_PATH || undefined,
     }),
     p = await b.newPage({ viewport: { width: 1440, height: 1000 } }),
     errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
-  await p.goto("file://" + path.resolve(__dirname, "../YourFXjourney.html"));
+  await p.goto("http://127.0.0.1:" + app.server.address().port);
   await p.evaluate(() => taGo("dash"));
   await p.evaluate(() => {
     S = {
@@ -100,6 +102,7 @@ const { chromium } = require("playwright"),
     "PASS money visibility, persistence, tooltips, unchanged data, larger R calendar, per-trade signed R and mobile layout",
   );
   await b.close();
+  app.server.close();
 })().catch((e) => {
   console.error(e);
   process.exit(1);

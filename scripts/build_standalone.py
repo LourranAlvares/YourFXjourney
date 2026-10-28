@@ -4,7 +4,7 @@ root=Path(__file__).resolve().parents[1]
 files={'library':'tesseract.min.js','worker':'worker.min.js','core':'core/tesseract-core-lstm.wasm.js','eng':'lang/eng.traineddata.gz','por':'lang/por.traineddata.gz'}
 assets={k:base64.b64encode((root/'vendor/ocr'/f).read_bytes()).decode() for k,f in files.items()}
 source=(root/'YourFXjourney.html').read_text()
-for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','mt5-import','office','trader-review','reference']:
+for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','mt5-import','office','trader-review','reference','dashboard']:
  source=source.replace(f'<script src="public/{name}.js"></script>', '<script>'+ (root/'public'/f'{name}.js').read_text().replace('</script', '<\\/script') +'</script>')
 source=source.replace('<link rel="stylesheet" href="public/assistant.css">', '<style>'+(root/'public/assistant.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/terminal.css">', '<style>'+(root/'public/terminal.css').read_text()+'</style>')

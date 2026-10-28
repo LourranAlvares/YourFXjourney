@@ -112,6 +112,8 @@ function terminalChart(
     daily = false,
     includeZero = true,
     readout = false,
+    color = null,
+    netFormat = money,
   } = {},
 ) {
   id = id || "terminal-chart-" + ++terminalChartSequence;
@@ -130,6 +132,8 @@ function terminalChart(
     daily,
     includeZero,
     readout,
+    color,
+    netFormat,
     state: windowState,
   };
   terminalCharts.set(id, model);
@@ -170,7 +174,7 @@ function terminalDrawChart(model) {
   const areaBase = Math.max(T, Math.min(B, y(0)));
   model.geometry = { W, L, T, B, R, x, y, visible };
   const describe = (p) =>
-    `${p.date} · ${label}: ${format(p.value)}${p.net != null ? " · P&L diário: " + money(p.net) : ""}${p.n != null ? " · " + p.n + " trades" : ""}${p.r != null ? " · " + p.r.toFixed(2) + "R" : ""}${p.coverage != null ? " · " + p.coverage + " com risco" : ""}`;
+    `${p.date} · ${label}: ${format(p.value)}${p.net != null ? " · Resultado diário: " + (model.netFormat || money)(p.net) : ""}${p.n != null ? " · " + p.n + " trades" : ""}${p.r != null ? " · " + p.r.toFixed(2) + "R" : ""}${p.coverage != null ? " · " + p.coverage + " com risco" : ""}`;
   model.describe = describe;
   let grid = "";
   for (let i = 0; i <= 4; i++) {
@@ -189,11 +193,12 @@ function terminalDrawChart(model) {
     grid += `<line x1="${x(i)}" x2="${x(i)}" y1="${T}" y2="${B}" class="terminal-gridline"/><text x="${x(i)}" y="${H - 10}" text-anchor="${i === 0 ? "start" : i === n - 1 ? "end" : "middle"}" class="terminal-axis">${esc(visible[i].date)}</text>`;
   }
   const color =
-      visible.at(-1).value < 0
+      model.color ||
+      (visible.at(-1).value < 0
         ? "var(--r)"
         : visible.at(-1).value > 0
           ? "var(--g)"
-          : "var(--secondary)",
+          : "var(--secondary)"),
     points = visible.map((p, i) => x(i) + "," + y(p.value)).join(" ");
   const graph = daily
     ? visible
@@ -202,7 +207,7 @@ function terminalDrawChart(model) {
           return `<rect x="${x(i) - width / 2}" y="${Math.min(y(0), y(p.value))}" width="${width}" height="${Math.max(1, Math.abs(y(p.value) - y(0)))}" fill="${p.value < 0 ? "var(--r)" : "var(--g)"}" opacity=".75"/>`;
         })
         .join("")
-    : `<polygon points="${x(0)},${areaBase} ${points} ${x(n - 1)},${areaBase}" fill="${color}" opacity=".045"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.6" vector-effect="non-scaling-stroke"/>`;
+    : `<polygon points="${x(0)},${areaBase} ${points} ${x(n - 1)},${areaBase}" fill="${color}" opacity=".045"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.6" vector-effect="non-scaling-stroke"/><circle cx="${x(n - 1)}" cy="${y(visible.at(-1).value)}" r="2.5" fill="${color}"/>`;
   const marks = visible
     .map(
       (p, i) =>

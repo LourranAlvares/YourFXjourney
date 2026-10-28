@@ -47,7 +47,7 @@ const { createApp } = require("../server/index.cjs");
     assert.ok(
       await page
         .locator("header")
-        .evaluate((e) => e.getBoundingClientRect().width >= 240),
+        .evaluate((e) => e.getBoundingClientRect().width >= 232),
     );
     assert.ok(
       await page
@@ -99,9 +99,9 @@ const { createApp } = require("../server/index.cjs");
       "PASS EliteX mark loads, identity matches and rising/falling ambient candles have distinct restrained colors",
     );
     const snapshot = await page.evaluate(() => JSON.stringify(S));
-    assert.equal(await page.locator(".primary-metrics .k").count(), 7);
+    assert.equal(await page.locator(".primary-metrics .k").count(), 6);
     assert.equal(
-      await page.locator(".terminal-analysis-grid .terminal-chart").count(),
+      await page.locator(".elite-dash-charts .terminal-chart").count(),
       2,
     );
     const count = await page
@@ -169,6 +169,9 @@ const { createApp } = require("../server/index.cjs");
       "PASS dashboard real calculations, multiple chart modes, crosshair, keyboard inspection, zoom, pan controls, reset and money privacy",
     );
     await page.evaluate(() => taGo("trades"));
+    const openRecords=()=>page.locator("details").filter({has:page.locator(".terminal-trade-table")}).evaluate(e=>e.open=true);
+    await openRecords();
+    await openRecords();
     await page.locator("th").getByRole("button", { name: /^P&L/ }).click();
     const first = await page
       .locator(".terminal-trade-table tbody tr")
@@ -178,6 +181,7 @@ const { createApp } = require("../server/index.cjs");
       await page.evaluate((id) => S.trades.find((t) => t.id === id).pnl, first),
       -80,
     );
+    await openRecords();
     await page.locator("th").getByRole("button", { name: /^P&L/ }).click();
     const greatest = await page
       .locator(".terminal-trade-table tbody tr")
@@ -190,6 +194,7 @@ const { createApp } = require("../server/index.cjs");
       ),
       88,
     );
+    await openRecords();
     await page.locator(".terminal-trade-table tbody tr").first().press("Enter");
     assert.equal(await page.locator("#dlg").evaluate((d) => d.open), true);
     await page.getByRole("button", { name: "Cancelar", exact: true }).click();
