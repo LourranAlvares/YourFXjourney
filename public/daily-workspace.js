@@ -480,7 +480,7 @@ function taDailyInsight(week) {
         ? `Prioridade documentada: ${first.label}. Confira sua definição no Plano de Trading antes de executar.`
         : "Prepare sua sessão seguindo os limites e condições registrados no Plano de Trading.",
       action:
-        "Use o Trade Analyst para conferir as evidências do próximo setup com essa versão do plano.",
+        "Use o EliteX Alinha para conferir as evidências do próximo setup com essa versão do plano.",
     };
   }
   return {

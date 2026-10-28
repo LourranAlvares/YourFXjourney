@@ -667,10 +667,14 @@ function taSafeImage(value) {
 function vAnalyst() {
   const p = taCurrentPlan(),
     c = taAnalyst.context;
-  return `<section class="card"><div class="section-head"><div><div class="eyebrow">Evidências antes de convicção</div><h2>Trade Analyst</h2><p>Baseado nas definições do seu Trading Plan.</p></div><span class="badge">${p ? "Plano v" + esc(p.version) : "Plano não configurado"}</span></div>${
+  return `<section class="card"><div class="section-head"><div><div class="eyebrow">Evidências antes de convicção</div><h2>EliteX Alinha</h2><p>Confira sua operação contra os critérios do seu sistema de trading.</p></div><span class="badge">${p ? "Plano v" + esc(p.version) : "Plano não configurado"}</span></div>${p ? `<div class="elite-analysis-guide"><p><b>Sistema de referência: ${esc(p.name)} · versão ${esc(p.version)}</b></p><ol><li>Confira as regras do seu sistema.</li><li>Adicione o print e o contexto da operação.</li><li>Revise critérios atendidos, conflitos e evidências ausentes.</li></ol><small>A avaliação mede aderência ao seu sistema, não chance de lucro. O resultado usa esta versão do plano, sem alterar suas regras.</small></div>` : ""}${
     !p
       ? '<div class="ta-empty"><h3>Defina as regras que deseja avaliar</h3><p>Salve um Trading Plan com critérios explícitos antes de iniciar uma análise.</p><button class="b" onclick="taGo(\'plan\')">Criar Trading Plan</button></div>'
-      : `<div class="ta-analyst-grid"><div><label class="ta-image-upload">${taSafeImage(taAnalyst.image) ? `<img src="${esc(taSafeImage(taAnalyst.image))}" alt="Screenshot do setup em análise">` : "<span>Adicionar screenshot anotado<br><small>PNG, JPEG ou WebP · até 6 MB</small></span>"}<input id="ta-analyst-image" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="taLoadAnalysisImage(this.files[0])"></label><p class="muted-note">A imagem só é enviada ao provedor de IA ao clicar em Analisar. A revisão manual funciona offline. Envie apenas a evidência que deseja avaliar.</p></div><form id="ta-analyst-form" oninput="taStoreAnalystContext()" onsubmit="event.preventDefault();taRunAnalysis()"><div class="fg">${taInput("Ativo", "ta-a-asset", c.asset, "text", 'maxlength="30" required')}${taInput("Timeframe", "ta-a-timeframe", c.timeframe, "text", 'maxlength="20" required')}${taSelect(
+      : `<div class="ta-analyst-grid"><div><label class="ta-image-upload">${taSafeImage(taAnalyst.image) ? `<img src="${esc(taSafeImage(taAnalyst.image))}" alt="Screenshot do setup em análise">` : "<span>Adicionar screenshot anotado<br><small>PNG, JPEG ou WebP · até 6 MB</small></span>"}<input id="ta-analyst-image" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="taLoadAnalysisImage(this.files[0])"></label><p class="muted-note">A imagem só é enviada ao provedor de IA ao clicar em Analisar. A revisão manual funciona offline. Envie apenas a evidência que deseja avaliar.</p></div><form id="ta-analyst-form" oninput="taStoreAnalystContext()" onsubmit="event.preventDefault();taRunAnalysis()">${!taConnection.authenticated || !taConnection.services?.ai ? '<p class="muted-note">A análise visual precisa de IA conectada. <button class="b s" onclick="taGo(\'settings\')">Conectar IA</button></p>' : ""}<div class="fg">${taInput("Ativo", "ta-a-asset", c.asset, "text", 'maxlength="30" list="ta-analysis-assets" required')}${taInput("Timeframe", "ta-a-timeframe", c.timeframe, "text", 'maxlength="20" list="ta-analysis-timeframes" required')}<datalist id="ta-analysis-assets">${taProfile()
+          .instruments.map((s) => `<option value="${esc(s)}"></option>`)
+          .join(
+            "",
+          )}</datalist><datalist id="ta-analysis-timeframes">${["M1", "M5", "M15", "M30", "H1", "H4", "D1"].map((s) => `<option value="${s}"></option>`).join("")}</datalist>${taSelect(
           "Viés planejado",
           "ta-a-bias",
           c.bias,
@@ -680,7 +684,7 @@ function vAnalyst() {
             ["short", "Venda"],
             ["neutral", "Neutro"],
           ],
-        )}${taInput("R:R planejado (se conhecido)", "ta-a-rr", c.plannedRR ?? "", "number", 'min="0" step="any"')}${taInput("Risco planejado (moeda do plano)" + (S.currency ? " · " + S.currency : ""), "ta-a-risk", c.plannedRisk ?? "", "number", 'min="0" step="any"')}</div>${taText("Contexto macro", "ta-a-macro", c.macroContext)}${taText("Região de entrada e anotações", "ta-a-region", c.entryRegion)}<div class="row"><button class="b" type="submit" ${taAnalyst.pending ? "disabled" : ""}>${taAnalyst.pending ? "Analisando evidências…" : "Analisar com IA"}</button><button class="b s" type="button" onclick="taRunManual()" ${taAnalyst.pending ? "disabled" : ""}>Revisar manualmente</button></div><p class="muted-note">Critérios sem evidência suficiente permanecem “Não verificável”. Notícias sem fonte conectada não são consideradas liberadas.</p></form></div>`
+        )}${taInput("R:R planejado (se conhecido)", "ta-a-rr", c.plannedRR ?? "", "number", 'min="0" step="any"')}${taInput("Risco planejado (moeda do plano)" + (S.currency ? " · " + S.currency : ""), "ta-a-risk", c.plannedRisk ?? "", "number", 'min="0" step="any"')}</div>${taText("Contexto macro (opcional)", "ta-a-macro", c.macroContext)}${taText("Região de entrada e anotações (opcional)", "ta-a-region", c.entryRegion)}<div class="row"><button class="b" type="submit" ${taAnalyst.pending ? "disabled" : ""}>${taAnalyst.pending ? "Analisando evidências…" : "Analisar com IA"}</button><button class="b s" type="button" onclick="taRunManual()" ${taAnalyst.pending ? "disabled" : ""}>Revisar manualmente</button></div><p class="muted-note">Critérios sem evidência suficiente permanecem “Não verificável”. Notícias sem fonte conectada não são consideradas liberadas.</p></form></div>`
   }<p class="ta-status-error" role="status">${esc(taAnalyst.error)}</p></section>${taAnalysisResult()}<details class="card"><summary>Análises anteriores (${(S.setupAnalyses || []).length})</summary><div class="ta-analysis-history">${
     (S.setupAnalyses || [])
       .slice()
@@ -744,6 +748,12 @@ async function taRunAnalysis() {
     !taAnalyst.context.timeframe
   ) {
     taAnalyst.error = "Inclua um print, ativo, timeframe e um plano salvo.";
+    R();
+    return;
+  }
+  if (!taConnection.authenticated || !taConnection.services?.ai) {
+    taAnalyst.error =
+      "Conecte o serviço de IA em Configurações para analisar o print. A revisão manual dos critérios permanece disponível.";
     R();
     return;
   }

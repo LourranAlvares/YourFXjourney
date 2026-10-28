@@ -54,7 +54,7 @@ const { chromium } = require("playwright"),
     const snapshot = await p.evaluate(() => JSON.stringify(S));
     await p.locator(".scene-more-nav summary").click();
     assert(await p.locator(".scene-more-nav").evaluate((e) => e.open));
-    await p.getByRole("button", { name: "Trade Analyst", exact: true }).click();
+    await p.getByRole("button", { name: "EliteX Alinha", exact: true }).click();
     assert.equal(await p.evaluate(() => tab), "analyst");
     assert(await p.locator(".scene-more-nav").evaluate((e) => e.open));
     for (const width of [320, 760, 1024, 1440, 1920]) {

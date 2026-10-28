@@ -1710,3 +1710,105 @@ body.elitex-unified .terminal-gridline {
 .scene-more-nav summary::-webkit-details-marker {
   display: none;
 }
+.elite-function-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+.elite-function-heading h2 {
+  font-size: 20px;
+  margin: 0 0 5px;
+}
+.elite-function-heading p {
+  font-size: 13px;
+  margin: 0;
+  color: #a9bfb9;
+}
+.elite-function-heading > span {
+  font-size: 11px;
+  color: #a5c8bc;
+}
+.elite-function-actions button > span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.elite-function-actions small {
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ab7b0;
+  line-height: 1.4;
+}
+.elite-function-actions b {
+  font-size: 14px;
+}
+.elite-function-actions button {
+  min-height: 78px;
+}
+.elite-analysis-guide {
+  padding: 16px;
+  margin-bottom: 18px;
+  border: 1px solid #2c5149;
+  border-radius: 16px;
+  background: #07201d44;
+}
+.elite-analysis-guide ol {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  padding-left: 20px;
+}
+.elite-analysis-guide small {
+  display: block;
+  color: #a8c2b9;
+  line-height: 1.6;
+}
+.elite-review-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+.elite-review-columns > section {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #2b4c43;
+  border-radius: 18px;
+  background: #081b20aa;
+}
+.elite-review-columns p,
+.elite-review details p {
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.elite-review-columns li {
+  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.elite-review-columns .b {
+  margin-top: 12px;
+}
+.elite-review summary {
+  cursor: pointer;
+  color: #a6d9cd;
+}
+@media (max-width: 760px) {
+  .elite-review-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .elite-function-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .elite-analysis-guide ol {
+    display: block;
+  }
+  .elite-analysis-guide li {
+    margin-bottom: 8px;
+  }
+}

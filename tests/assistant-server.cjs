@@ -104,13 +104,11 @@ const { createApp } = require("../server/index.cjs");
       x.fillRect(0, 0, 200, 100);
       return c.toDataURL("image/png").split(",")[1];
     });
-    await p
-      .locator("#ta-analyst-image")
-      .setInputFiles({
-        name: "setup.png",
-        mimeType: "image/png",
-        buffer: Buffer.from(image, "base64"),
-      });
+    await p.locator("#ta-analyst-image").setInputFiles({
+      name: "setup.png",
+      mimeType: "image/png",
+      buffer: Buffer.from(image, "base64"),
+    });
     await p.locator("#ta-a-asset").fill("EURUSD");
     await p.locator("#ta-a-timeframe").fill("5m");
     await p.locator("#ta-a-rr").fill("1");
@@ -132,17 +130,42 @@ const { createApp } = require("../server/index.cjs");
       "PASS UI to authenticated analysis endpoint to mocked multimodal provider to deterministic score",
     );
     await p.evaluate(() => taGo("home"));
-    await p
-      .getByRole("button", { name: "Gerar insight com IA", exact: true })
-      .click();
+    await p.getByRole("button", { name: /Atualizar foco com IA/ }).click();
     await p.waitForFunction(() => taBriefing.result !== null);
     assert.match(
-      await p.locator(".ta-generated-insight").innerText(),
+      await p.locator(".scene-focus").innerText(),
       /Confira os critérios/,
     );
     assert.equal(calls, 2);
     console.log(
       "PASS personal AI briefing references original deterministic facts through authenticated endpoint",
+    );
+    await p.evaluate(() => {
+      S.trades = Array.from({ length: 6 }, (_, i) =>
+        mk({
+          id: "review" + i,
+          symbol: "EURUSD",
+          close: "2026-10-01T12:00",
+          pnl: i % 2 ? 30 : -10,
+          risk: 10,
+          behavior: { plan: true, errors: [] },
+        }),
+      );
+      taGo("ins");
+    });
+    const stored = await p.evaluate(() => JSON.stringify(S));
+    await p
+      .getByRole("button", { name: "Gerar Raio-X com IA", exact: true })
+      .click();
+    await p.waitForFunction(() => eliteReview.result && !eliteReview.pending);
+    assert.match(
+      await p.locator(".elite-review").innerText(),
+      /Confira os critérios/,
+    );
+    assert.equal(calls, 3);
+    assert.equal(await p.evaluate(() => JSON.stringify(S)), stored);
+    console.log(
+      "PASS full-history review through authenticated backend and validated AI facts",
     );
     await p.evaluate(() => taGo("settings"));
     await p

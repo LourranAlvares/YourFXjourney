@@ -1,5 +1,5 @@
 /* Reference-led photographic office. No simulated market data or character articulation. */
-const eliteDesk = { state: "working", messages: [], pending: false, timer: 0 };
+const eliteDesk = { state: "working", timer: 0 };
 function eliteState(state) {
   eliteDesk.state = state;
   document.querySelector(".elite-scene")?.setAttribute("data-state", state);
@@ -7,8 +7,8 @@ function eliteState(state) {
   const label = document.querySelector("#elite-state");
   if (label)
     label.textContent = {
-      working: "Seu espaço de preparação",
-      attention: "Estou ouvindo",
+      working: "Seu processo em foco",
+      attention: "Pronto para revisar",
       thinking: "Consultando a IA…",
       responding: "Orientação disponível",
     }[state];
@@ -16,50 +16,6 @@ function eliteState(state) {
   if (state === "attention" || state === "responding")
     eliteDesk.timer = setTimeout(() => eliteState("working"), 9000);
 }
-async function eliteSend() {
-  if (eliteDesk.pending) return;
-  const input = document.querySelector("#elite-question"),
-    question = input?.value.trim();
-  if (!question) return;
-  if (!taConnection.authenticated || !taConnection.services?.ai) {
-    eliteDesk.messages.push({
-      role: "error",
-      text: "A IA não está conectada. Entre em Configurações para validar a conexão. Os atalhos continuam disponíveis.",
-    });
-    R();
-    eliteState("attention");
-    return;
-  }
-  eliteDesk.messages.push({ role: "user", text: question });
-  eliteDesk.pending = true;
-  eliteState("thinking");
-  R();
-  try {
-    const snapshot = taBriefingInput(),
-      result = await taApi("/api/briefing", {
-        method: "POST",
-        body: JSON.stringify({ ...snapshot, question }),
-      });
-    const byId = new Map(snapshot.facts.map((f) => [f.id, f.text]));
-    eliteDesk.messages.push({
-      role: "assistant",
-      text: [
-        ...result.facts.map((f) => byId.get(f.id)).filter(Boolean),
-        result.action,
-      ].join("\n\n"),
-    });
-  } catch (e) {
-    eliteDesk.messages.push({ role: "error", text: e.message });
-  } finally {
-    eliteDesk.pending = false;
-    eliteDesk.messages = eliteDesk.messages.slice(-20);
-    if (tab === "home") {
-      R();
-      eliteState("responding");
-    } else eliteDesk.state = "responding";
-  }
-}
-
 function eliteDaySummary() {
   const parts = new Intl.DateTimeFormat("en-CA", {
       timeZone: taProfile().timezone,
@@ -96,19 +52,17 @@ function vHome() {
           )
           .join("")
       : `<p>${profile.instruments.length ? profile.instruments.map(esc).join(" · ") : "Selecione os ativos que acompanha."}</p><small>${taConnection.authenticated ? "Volatilidade aguardando consulta." : "Conecte os serviços para consultar a volatilidade."}</small>`
-  }<small>Volatilidade observada · sem indicação de direção</small></section><section class="scene-card"><div class="section-head"><h2>Próximo evento</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ↗</button></div>${event ? `<div class="scene-event"><b>${esc(taDailyFormatTime(event.time))}</b><span>${esc(event.currency)}</span></div><p>${esc(event.name)}</p>` : "<p>Confira a agenda econômica.</p><small>Sem próximo evento verificado disponível nesta consulta.</small>"}</section><section class="scene-card"><div class="section-head"><h2>Visão do dia</h2><button class="scene-link" onclick="taGo('dash')">↗</button></div><dl><div><dt>Sessão</dt><dd>${session.configured ? esc(profile.session.start + "–" + profile.session.end) : '<button class="scene-link" onclick="taGo(\'settings\')">Configurar</button>'}</dd></div><div><dt>Trading Plan</dt><dd>${plan ? "Ativo · v" + esc(plan.version) : '<button class="scene-link" onclick="taGo(\'plan\')">Criar plano</button>'}</dd></div><div><dt>Limite diário</dt><dd>${plan?.risk?.maxDaily ? money(plan.risk.maxDaily) : "Não definido"}</dd></div></dl></section></div><div class="elite-office scene-composer" data-state="${eliteDesk.state}">${eliteConnectionGate()}<form onsubmit="event.preventDefault();eliteSend()"><button type="button" class="scene-attach" aria-label="Anexar gráfico no Trade Analyst" onclick="taGo('analyst')">${terminalIcon("analyst")}</button><label class="sr-only" for="elite-question">Pergunte ao assistente</label><textarea id="elite-question" rows="1" maxlength="1500" placeholder="Pergunte algo ou peça uma análise…" oninput="if(!eliteDesk.pending)eliteState('attention')" ${eliteDesk.pending ? "disabled" : ""}></textarea><button class="scene-send" type="submit" aria-label="Enviar pergunta" ${eliteDesk.pending ? "disabled" : ""}>${eliteDesk.pending ? "…" : "➤"}</button></form><div class="scene-bottom-actions">${[
-    ["analyst", "Analisar gráfico"],
-    ["economic", "Eventos de hoje"],
-    ["plan", "Revisar meu plano"],
-    ["trades", "Meu diário"],
+  }<small>Volatilidade observada · sem indicação de direção</small></section><section class="scene-card"><div class="section-head"><h2>Próximo evento</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ↗</button></div>${event ? `<div class="scene-event"><b>${esc(taDailyFormatTime(event.time))}</b><span>${esc(event.currency)}</span></div><p>${esc(event.name)}</p>` : "<p>Confira a agenda econômica.</p><small>Sem próximo evento verificado disponível nesta consulta.</small>"}</section><section class="scene-card"><div class="section-head"><h2>Visão do dia</h2><button class="scene-link" onclick="taGo('dash')">↗</button></div><dl><div><dt>Sessão</dt><dd>${session.configured ? esc(profile.session.start + "–" + profile.session.end) : '<button class="scene-link" onclick="taGo(\'settings\')">Configurar</button>'}</dd></div><div><dt>Trading Plan</dt><dd>${plan ? "Ativo · v" + esc(plan.version) : '<button class="scene-link" onclick="taGo(\'plan\')">Criar plano</button>'}</dd></div><div><dt>Limite diário</dt><dd>${plan?.risk?.maxDaily ? money(plan.risk.maxDaily) : "Não definido"}</dd></div></dl></section></div><div class="elite-office scene-composer" data-state="${eliteDesk.state}">${eliteConnectionGate()}<div class="elite-function-heading"><div><h2>Seu assistente de trading</h2><p>Escolha o que precisa revisar.</p></div><span id="elite-state">${ready ? "IA configurada" : "Ferramentas disponíveis"}</span></div><div class="scene-bottom-actions elite-function-actions">${[
+    ["analyst", "EliteX Alinha", "Meu trade segue meu sistema?"],
+    ["ins", "Raio-X do Trader", "Meus padrões e pontos de atenção"],
+    ["economic", "Calendário", "Eventos e cautelas do dia"],
+    ["plan", "Meu sistema", "Regras que orientam as análises"],
   ]
     .map(
-      ([id, label]) =>
-        `<button onclick="taGo('${id}')">${terminalIcon(id)}<span>${label}</span></button>`,
+      ([id, label, note]) =>
+        `<button onclick="eliteState('attention');taGo('${id}')">${terminalIcon(id)}<span><b>${label}</b><small>${note}</small></span></button>`,
     )
-    .join(
-      "",
-    )}</div><div class="scene-chat-status"><span id="elite-state">${eliteDesk.pending ? "Consultando a IA…" : ready ? "IA disponível" : "IA não conectada"}</span><button class="scene-link" onclick="taGo('settings')">${ready ? "Conexão" : "Conectar"}</button><details><summary>Privacidade</summary><p>A pergunta, o plano e fatos agregados são enviados à IA. Imagens são analisadas no Trade Analyst.</p></details></div>${eliteDesk.messages.length ? `<details class="elite-history" open><summary>Conversa desta visita (${eliteDesk.messages.length})</summary><div role="log" aria-live="polite">${eliteDesk.messages.map((m) => `<article class="elite-message ${m.role}"><small>${m.role === "user" ? "Você" : m.role === "error" ? "Conexão" : "EliteX · IA"}</small><p>${esc(m.text)}</p></article>`).join("")}</div></details>` : ""}</div></section>`;
+    .join("")}</div></div></section>`;
 }
 
 function eliteConnectionGate() {
