@@ -1027,7 +1027,7 @@ dialog {
   --border: #252a32;
   --text: #f2f4f7;
   --secondary: #a0a7b2;
-  --muted: #69717d;
+  --muted: #88919e;
   --positive: #00d6a0;
   --negative: #f23645;
   --warning: #f0b85a;
@@ -1041,8 +1041,8 @@ dialog {
   --ac: var(--text);
   --mono:
     ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --sidebar-width: 192px;
-  --radius: 4px;
+  --sidebar-width: 248px;
+  --radius: 18px;
   color-scheme: dark;
 }
 html {
@@ -1057,7 +1057,7 @@ body {
     -apple-system,
     "Segoe UI",
     sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   background: var(--workspace);
   letter-spacing: 0;
@@ -1101,7 +1101,7 @@ header {
   gap: 0;
 }
 header h1 {
-  font-size: 16px;
+  font-size: 19px;
   margin: 0 4px 28px;
   letter-spacing: -0.6px;
   color: var(--tx);
@@ -1113,7 +1113,7 @@ header h1::before {
 }
 header h1::after {
   content: "TRADING WORKSPACE";
-  font: 8px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 1.5px;
   margin: 7px 0 0 24px;
   color: var(--muted);
@@ -1130,7 +1130,7 @@ header nav {
   margin-bottom: 18px;
 }
 .ta-nav-group > small {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 1.4px;
   padding: 0 10px 8px;
   color: var(--muted);
@@ -1140,9 +1140,9 @@ header nav {
   align-items: center;
   gap: 10px;
   min-height: 34px;
-  font-size: 11px;
+  font-size: 13px;
   padding: 8px 10px;
-  border-radius: 3px;
+  border-radius: 10px;
   border: 1px solid transparent;
   color: var(--secondary);
   text-align: left;
@@ -1182,7 +1182,7 @@ header nav {
   color: var(--tx);
 }
 .sidebar-note {
-  font: 9px/1.8 var(--mono);
+  font: 11px/1.8 var(--mono);
   color: var(--muted);
   margin-top: 10px;
   padding: 12px 4px 0;
@@ -1215,10 +1215,10 @@ main {
   gap: 12px;
   min-width: 0;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 13px;
 }
 .terminal-wordmark {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 1.8px;
   color: var(--secondary);
 }
@@ -1232,10 +1232,10 @@ main {
   color: var(--secondary);
   min-width: 28px;
   padding: 0;
-  font-size: 15px;
+  font-size: 17px;
 }
 .terminal-storage {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   color: var(--muted);
 }
 .terminal-connection {
@@ -1243,11 +1243,11 @@ main {
   align-items: center;
   gap: 7px;
   border: 1px solid var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
   background: var(--surface);
   color: var(--secondary);
   padding: 4px 8px;
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   min-height: 26px;
 }
 .terminal-connection i {
@@ -1266,30 +1266,30 @@ main {
 }
 .page-top h2,
 .ta-home-heading h1 {
-  font-size: 23px;
+  font-size: 30px;
   line-height: 1.3;
   letter-spacing: -0.7px;
   font-weight: 550;
 }
 .page-top p {
-  font-size: 11px;
+  font-size: 13px;
   margin-top: 5px;
   color: var(--muted);
 }
 .eyebrow {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   color: var(--muted);
   letter-spacing: 1.4px;
   margin-bottom: 7px;
 }
 h2,
 .section-head h2 {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 550;
   letter-spacing: -0.1px;
 }
 h3 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 550;
   letter-spacing: 0;
 }
@@ -1298,7 +1298,7 @@ h3 {
   gap: 10px;
 }
 .section-head p {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .card {
@@ -1318,9 +1318,9 @@ h3 {
 label.b,
 button.b,
 label.s {
-  border-radius: 3px !important;
+  border-radius: 10px !important;
   min-height: 32px;
-  font-size: 11px !important;
+  font-size: 13px !important;
   padding: 6px 11px;
   line-height: 1.4;
   font-weight: 500 !important;
@@ -1355,10 +1355,10 @@ input,
 select,
 textarea {
   min-height: 32px;
-  border-radius: 3px;
+  border-radius: 10px;
   background: var(--workspace);
   border: 1px solid var(--bd);
-  font-size: 11px;
+  font-size: 13px;
   color: var(--tx);
   padding: 6px 8px;
 }
@@ -1374,7 +1374,7 @@ input[type="time"],
 input[type="month"],
 input[type="number"] {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 13px;
 }
 textarea {
   min-height: 76px;
@@ -1396,7 +1396,7 @@ textarea::placeholder {
 .ta-two-columns > label,
 .ta-login > label,
 .ta-analyst-grid form > label {
-  font-size: 10px;
+  font-size: 12px;
   gap: 5px;
   color: var(--secondary);
 }
@@ -1404,13 +1404,13 @@ textarea::placeholder {
   display: flex;
   gap: 9px;
   padding: 10px 12px;
-  border-radius: 3px;
+  border-radius: 10px;
   border-color: var(--bd);
   background: var(--surface);
   margin-bottom: 12px;
 }
 .filters label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.5px;
 }
 .filters select {
@@ -1448,25 +1448,25 @@ textarea::placeholder {
 }
 .k {
   border-color: var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 12px;
   background: var(--surface);
 }
 .k small {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
   color: var(--secondary);
 }
 .k b,
 .grid .k b {
-  font: 500 20px/1.3 var(--mono);
+  font: 500 25px/1.3 var(--mono);
   letter-spacing: -0.7px;
   display: block;
   margin: 10px 0 6px;
   overflow-wrap: anywhere;
 }
 .k small:last-child {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--muted);
 }
 .secondary-metrics {
@@ -1478,7 +1478,7 @@ textarea::placeholder {
   border-bottom: 1px solid var(--bd);
 }
 .secondary-metrics .k b {
-  font-size: 17px;
+  font-size: 20px;
   letter-spacing: -0.5px;
 }
 .grid {
@@ -1515,7 +1515,7 @@ textarea::placeholder {
   gap: 10px;
   padding: 9px 0;
   border-top: 1px solid var(--bd);
-  font-size: 10px;
+  font-size: 12px;
 }
 .terminal-context dt {
   color: var(--secondary);
@@ -1535,7 +1535,7 @@ textarea::placeholder {
   overflow: hidden;
   background: var(--workspace);
   border: 1px solid #191d24;
-  border-radius: 2px;
+  border-radius: 8px;
 }
 .terminal-chart-toolbar {
   display: flex;
@@ -1547,7 +1547,7 @@ textarea::placeholder {
   padding: 3px 8px;
 }
 .terminal-chart-label {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--secondary);
 }
 .terminal-chart-tools {
@@ -1560,23 +1560,23 @@ textarea::placeholder {
   background: transparent;
   color: var(--secondary);
   border: 1px solid transparent;
-  border-radius: 2px;
+  border-radius: 8px;
   min-height: 24px;
   min-width: 24px;
   padding: 2px 5px;
-  font: 11px var(--mono);
+  font: 13px var(--mono);
 }
 .terminal-chart-tools button:hover:enabled {
   background: var(--hover);
   border-color: var(--bd);
 }
 .terminal-chart-tools > span {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   color: var(--muted);
   padding: 0 4px;
 }
 .chart-readout {
-  font: 10px/1.6 var(--mono);
+  font: 12px/1.6 var(--mono);
   color: var(--secondary);
   min-height: 34px;
   padding: 8px 10px;
@@ -1597,7 +1597,7 @@ textarea::placeholder {
   opacity: 0.55;
 }
 .terminal-axis {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   fill: var(--muted);
 }
 .terminal-crosshair line {
@@ -1615,13 +1615,13 @@ textarea::placeholder {
   stroke-width: 1.5;
 }
 .terminal-chart-caption {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   color: var(--muted);
   padding: 6px 10px;
   border-top: 1px solid #171b21;
 }
 .chart-foot {
-  font: 9px/1.6 var(--mono);
+  font: 11px/1.6 var(--mono);
   margin-top: 10px;
   color: var(--muted);
   gap: 10px;
@@ -1631,10 +1631,10 @@ textarea::placeholder {
   gap: 10px;
   background: var(--workspace);
   border: 1px solid var(--bd);
-  font-size: 11px;
+  font-size: 13px;
 }
 .empty-chart b {
-  font-size: 14px;
+  font-size: 16px;
 }
 .empty-chart .b {
   margin-top: 8px;
@@ -1653,10 +1653,10 @@ textarea::placeholder {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .terminal-bar-row b {
-  font: 11px var(--mono);
+  font: 13px var(--mono);
   font-weight: 400;
 }
 .terminal-bar-track {
@@ -1681,11 +1681,11 @@ textarea::placeholder {
   opacity: 0.8;
 }
 .terminal-bar-row small {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   color: var(--muted);
 }
 table {
-  font-size: 11px;
+  font-size: 13px;
   border-collapse: collapse;
   width: 100%;
   font-variant-numeric: tabular-nums;
@@ -1693,7 +1693,7 @@ table {
 th {
   background: var(--workspace);
   color: var(--secondary);
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 0.3px;
   text-transform: uppercase;
   position: sticky;
@@ -1707,7 +1707,7 @@ td {
 }
 td {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--secondary);
 }
 td b {
@@ -1743,12 +1743,12 @@ th[aria-sort="descending"] button {
   overflow: auto;
   max-width: 100%;
   scrollbar-width: thin;
-  border-radius: 2px;
+  border-radius: 8px;
 }
 .badge {
-  border-radius: 2px;
+  border-radius: 8px;
   padding: 2px 5px;
-  font: 9px/1.5 var(--mono);
+  font: 11px/1.5 var(--mono);
   color: var(--secondary);
   border-color: var(--bd);
   background: transparent;
@@ -1759,7 +1759,7 @@ th[aria-sort="descending"] button {
 }
 .cd {
   min-height: 96px;
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 10px 8px;
   background: var(--workspace);
   border-color: var(--bd);
@@ -1793,26 +1793,26 @@ th[aria-sort="descending"] button {
   font-family: var(--mono);
 }
 .cd .day-pnl {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   letter-spacing: -0.3px;
 }
 .cd small {
-  font-size: 9px;
+  font-size: 11px;
 }
 .ch {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 0.5px;
   padding-bottom: 6px;
 }
 .month-title {
-  font: 12px var(--mono);
+  font: 14px var(--mono);
 }
 .month-actions .b {
   min-height: 29px;
 }
 .calendar-summary {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   gap: 14px;
   margin-top: 12px;
   padding-top: 12px;
@@ -1823,19 +1823,19 @@ th[aria-sort="descending"] button {
 .share-live-day {
   min-height: 140px;
   padding: 12px;
-  border-radius: 3px;
+  border-radius: 10px;
   background: var(--workspace);
   border-color: var(--bd);
 }
 .share-live-day b {
-  font: 500 19px var(--mono);
+  font: 500 23px var(--mono);
   letter-spacing: -0.7px;
 }
 .share-live-stats {
   gap: 0;
   margin: 14px 0;
   border: 1px solid var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
 }
 .share-live-stats > div {
   padding: 12px;
@@ -1845,10 +1845,10 @@ th[aria-sort="descending"] button {
   border-radius: 0;
 }
 .share-live-stats small {
-  font-size: 9px;
+  font-size: 11px;
 }
 .share-live-stats b {
-  font: 500 20px var(--mono);
+  font: 500 25px var(--mono);
   margin-top: 7px;
 }
 .share-settings {
@@ -1857,17 +1857,17 @@ th[aria-sort="descending"] button {
 .share-r-needed {
   border-color: #f0b85a45;
   background: #f0b85a07;
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 12px;
 }
 .share-risk-bulk,
 .shot-summary > div {
   border-color: var(--bd);
   background: var(--workspace);
-  border-radius: 3px;
+  border-radius: 10px;
 }
 dialog {
-  border-radius: 5px;
+  border-radius: 14px;
   background: var(--surface);
   border-color: #3a414c;
   padding: 22px;
@@ -1880,7 +1880,7 @@ dialog::backdrop {
   backdrop-filter: blur(2px);
 }
 dialog h2 {
-  font-size: 16px;
+  font-size: 19px;
 }
 dialog .row {
   gap: 8px;
@@ -1888,30 +1888,30 @@ dialog .row {
 .day-summary {
   background: var(--workspace);
   border: 1px solid var(--bd);
-  border-radius: 3px;
-  font: 11px var(--mono);
+  border-radius: 10px;
+  font: 13px var(--mono);
   padding: 12px;
 }
 .th img,
 .day-trade img {
   border: 1px solid var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
   background: var(--workspace);
 }
 .ins {
-  border-radius: 2px;
+  border-radius: 8px;
   border-left-width: 2px;
   background: var(--workspace);
   padding: 12px;
 }
 details > summary {
-  font-size: 11px;
+  font-size: 13px;
   cursor: pointer;
   color: var(--secondary);
   padding: 5px 0;
 }
 .muted-note {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.7;
   color: var(--secondary);
 }
@@ -1920,7 +1920,7 @@ details > summary {
   gap: 16px;
 }
 .ta-home-heading > div > p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--secondary);
   margin: 8px 0;
 }
@@ -1935,7 +1935,7 @@ details > summary {
   min-height: 0;
 }
 .ta-session-hours {
-  font: 500 31px var(--mono);
+  font: 500 38px var(--mono);
   letter-spacing: -1px;
   margin: 14px 0;
 }
@@ -1943,7 +1943,7 @@ details > summary {
   color: var(--muted);
 }
 .ta-session-title strong {
-  font-size: 13px;
+  font-size: 15px;
 }
 .ta-session-card {
   background: var(--surface);
@@ -1954,14 +1954,14 @@ details > summary {
   border-color: var(--bd);
 }
 .ta-market-item strong {
-  font: 11px var(--mono);
+  font: 13px var(--mono);
 }
 .ta-source {
-  font: 9px/1.7 var(--mono);
+  font: 11px/1.7 var(--mono);
   color: var(--muted);
 }
 .ta-unavailable {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--secondary);
   padding: 10px 0;
@@ -1984,25 +1984,25 @@ details > summary {
   padding-left: 12px;
 }
 .ta-event-time b {
-  font: 12px var(--mono);
+  font: 14px var(--mono);
 }
 .ta-event-time small {
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   color: var(--muted);
 }
 .ta-event-info strong {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
 }
 .ta-event-values {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
 }
 .ta-event-warning {
   background: #f0b85a09;
   border-color: #f0b85a40;
   color: var(--warning);
-  font-size: 9px;
-  border-radius: 3px;
+  font-size: 11px;
+  border-radius: 10px;
 }
 .ta-assistant-insight,
 .ta-insight-evidence {
@@ -2010,7 +2010,7 @@ details > summary {
   border-color: var(--bd);
 }
 .ta-assistant-insight > p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .ta-assistant-insight .badge {
   color: var(--secondary);
@@ -2021,7 +2021,7 @@ details > summary {
 }
 .ta-quick-action {
   border-color: var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 12px;
   background: var(--surface);
 }
@@ -2031,10 +2031,10 @@ details > summary {
   transform: none;
 }
 .ta-quick-action b {
-  font-size: 11px;
+  font-size: 13px;
 }
 .ta-quick-action small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .ta-quick-action > span {
@@ -2052,7 +2052,7 @@ details > summary {
 .ta-connection-help {
   background: var(--workspace);
   border-color: var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
 }
 .ta-service-grid {
   gap: 8px;
@@ -2061,16 +2061,16 @@ details > summary {
   padding: 12px;
 }
 .ta-service-grid b {
-  font: 10px/1.6 var(--mono);
+  font: 12px/1.6 var(--mono);
   color: var(--secondary);
 }
 .ta-connection-help {
   padding: 16px;
   line-height: 1.7;
-  font-size: 11px;
+  font-size: 13px;
 }
 .ta-connection-help h3 {
-  font-size: 13px;
+  font-size: 15px;
 }
 .ta-analyst-grid {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
@@ -2094,13 +2094,13 @@ details > summary {
   font-family: var(--mono);
 }
 .ta-check {
-  font-size: 11px;
+  font-size: 13px;
 }
 .ta-weekdays {
   gap: 12px;
 }
 .ta-weekdays label {
-  font-size: 10px;
+  font-size: 12px;
 }
 .ta-weekdays input,
 .ta-check input {
@@ -2111,7 +2111,7 @@ details > summary {
   padding: 12px;
 }
 .ta-assessment p {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
 }
 .ta-tabs,
@@ -2120,19 +2120,19 @@ details > summary {
 }
 .ta-tabs button,
 .ins-tabs button {
-  border-radius: 3px;
+  border-radius: 10px;
 }
 .ta-empty {
   padding: 22px 12px;
   background: var(--workspace);
   border: 1px dashed var(--bd);
-  border-radius: 3px;
+  border-radius: 10px;
 }
 .ta-empty p {
-  font-size: 11px;
+  font-size: 13px;
 }
 .ta-empty small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 .sr-only {
@@ -2147,7 +2147,7 @@ details > summary {
   border: 0 !important;
 }
 .terminal-collapsed {
-  --sidebar-width: 56px;
+  --sidebar-width: 72px;
 }
 .terminal-collapsed header {
   padding: 20px 6px 12px;
@@ -2158,7 +2158,7 @@ details > summary {
   text-align: center;
 }
 .terminal-collapsed header h1::before {
-  font-size: 22px;
+  font-size: 28px;
   margin: 0;
 }
 .terminal-collapsed header h1::after,
@@ -2230,7 +2230,7 @@ details > summary {
 }
 @media (max-width: 900px) {
   :root {
-    --sidebar-width: 168px;
+    --sidebar-width: 210px;
   }
   main {
     padding-left: 16px;
@@ -2270,7 +2270,7 @@ details > summary {
     overflow: visible;
   }
   header h1 {
-    font-size: 15px;
+    font-size: 17px;
     margin: 0 0 10px;
   }
   header h1::after,
@@ -2294,7 +2294,7 @@ details > summary {
     flex-shrink: 0;
     white-space: nowrap;
     min-height: 32px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 6px 9px;
   }
   .ta-nav-group button span {
@@ -2327,10 +2327,10 @@ details > summary {
   }
   .terminal-breadcrumb {
     gap: 8px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .terminal-connection {
-    font-size: 8px;
+    font-size: 11px;
     max-width: 155px;
     overflow: hidden;
     white-space: nowrap;
@@ -2344,22 +2344,22 @@ details > summary {
   }
   .page-top h2,
   .ta-home-heading h1 {
-    font-size: 21px;
+    font-size: 26px;
   }
   .page-top p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .page-actions {
     max-width: 145px;
     gap: 5px;
   }
   .page-actions .b {
-    font-size: 10px !important;
+    font-size: 12px !important;
     min-height: 30px;
     padding: 5px 8px;
   }
   .eyebrow {
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: 1px;
   }
   .card {
@@ -2374,7 +2374,7 @@ details > summary {
     min-height: 96px;
   }
   .primary-metrics .k b {
-    font-size: 21px;
+    font-size: 26px;
   }
   .primary-metrics .k:last-child {
     grid-column: 1/-1;
@@ -2386,7 +2386,7 @@ details > summary {
     padding: 12px 6px;
   }
   .secondary-metrics .k b {
-    font-size: 16px;
+    font-size: 19px;
   }
   .filters {
     padding: 9px;
@@ -2416,17 +2416,17 @@ details > summary {
     margin-left: auto;
   }
   .terminal-chart-label {
-    font-size: 9px;
+    font-size: 11px;
   }
   .chart-readout {
-    font-size: 9px;
+    font-size: 11px;
     padding: 7px;
   }
   .terminal-chart-caption {
-    font-size: 8px;
+    font-size: 11px;
   }
   .chart-foot {
-    font-size: 8px;
+    font-size: 11px;
     flex-wrap: wrap;
   }
   .terminal-performance .section-head label {
@@ -2446,23 +2446,23 @@ details > summary {
     min-height: 93px;
   }
   .cd .day-pnl {
-    font-size: 12px;
+    font-size: 14px;
   }
   .share-live-day {
     min-height: 105px;
     padding: 10px 7px;
   }
   .share-live-day b {
-    font-size: 17px;
+    font-size: 20px;
   }
   .share-live-stats b {
-    font-size: 18px;
+    font-size: 22px;
   }
   .share-live-stats small {
-    font-size: 9px;
+    font-size: 11px;
   }
   .ta-session-hours {
-    font-size: 28px;
+    font-size: 34px;
   }
   .ta-event {
     gap: 9px;
@@ -2471,13 +2471,13 @@ details > summary {
     padding-left: 8px;
   }
   .ta-event-info strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .ta-event-time b {
-    font-size: 11px;
+    font-size: 13px;
   }
   .ta-event-values {
-    font-size: 9px;
+    font-size: 11px;
   }
   .ta-quick-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2492,7 +2492,7 @@ details > summary {
     margin-bottom: 16px;
   }
   .ta-home-heading .b {
-    font-size: 10px !important;
+    font-size: 12px !important;
   }
   .ta-connection-help {
     padding: 12px;
@@ -2517,7 +2517,7 @@ details > summary {
   input,
   select,
   textarea {
-    font-size: 12px;
+    font-size: 14px;
   }
   .terminal-topbar {
     position: relative;
@@ -2531,6 +2531,547 @@ details > summary {
     transition: none !important;
     animation: none !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* OLED atmosphere: original CSS layers, no canvas, assets or market-data simulation. */
+body {
+  isolation: isolate;
+  background: #050607;
+}
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -8%;
+  z-index: -1;
+  pointer-events: none;
+}
+body::before {
+  background:
+    radial-gradient(ellipse at 75% 8%, #c3d8e818, transparent 46%),
+    radial-gradient(ellipse at 32% 83%, #c9ac770d, transparent 43%),
+    radial-gradient(ellipse at 96% 70%, #adb9c610, transparent 40%);
+  animation: oled-drift 32s ease-in-out infinite alternate;
+  will-change: transform;
+}
+body::after {
+  inset: 0;
+  opacity: 0.14;
+  background-image:
+    linear-gradient(#bac6d01c 1px, transparent 1px),
+    linear-gradient(90deg, #bac6d01c 1px, transparent 1px);
+  background-size: 90px 90px;
+  mask-image: radial-gradient(ellipse at 80% 10%, #000, transparent 70%);
+  animation: oled-grid 44s linear infinite alternate;
+}
+@keyframes oled-drift {
+  from {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(3%, 3%, 0) scale(1.09);
+  }
+}
+@keyframes oled-grid {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(28px, 35px, 0);
+  }
+}
+header {
+  padding: 26px 16px 16px;
+  background: #050607f5;
+  box-shadow: 12px 0 50px #0003;
+}
+header h1 {
+  font-size: 21px;
+  margin-bottom: 32px;
+}
+header h1::after {
+  font-size: 10px;
+}
+.ta-nav-group {
+  margin-bottom: 22px;
+}
+.ta-nav-group > small {
+  font-size: 11px;
+  padding-bottom: 10px;
+}
+.ta-nav-group button {
+  min-height: 44px;
+  padding: 11px 12px;
+  font-size: 14px;
+  gap: 12px;
+  border-radius: 11px;
+}
+.ta-nav-group button span,
+.ta-nav-group svg {
+  width: 20px;
+  height: 20px;
+}
+.ta-nav-group button.on {
+  background: linear-gradient(120deg, #232a33, #13171d);
+  border-color: #424b58;
+  box-shadow:
+    inset 0 1px #ffffff0a,
+    0 4px 12px #0003;
+}
+.ta-nav-group button.on::before {
+  left: 0;
+  top: 13px;
+  bottom: 13px;
+  border-radius: 3px;
+}
+.sidebar-note {
+  font-size: 11px;
+  line-height: 1.8;
+}
+main {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+.terminal-topbar {
+  height: 60px;
+  margin-left: -28px;
+  margin-right: -28px;
+  padding-left: 28px;
+  padding-right: 28px;
+  margin-bottom: 28px;
+  background: #080a0de8;
+  backdrop-filter: blur(14px);
+}
+.terminal-icon-button {
+  min-height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+}
+.terminal-icon-button:hover {
+  background: var(--hover);
+}
+.terminal-connection {
+  min-height: 34px;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+.terminal-connection i {
+  width: 6px;
+  height: 6px;
+}
+.card {
+  padding: 22px;
+  background: #0b0d12f5;
+  border-color: #2d333e;
+  box-shadow:
+    inset 0 1px #ffffff07,
+    0 10px 36px #0003;
+}
+.page-top {
+  margin-bottom: 24px;
+}
+.page-top h2,
+.ta-home-heading h1 {
+  font-size: 32px;
+}
+.section-head {
+  margin-bottom: 20px;
+}
+.section-head h2,
+.card h2 {
+  font-size: 17px;
+}
+.b,
+label.b,
+input,
+select {
+  min-height: 40px;
+}
+.b,
+label.b {
+  padding: 9px 15px;
+}
+input,
+select,
+textarea {
+  padding: 9px 11px;
+}
+.primary-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+.primary-metrics .k {
+  min-height: 124px;
+  padding: 19px;
+  border-bottom: 1px solid var(--bd);
+}
+.k b,
+.grid .k b {
+  font-size: 28px;
+}
+.k small {
+  font-size: 13px;
+}
+.k small:last-child {
+  font-size: 11px;
+}
+.secondary-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.secondary-metrics .k {
+  padding: 18px 12px;
+}
+.secondary-metrics .k b {
+  font-size: 23px;
+}
+.terminal-analysis-grid,
+.terminal-breakdowns {
+  gap: 18px;
+}
+.terminal-chart {
+  border-radius: 12px;
+  margin-top: 12px;
+}
+.terminal-chart-toolbar {
+  min-height: 44px;
+  padding: 6px 10px;
+}
+.terminal-chart-tools button {
+  min-height: 32px;
+  min-width: 30px;
+  border-radius: 7px;
+  font-size: 13px;
+}
+.terminal-chart-tools > span {
+  font-size: 11px;
+}
+.terminal-chart-label {
+  font-size: 12px;
+}
+.terminal-axis {
+  font-size: 12px;
+}
+.chart-readout {
+  font-size: 12px;
+  min-height: 42px;
+  padding: 10px 12px;
+}
+.terminal-chart-caption,
+.chart-foot {
+  font-size: 11px;
+}
+.terminal-chart-caption {
+  padding: 9px 12px;
+}
+.terminal-context dl > div {
+  font-size: 12px;
+  padding: 12px 0;
+}
+.terminal-bar-row {
+  padding: 12px 0;
+}
+.terminal-bar-row > div:first-child {
+  font-size: 14px;
+}
+.terminal-bar-row b {
+  font-size: 13px;
+}
+.terminal-bar-row small {
+  font-size: 11px;
+}
+.terminal-bar-track {
+  height: 6px;
+  margin: 10px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+th {
+  font-size: 11px;
+}
+td {
+  font-size: 12px;
+}
+th,
+td {
+  padding: 14px 12px;
+}
+.cd {
+  min-height: 116px;
+  padding: 13px 10px;
+}
+.cd .day-pnl {
+  font-size: 17px;
+}
+.cd small {
+  font-size: 11px;
+}
+.ch {
+  font-size: 11px;
+}
+.ta-quick-action {
+  padding: 18px;
+  border-radius: 14px;
+}
+.ta-service-grid > div {
+  padding: 18px;
+}
+.ta-service-grid b {
+  font-size: 12px;
+}
+dialog {
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow:
+    0 24px 120px #000c,
+    inset 0 1px #ffffff0a;
+}
+.ta-connection-help {
+  border-radius: 14px;
+}
+.badge {
+  border-radius: 7px;
+  font-size: 11px;
+  padding: 3px 7px;
+}
+.terminal-collapsed header {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.terminal-collapsed .ta-nav-group button {
+  padding: 12px;
+  min-height: 46px;
+}
+.terminal-collapsed .ta-nav-group button span,
+.terminal-collapsed .ta-nav-group svg {
+  width: 22px;
+  height: 22px;
+}
+@media (min-width: 1600px) {
+  .terminal-analysis-grid {
+    grid-template-columns: minmax(0, 2.5fr) minmax(350px, 1fr);
+  }
+  main {
+    padding-left: 34px;
+    padding-right: 34px;
+  }
+  .terminal-topbar {
+    margin-left: -34px;
+    margin-right: -34px;
+    padding-left: 34px;
+    padding-right: 34px;
+  }
+}
+@media (max-width: 1250px) {
+  .terminal-analysis-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .primary-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .secondary-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  main {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .terminal-topbar {
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .ta-nav-group button {
+    font-size: 13px;
+    padding: 10px 8px;
+    gap: 8px;
+  }
+  .terminal-breadcrumb {
+    gap: 8px;
+  }
+}
+@media (max-width: 760px) {
+  header {
+    padding: 16px 12px 10px;
+    box-shadow: none;
+  }
+  header h1 {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+  .ta-nav-group button {
+    font-size: 13px;
+    min-height: 40px;
+    padding: 9px 12px;
+  }
+  main {
+    padding: 0 14px 36px;
+  }
+  .terminal-topbar {
+    height: 52px;
+    margin: 0 -14px 22px;
+    padding: 0 12px;
+    backdrop-filter: none;
+  }
+  .terminal-breadcrumb {
+    font-size: 12px;
+    gap: 5px;
+  }
+  .terminal-top-status .terminal-connection {
+    font-size: 10px;
+    max-width: 145px;
+    padding: 5px 8px;
+  }
+  .card {
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+  }
+  .page-top h2,
+  .ta-home-heading h1 {
+    font-size: 27px;
+  }
+  .page-top {
+    margin-bottom: 20px;
+  }
+  .page-top p {
+    font-size: 12px;
+  }
+  .primary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .primary-metrics .k {
+    padding: 15px;
+    min-height: 120px;
+  }
+  .primary-metrics .k b {
+    font-size: 25px;
+  }
+  .primary-metrics .k:last-child {
+    grid-column: 1/-1;
+  }
+  .secondary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .secondary-metrics .k {
+    padding: 14px 6px;
+  }
+  .secondary-metrics .k b {
+    font-size: 20px;
+  }
+  .b,
+  label.b,
+  input,
+  select {
+    min-height: 40px;
+  }
+  .page-actions .b {
+    font-size: 12px !important;
+    min-height: 36px;
+    padding: 7px 10px;
+  }
+  .page-actions {
+    max-width: 150px;
+  }
+  .terminal-chart-tools button {
+    min-height: 34px;
+    min-width: 28px;
+  }
+  .chart-readout {
+    font-size: 11px;
+  }
+  .terminal-chart-caption,
+  .chart-foot {
+    font-size: 10px;
+  }
+  .terminal-chart-label {
+    font-size: 11px;
+  }
+  .terminal-axis {
+    font-size: 11px;
+  }
+  .terminal-context {
+    display: block;
+  }
+  .terminal-context dl > div {
+    font-size: 12px;
+  }
+  .terminal-breakdowns {
+    gap: 4px;
+  }
+  .ta-quick-action {
+    padding: 14px;
+  }
+  .ta-quick-action b {
+    font-size: 13px;
+  }
+  .ta-quick-action small {
+    font-size: 12px;
+  }
+  .ta-home-heading {
+    flex-wrap: wrap;
+  }
+  .ta-home-heading .b {
+    font-size: 12px !important;
+  }
+  .section-head h2,
+  .card h2 {
+    font-size: 16px;
+  }
+  .calendar-scroll .cal {
+    min-width: 650px;
+  }
+  .cd {
+    min-height: 110px;
+  }
+  .share-live-day {
+    min-height: 120px;
+  }
+  .share-live-day b {
+    font-size: 21px;
+  }
+  dialog {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 14px;
+  }
+  th,
+  td {
+    padding: 12px;
+  }
+  td {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+    will-change: auto;
+  }
+}
+@media (max-width: 560px) {
+  .page-top {
+    flex-wrap: wrap;
+  }
+  .page-top > div:first-child {
+    min-width: 0;
+    flex: 1 1 220px;
+    max-width: 100%;
+  }
+  .page-top h2 {
+    overflow-wrap: anywhere;
+  }
+  .page-top .page-actions {
+    max-width: none;
+    flex: 0 1 auto;
   }
 }
 </style></head><body>
@@ -5101,7 +5642,7 @@ function terminalDrawChart(model) {
     L = 14,
     T = 20,
     B = H - 34,
-    R = W - 100;
+    R = W - 114;
   const lo = Math.min(0, ...visible.map((p) => p.value)),
     hi = Math.max(0, ...visible.map((p) => p.value)),
     span = hi - lo || 1,
@@ -5281,7 +5822,7 @@ function terminalPerformanceChart(ts) {
     )
     .join(
       "",
-    )}</select></label></div>${data.length ? terminalChart(data, { id: "performance", height: 365, label: chartNames[chartMode], format: isR ? (v) => v.toFixed(2) + "R" : money, daily: chartMode === "daily", readout: true }) : '<div class="empty-chart"><b>A sua performance começa aqui</b><span>Adicione ou importe trades para visualizar os resultados.</span><button class="b s" onclick="taGo(\'trades\')">Abrir Trades</button></div>'}<div class="chart-foot"><span>${isR ? "R inclui apenas trades com risco informado." : "Datas e horários seguem os registros originais, sem conversão de fuso."}</span><span>${ts.length} trades</span></div></section>`;
+    )}</select></label></div>${data.length ? terminalChart(data, { id: "performance", height: 400, label: chartNames[chartMode], format: isR ? (v) => v.toFixed(2) + "R" : money, daily: chartMode === "daily", readout: true }) : '<div class="empty-chart"><b>A sua performance começa aqui</b><span>Adicione ou importe trades para visualizar os resultados.</span><button class="b s" onclick="taGo(\'trades\')">Abrir Trades</button></div>'}<div class="chart-foot"><span>${isR ? "R inclui apenas trades com risco informado." : "Datas e horários seguem os registros originais, sem conversão de fuso."}</span><span>${ts.length} trades</span></div></section>`;
 }
 function terminalLine(values, height = 170, dates = []) {
   return terminalChart(

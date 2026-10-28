@@ -44,6 +44,40 @@ const { createApp } = require("../server/index.cjs");
       SC.month = "2026-10";
       taGo("dash");
     });
+    assert.ok(
+      await page
+        .locator("header")
+        .evaluate((e) => e.getBoundingClientRect().width >= 240),
+    );
+    assert.ok(
+      await page
+        .locator(".ta-nav-group button")
+        .first()
+        .evaluate((e) => parseFloat(getComputedStyle(e).fontSize) >= 14),
+    );
+    assert.ok(
+      await page
+        .locator(".card")
+        .first()
+        .evaluate((e) => parseFloat(getComputedStyle(e).borderRadius) >= 16),
+    );
+    assert.notEqual(
+      await page.evaluate(
+        () => getComputedStyle(document.body, "::before").animationName,
+      ),
+      "none",
+    );
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    assert.equal(
+      await page.evaluate(
+        () => getComputedStyle(document.body, "::before").animationName,
+      ),
+      "none",
+    );
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    console.log(
+      "PASS larger sidebar and text, rounded surfaces, animated OLED background and reduced-motion preference",
+    );
     const snapshot = await page.evaluate(() => JSON.stringify(S));
     assert.equal(await page.locator(".primary-metrics .k").count(), 7);
     assert.equal(
@@ -143,7 +177,7 @@ const { createApp } = require("../server/index.cjs");
     console.log(
       "PASS sortable journal, keyboard trade details, unchanged stored records",
     );
-    for (const width of [1440, 1024, 760, 390, 320]) {
+    for (const width of [1920, 1440, 1024, 760, 390, 320]) {
       await page.setViewportSize({ width, height: 1000 });
       for (const route of [
         "home",
@@ -199,7 +233,7 @@ const { createApp } = require("../server/index.cjs");
     assert.equal(await page.locator(".terminal-performance").count(), 1);
     assert.deepEqual(errors, []);
     console.log(
-      "PASS all 15 routes at 320–1440px, responsive navigation, identical store and standalone modules",
+      "PASS all 15 routes at 320–1920px, responsive navigation, identical store and standalone modules",
     );
   } finally {
     await browser.close();

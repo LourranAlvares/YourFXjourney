@@ -96,7 +96,7 @@ function terminalDrawChart(model) {
     L = 14,
     T = 20,
     B = H - 34,
-    R = W - 100;
+    R = W - 114;
   const lo = Math.min(0, ...visible.map((p) => p.value)),
     hi = Math.max(0, ...visible.map((p) => p.value)),
     span = hi - lo || 1,
@@ -276,7 +276,7 @@ function terminalPerformanceChart(ts) {
     )
     .join(
       "",
-    )}</select></label></div>${data.length ? terminalChart(data, { id: "performance", height: 365, label: chartNames[chartMode], format: isR ? (v) => v.toFixed(2) + "R" : money, daily: chartMode === "daily", readout: true }) : '<div class="empty-chart"><b>A sua performance começa aqui</b><span>Adicione ou importe trades para visualizar os resultados.</span><button class="b s" onclick="taGo(\'trades\')">Abrir Trades</button></div>'}<div class="chart-foot"><span>${isR ? "R inclui apenas trades com risco informado." : "Datas e horários seguem os registros originais, sem conversão de fuso."}</span><span>${ts.length} trades</span></div></section>`;
+    )}</select></label></div>${data.length ? terminalChart(data, { id: "performance", height: 400, label: chartNames[chartMode], format: isR ? (v) => v.toFixed(2) + "R" : money, daily: chartMode === "daily", readout: true }) : '<div class="empty-chart"><b>A sua performance começa aqui</b><span>Adicione ou importe trades para visualizar os resultados.</span><button class="b s" onclick="taGo(\'trades\')">Abrir Trades</button></div>'}<div class="chart-foot"><span>${isR ? "R inclui apenas trades com risco informado." : "Datas e horários seguem os registros originais, sem conversão de fuso."}</span><span>${ts.length} trades</span></div></section>`;
 }
 function terminalLine(values, height = 170, dates = []) {
   return terminalChart(
