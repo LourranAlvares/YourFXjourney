@@ -1,20 +1,29 @@
-TRADE ASSISTANT — COMO ABRIR
+TRADE ASSISTANT — WINDOWS
 
-MODO OFFLINE
-1. Extraia o ZIP do GitHub no computador.
-2. Abra YourFXjourney-standalone.html no Chrome ou Edge.
-3. A nova Home abre primeiro. Configure sua rotina e seu Trading Plan.
-4. Diario, calendario, importacao, analises estatisticas e revisao manual
-   de setups continuam funcionando sem servidor.
+1. Extraia TODO o ZIP em uma pasta no computador.
+2. Na versao antiga, exporte o backup do historico e plano antes de trocar.
+3. Abra INICIAR-TRADE-ASSISTANT.bat com dois cliques.
+4. Se faltar Node.js, instale a versao LTS do site oficial indicado
+   e abra o iniciador novamente.
+5. Siga as perguntas: crie uma senha de 12 caracteres ou mais e informe
+   as chaves dos provedores desejados. Enter pula os servicos opcionais.
+6. O navegador abre o aplicativo. Em Configuracoes, entre com sua senha.
+   Restaure o backup antigo para trazer seu historico e plano.
+7. Mantenha a janela do iniciador aberta enquanto usa IA e noticias.
 
-IA E DADOS AO VIVO
-Esses recursos precisam do servidor incluido, Node.js 22.17+ e credenciais
-validas dos provedores. A versao offline nao finge ter IA ou noticias ao vivo.
-Veja README.md e server/SETUP.md. Nenhuma chave deve ser posta no HTML.
+Nao precisa contratar um servidor: essa parte roda no proprio computador.
+A chave da API OpenAI e separada da assinatura do ChatGPT.
+Eventos: Financial Modeling Prep. Mercado: Twelve Data.
+Cada provedor precisa de credenciais e acesso proprios.
+Nao envie chaves por chat nem coloque no HTML.
 
-ANTES DE TROCAR DE ARQUIVO OU NAVEGADOR
-Exporte seu backup na versao anterior em Trades > Exportar backup.
-Depois restaure esse backup na nova versao. Os dados ficam no navegador.
+Para adicionar ou trocar chaves depois: feche o iniciador e abra
+CONFIGURAR-TRADE-ASSISTANT.bat.
 
-O score do Trade Analyst mede aderencia ao plano, nao chance de lucro.
-Nao ha execucao automatica de ordens.
+Abrir apenas YourFXjourney-standalone.html permite diario, plano,
+importacoes e revisao manual. IA e noticias nao conectam pelo HTML local.
+Salvar o Trading Plan nao ativa os provedores automaticamente.
+
+Seus dados ficam no navegador. O arquivo HTML e o aplicativo conectado
+usam armazenamentos separados: exporte e restaure seu backup.
+Veja README.md para detalhes. No macOS, use o arquivo .command.

@@ -99,6 +99,7 @@ async function taApi(path, options = {}) {
       "Abra a versão com servidor para conectar IA e dados ao vivo. O modo offline mantém plano, diário e revisão manual.",
     );
     error.status = 503;
+    error.code = "file_mode";
     throw error;
   }
   const controller = new AbortController(),
@@ -133,6 +134,7 @@ async function taApi(path, options = {}) {
           "A integração não respondeu.",
       );
       error.status = response.status;
+      error.code = data.error?.code || "backend_unavailable";
       throw error;
     }
     return data;
@@ -145,7 +147,18 @@ async function taCheckConnection() {
   taStatusChecked = true;
   try {
     const s = await taApi("/api/status");
-    taConnection = { ...s, available: true };
+    if (
+      typeof s.authenticated !== "boolean" ||
+      typeof s.authConfigured !== "boolean" ||
+      !s.services ||
+      typeof s.services !== "object"
+    )
+      throw new Error("Resposta de conexão inválida.");
+    taConnection = {
+      ...s,
+      available: true,
+      errorCode: s.authConfigured ? null : "auth_unconfigured",
+    };
     taCsrf = s.csrf || "";
   } catch (e) {
     taConnection = {
@@ -153,16 +166,37 @@ async function taCheckConnection() {
       authenticated: false,
       services: {},
       error: e.message,
+      errorCode: e.code || "backend_unavailable",
     };
   }
   if (["home", "settings", "economic", "analyst"].includes(tab)) R();
 }
+async function taRetryConnection() {
+  taStatusChecked = false;
+  if (typeof taDailyReset === "function") taDailyReset();
+  await taCheckConnection();
+  if (typeof taEnsureDailyData === "function") taEnsureDailyData();
+}
 function taApiState() {
-  return !taConnection.available
-    ? "Modo offline"
-    : !taConnection.authenticated
-      ? "Servidor · entre para conectar"
-      : "Servidor autenticado";
+  if (location.protocol === "file:") return "Arquivo HTML local";
+  if (!taConnection.available) return "Servidor indisponível";
+  if (!taConnection.authConfigured) return "Servidor sem configuração";
+  return taConnection.authenticated
+    ? "Servidor autenticado"
+    : "Conexão disponível · entre";
+}
+function taConnectionHelp() {
+  return `<div id="ta-connection-help" class="ta-connection-help"><h3>Ativar no Windows</h3>
+  <p>O servidor é uma parte deste programa que roda no seu computador. Não é preciso contratar hospedagem. Abrir apenas o HTML permite usar o diário e o plano; IA e notícias precisam dessa parte aberta.</p>
+  <ol><li>Antes de trocar de versão, <button class="b s" onclick="bk()">Exportar backup</button> do seu histórico e plano.</li>
+  <li>Extraia o ZIP completo. Na pasta extraída, abra <strong>INICIAR-TRADE-ASSISTANT.bat</strong>. Se faltar Node.js, instale a versão LTS pelo site oficial que o iniciador abrir e execute o arquivo novamente.</li>
+  <li>Siga as perguntas na janela: crie uma senha pessoal de pelo menos 12 caracteres e informe as chaves dos serviços desejados. Elas ficam no arquivo local <code>.env</code>, fora do HTML. Não envie chaves pelo chat.</li>
+  <li>O navegador abrirá o aplicativo. Entre com a senha criada em Configurações e restaure seu backup pelo menu de dados. O endereço do aplicativo tem armazenamento separado do arquivo HTML.</li></ol>
+  <p>Mantenha a janela do iniciador aberta enquanto usa os serviços. Para adicionar ou trocar chaves depois, feche o iniciador e abra <strong>CONFIGURAR-TRADE-ASSISTANT.bat</strong>. No macOS, use INICIAR-TRADE-ASSISTANT.command.</p>
+  <p><strong>IA:</strong> precisa de uma chave OpenAI API; a assinatura do ChatGPT não inclui essa conexão. <strong>Notícias:</strong> Financial Modeling Prep, com acesso ao calendário econômico. <strong>Mercado:</strong> Twelve Data. Cada serviço depende de credenciais e acesso próprios; você pode pular os que não quiser configurar.</p>
+  <p>Obtenha as credenciais nos sites oficiais: <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI API</a>, <a href="https://site.financialmodelingprep.com/developer/docs" target="_blank" rel="noopener noreferrer">Financial Modeling Prep</a> e <a href="https://twelvedata.com/account/api-keys" target="_blank" rel="noopener noreferrer">Twelve Data</a>.</p>
+  <p>Seu Trading Plan continua salvo e orienta o foco e a revisão dos setups. Salvar o plano não ativa os provedores automaticamente.</p>
+  <button class="b s" onclick="taRetryConnection()">Verificar conexão novamente</button></div>`;
 }
 function taNav() {
   const groups = [
@@ -245,17 +279,17 @@ function vSettings() {
       ["Personalizada", "Personalizada"],
     ],
   )}${taInput("Fuso da sessão", "ta-session-zone", p.session.timezone, "text", 'list="ta-zones" required')}${taInput("Início", "ta-session-start", p.session.start, "time", "required")}${taInput("Fim", "ta-session-end", p.session.end, "time", "required")}</div><p class="muted-note">Os dias abaixo representam o dia em que a sessão começa; sessões que atravessam a meia-noite são suportadas.</p><div class="ta-weekdays">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((d, i) => `<label><input type="checkbox" data-ta-day="${i + 1}" ${p.session.days.includes(i + 1) ? "checked" : ""}> ${d}</label>`).join("")}</div><div class="fg">${taInput("Cautela antes da notícia (min)", "ta-news-before", p.newsBeforeMinutes, "number", 'min="0" max="240" required')}${taInput("Cautela após a notícia (min)", "ta-news-after", p.newsAfterMinutes, "number", 'min="0" max="240" required')}</div><p id="ta-profile-error" role="status" class="muted-note"></p><button class="b" type="submit">Salvar rotina</button></form></section><section class="card"><div class="eyebrow">Conexões protegidas</div><h2>IA e dados de mercado</h2><p class="muted-note">A análise multimodal e os provedores ao vivo usam credenciais exclusivamente no servidor. O diário, plano e imagens continuam neste navegador. Cada navegador mantém seu próprio histórico; use backup para transferir dados.</p><div class="ta-service-grid">${[
-    ["ai", "Análise multimodal"],
-    ["economicCalendar", "Calendário econômico"],
-    ["marketConditions", "Dados de mercado"],
+    ["ai", "IA · OpenAI"],
+    ["economicCalendar", connected.economicProvider === "forexfactory" ? "Calendário econômico · Forex Factory (semanal)" : "Calendário econômico · Financial Modeling Prep"],
+    ["marketConditions", "Dados de mercado · Twelve Data"],
   ]
     .map(
       ([key, label]) =>
-        `<div><span>${label}</span><b>${connected[key] ? "Configurado no servidor" : "Não configurado"}</b></div>`,
+        `<div><span>${label}</span><b>${connected[key] ? (key === "economicCalendar" && connected.economicProvider === "forexfactory" ? "Feed sem chave · validação na consulta" : "Chave configurada · validação na consulta") : "Chave não configurada"}</b></div>`,
     )
     .join(
       "",
-    )}</div>${taConnection.available ? (taConnection.authenticated ? '<p class="g">Sessão autenticada.</p><button class="b s" onclick="taLogout()">Sair do servidor</button>' : `<form onsubmit="event.preventDefault();taLogin()" class="ta-login">${taInput("Senha do servidor pessoal", "ta-password", "", "password", 'autocomplete="current-password" required')}<button class="b" type="submit">Conectar ao servidor</button><p id="ta-login-error" class="muted-note" role="status"></p></form>`) : '<p class="muted-note">Servidor indisponível nesta versão. Para conectar, execute a aplicação pelo servidor Node incluído no projeto; instruções em README. Nenhuma chave deve ser inserida no HTML.</p>'}</section><section class="card"><h2>Seus dados</h2><p class="muted-note">Armazenamento local yfx1 preservado. O backup inclui histórico, prints, rotina, planos versionados, análises e correções.</p><button class="b s" onclick="bk()">Exportar backup</button></section>`;
+    )}</div>${taConnection.available && taConnection.authConfigured ? (taConnection.authenticated ? '<p class="g">Sessão autenticada.</p><button class="b s" onclick="taLogout()">Sair do servidor</button>' : `<form onsubmit="event.preventDefault();taLogin()" class="ta-login">${taInput("Senha do servidor pessoal", "ta-password", "", "password", 'autocomplete="current-password" required')}<button class="b" type="submit">Conectar ao servidor</button><p id="ta-login-error" class="muted-note" role="status"></p></form>`) : '<p class="muted-note">' + esc(taApiState()) + ". Siga a ativação abaixo.</p>"}${taConnectionHelp()}</section><section class="card"><h2>Seus dados</h2><p class="muted-note">Armazenamento local yfx1 preservado. O backup inclui histórico, prints, rotina, planos versionados, análises e correções.</p><button class="b s" onclick="bk()">Exportar backup</button></section>`;
 }
 function taSaveProfile() {
   const timezone = $("#ta-zone").value.trim(),

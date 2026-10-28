@@ -158,7 +158,8 @@ function createApp(options = {}) {
             authConfigured: configured,
             services: {
               ai: !!env.TRADE_AI_KEY,
-              economicCalendar: !!env.TRADE_ECONOMIC_KEY,
+              economicCalendar: env.TRADE_ECONOMIC_PROVIDER === "forexfactory" || !!env.TRADE_ECONOMIC_KEY,
+              economicProvider: env.TRADE_ECONOMIC_PROVIDER === "forexfactory" ? "forexfactory" : "fmp",
               marketConditions: !!env.TRADE_MARKET_KEY,
             },
             mode: "single-owner-local",

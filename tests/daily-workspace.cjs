@@ -144,8 +144,8 @@ const run = (s) => vm.runInContext(s, ctx);
   await run("taEnsureDailyData()");
   assert.equal(apiCalls, 2);
   ctx.taConnection.available = false;
-  assert.match(run("vHome()"), /indisponíveis no arquivo local/);
-  assert.match(run("vEconomicCalendar()"), /indisponíveis no arquivo local/);
+  assert.match(run("vHome()"), /O servidor não respondeu/);
+  assert.match(run("vEconomicCalendar()"), /O servidor não respondeu/);
   console.log("PASS cached repeated rendering and offline availability states");
   ctx.taConnection.available = true;
   ctx.S.trades = [

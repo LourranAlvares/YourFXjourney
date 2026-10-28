@@ -192,6 +192,7 @@ test("status exposes binding presence only and API data requires authentication"
     assert.deepEqual(data.services, {
       ai: true,
       economicCalendar: true,
+      economicProvider: "fmp",
       marketConditions: true,
     });
     assert.ok(!JSON.stringify(data).includes("synthetic-"));

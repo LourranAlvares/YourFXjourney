@@ -117,7 +117,8 @@ function createProviders({
   now = () => new Date(),
   engine,
 }) {
-  const calendarCache = ttlCache(5 * 60e3),
+  const weeklyFeedCache = ttlCache(30 * 60e3, 1),
+    calendarCache = ttlCache(5 * 60e3),
     marketCache = ttlCache(60e3),
     analysisCache = ttlCache(10 * 60e3, 30);
   let activeAI = 0;
@@ -141,7 +142,7 @@ function createProviders({
     }
   }
   async function economic(query) {
-    if (!env.TRADE_ECONOMIC_KEY)
+    if (env.TRADE_ECONOMIC_PROVIDER !== "forexfactory" && !env.TRADE_ECONOMIC_KEY)
       fail(
         503,
         "service_unavailable",
@@ -158,6 +159,26 @@ function createProviders({
         .filter(Boolean);
     if (currencies.length > 30 || currencies.some((c) => !/^[A-Z]{3}$/.test(c)))
       fail(400, "invalid_currencies", "Moedas inválidas.");
+    if (env.TRADE_ECONOMIC_PROVIDER === "forexfactory") {
+      const feed = await weeklyFeedCache("thisweek", async () => {
+        const data = await jsonFetch(fetchFn, "https://nfs.faireconomy.media/ff_calendar_thisweek.json");
+        if (!Array.isArray(data) || !data.length || data.length > 5000)
+          fail(502, "invalid_provider_response", "Feed semanal indisponível ou vazio. Não é possível confirmar os eventos.");
+        const events = data.map(item => {
+          if (!item || typeof item.title !== "string" || !item.title.trim() || !/^[A-Z]{3}$/.test(String(item.country || "").toUpperCase()) || typeof item.date !== "string" || !/(Z|[+-]\d{2}:\d{2})$/.test(item.date) || !providerDate(item.date))
+            fail(502, "invalid_provider_response", "Feed semanal com evento sem moeda ou horário verificável.");
+          const time = providerDate(item.date), currency = item.country.toUpperCase(), name = string(item.title, 200), impact = string(item.impact, 30).toLowerCase();
+          return {id:crypto.createHash("sha256").update(time+currency+name).digest("hex").slice(0,20), name,currency,time,impact:["high","medium","low"].includes(impact)?impact:"unknown",previous:scalar(item.previous),forecast:scalar(item.forecast),actual:null};
+        }).sort((a,b)=>a.time.localeCompare(b.time));
+        return {events, asOf:now().toISOString()};
+      });
+      const localDates = feed.events.map(e => SessionEngine.zonedParts(new Date(e.time), zone).date).sort();
+      return {events:feed.events.filter(e => e.time.slice(0,10)>=from && e.time.slice(0,10)<=to && (!currencies.length || e.currency === "ALL" || currencies.includes(e.currency))),
+        complete:false, source:"Forex Factory · Fair Economy", asOf:feed.asOf, cached:feed.cached, timezone:zone,
+        coverageFrom:localDates[0], coverageTo:localDates.at(-1),
+        notice:"Feed da semana publicada, atualizado em cache a cada 30 minutos. Sem resultado realizado; cobertura limitada. Confira os eventos na fonte."
+      };
+    }
     return calendarCache(
       JSON.stringify([from, to, currencies.sort(), zone]),
       async () => {

@@ -2,11 +2,22 @@
 
 Upgrade do projeto existente para um espaço pessoal de preparação, análise e revisão de trading. Vanilla HTML/CSS/JavaScript no navegador, com backend opcional Node.js sem dependências de produção. As operações, imports, screenshots, cálculos e a chave `yfx1` do localStorage foram preservados.
 
-## Baixar e abrir
+## Começar no Windows — IA e eventos
 
-No GitHub: **Code → Download ZIP**, extraia e abra **YourFXjourney-standalone.html** no Chrome ou Edge. A Home do Trade Assistant é a página inicial. O leitor OCR e os novos módulos estão embutidos nessa versão, que funciona como arquivo local.
+1. Baixe o ZIP no GitHub e **extraia toda a pasta**. Não execute de dentro do ZIP.
+2. Se já usa uma versão anterior, exporte antes seu backup em **Trades → Exportar backup**.
+3. Dê dois cliques em **INICIAR-TRADE-ASSISTANT.bat**. Se faltar Node.js, o iniciador oferece abrir o site oficial; instale o **Node.js LTS 22.17+** e abra o iniciador novamente.
+4. Na janela guiada, crie sua senha pessoal (12 caracteres ou mais). Informe as chaves dos serviços desejados; Enter permite pular os serviços opcionais. A digitação das credenciais fica oculta.
+5. O navegador abre o aplicativo. Em **Configurações**, entre com a senha criada. Restaure o backup antigo, pois o HTML e o aplicativo conectado têm armazenamentos separados.
+6. Mantenha a janela do iniciador aberta. Para trocar ou adicionar chaves depois, feche o iniciador e abra **CONFIGURAR-TRADE-ASSISTANT.bat**.
 
-**Antes de mudar de arquivo, origem ou navegador:** exporte um backup na versão antiga em **Trades → Exportar backup** e restaure-o na nova. O navegador pode manter armazenamentos separados para caminhos diferentes. O projeto não envia seu histórico ao GitHub.
+O servidor roda **no próprio computador**; não exige contratar hospedagem. A chave **OpenAI API** é separada da assinatura do ChatGPT. Eventos usam **Financial Modeling Prep** e condições de mercado usam **Twelve Data**, com acesso às respectivas APIs. Esses serviços podem exigir contratação própria. Chave configurada não significa consulta validada: erros de credencial, cota ou acesso aparecem na consulta.
+
+No macOS, use **INICIAR-TRADE-ASSISTANT.command** (se necessário, permita execução pelo Terminal com `chmod +x INICIAR-TRADE-ASSISTANT.command`). Pelo terminal, `node scripts/setup-local.cjs --configure` configura novamente.
+
+Para usar somente diário, plano e análises locais, abra **YourFXjourney-standalone.html** no Chrome ou Edge. Esse arquivo sozinho não conecta IA nem notícias. Salvar o Trading Plan alimenta o foco e a revisão dos setups, mas não ativa os provedores.
+
+**Antes de mudar de arquivo, origem ou navegador:** exporte e restaure um backup. O navegador pode manter armazenamentos separados para caminhos diferentes. O projeto não envia seu histórico ao GitHub.
 
 ## O que funciona offline
 
@@ -124,3 +135,20 @@ BROWSER_EXECUTABLE_PATH=/caminho/para/chromium node tests/shot-opening.cjs
 ```
 
 Não há dependências de produção para instalar. Playwright é somente uma ferramenta de desenvolvimento e não faz parte do HTML entregue. As suítes usam contextos isolados; dados sintéticos e eventos simulados não entram na conta real. Os testes cobrem score, invalidações, correções, DST, overnight/weekend, autenticação/CSRF/HTTPS, schemas, cache, indisponibilidade, integração da interface, preservação de dados legados e layout de 320 a 1440px. Veja `tests/` para regressões de risco, importação e limpeza.
+
+## Calendário semanal sem chave (Forex Factory)
+
+Para ativar, adicione ao `.env` a linha `TRADE_ECONOMIC_PROVIDER=forexfactory`.
+Ela seleciona o feed mesmo se houver uma chave FMP antiga. Pare o servidor com
+Ctrl+C, execute `npm start` novamente, abra uma nova aba e **digite**
+`http://127.0.0.1:8080` na barra de endereço. Entre em Configurações e atualize
+ o briefing. Não abra pelo HTML nem por link de outro site.
+
+Fonte: https://nfs.faireconomy.media/ff_calendar_thisweek.json . O servidor
+consulta o feed com cache compartilhado de 30 minutos, inclusive entre filtros,
+para reduzir requisições. Apenas a semana publicada está disponível; consultas
+fora dos dias cobertos não significam ausência de notícias. O campo realizado
+fica indisponível. Esse feed limitado nunca libera automaticamente uma restrição
+de notícias do Trading Plan. A disponibilidade externa e as condições de
+reutilização não são garantidas; confira a fonte antes de redistribuir dados.
+Para retornar à FMP, use `TRADE_ECONOMIC_PROVIDER=fmp` e uma chave com acesso.

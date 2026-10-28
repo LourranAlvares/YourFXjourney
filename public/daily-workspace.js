@@ -71,7 +71,15 @@ function taDailyConnection() {
   if (!c.available)
     return {
       ready: false,
-      text: "Dados ao vivo indisponíveis no arquivo local. Conecte o servidor nas Configurações.",
+      text:
+        typeof location !== "undefined" && location.protocol === "file:"
+          ? "Você abriu o HTML local. Para ativar IA e notícias no Windows, use INICIAR-TRADE-ASSISTANT.bat. Veja o guia em Configurações."
+          : "O servidor não respondeu. Verifique se o iniciador está aberto e tente novamente em Configurações.",
+    };
+  if (c.authConfigured === false)
+    return {
+      ready: false,
+      text: "O servidor está aberto, mas falta criar a senha e configurar os serviços. Use CONFIGURAR-TRADE-ASSISTANT.bat.",
     };
   if (!c.authenticated)
     return {
@@ -300,13 +308,13 @@ function taDailyEvents(date = taDailyDate()) {
         ).date === date &&
         (!taDailyState.relevantOnly ||
           !allowed.length ||
-          allowed.includes(e.currency)),
+          e.currency === "ALL" || allowed.includes(e.currency)),
     )
     .sort((a, b) => taDailyEventTime(a) - taDailyEventTime(b));
 }
 function taDailySource(data) {
   if (!data) return "";
-  return `<p class="muted-note ta-source">${esc(data.source || "Provedor externo")} · consultado ${esc(taDailyFormatTime(data.asOf, { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }))}${data.cached ? " · cache" : ""}</p>`;
+  return `<p class="muted-note ta-source">${esc(data.source || "Provedor externo")} · consultado ${esc(taDailyFormatTime(data.asOf, { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }))}${data.cached ? " · cache" : ""}</p>${data.notice ? `<p class="muted-note">${esc(data.notice)}</p>` : ""}`;
 }
 function taDailyAvailability(kind, date) {
   const connection = taDailyConnection(),
@@ -317,6 +325,8 @@ function taDailyAvailability(kind, date) {
     return '<p class="mu" role="status">Consultando o provedor…</p>';
   if (state.status === "error")
     return `<p class="ta-unavailable">${esc(state.error)}</p><button class="b s" onclick="taDailyRefresh()">Tentar novamente</button>`;
+  if (kind === "events" && state.data?.coverageFrom && (date < state.data.coverageFrom || date > state.data.coverageTo))
+    return '<p class="ta-unavailable">Esta data está fora dos dias cobertos pelo feed semanal disponível. Não é possível confirmar os eventos deste dia.</p>';
   return "";
 }
 function taDailyEventList(events, compact = false) {

@@ -954,3 +954,18 @@ dialog {
   font-size: 10px;
   color: var(--mu);
 }
+
+.ta-connection-help {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--bd, #30363d);
+  border-radius: 12px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.ta-connection-help ol {
+  padding-left: 22px;
+}
+.ta-connection-help li {
+  margin-bottom: 12px;
+}
