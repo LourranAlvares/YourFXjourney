@@ -1812,3 +1812,59 @@ body.elitex-unified .terminal-gridline {
     margin-bottom: 8px;
   }
 }
+.elite-momentum {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 12px;
+  padding: 12px 0;
+  border-top: 1px solid #294940;
+  border-bottom: 1px solid #294940;
+}
+.elite-momentum > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.elite-momentum small {
+  font-size: 12px;
+  color: #a7c5bb;
+}
+.elite-momentum b {
+  font-size: 24px;
+  letter-spacing: -0.6px;
+  font-variant-numeric: tabular-nums;
+}
+.scene-focus .elite-momentum-tip {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 12px 0 0;
+  color: #d1dfdb;
+}
+.elite-momentum-tip[data-tone="caution"] {
+  border-left: 2px solid #d9b26f;
+  padding-left: 10px;
+}
+.scene-focus .elite-momentum-method {
+  font-size: 10px;
+  margin-top: 10px;
+}
+.elite-momentum-method p {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.elite-observed-pattern p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+@media (min-width: 1101px) {
+  .elite-scene {
+    background-size: 100% auto;
+  }
+}
+@media (max-width: 650px) {
+  .elite-momentum b {
+    font-size: 23px;
+  }
+}

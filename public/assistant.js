@@ -961,6 +961,24 @@ function taBriefingInput() {
       id: "active-plan",
       text: `Plano ativo: ${plan.name}, versão ${plan.version}. Prioridade documentada: ${plan.criteria.find((c) => c.required)?.definition || plan.criteria[0].definition}`,
     });
+  if (typeof eliteMomentumModel === "function") {
+    const m = eliteMomentumModel(),
+      pct = (n) =>
+        n === null
+          ? "indisponível (saldo de abertura não confirmado/positivo)"
+          : n.toFixed(2) + "%";
+    facts.push({
+      id: "period-returns",
+      text: `Retorno calculado sobre saldo de abertura: semana ${m.week.from} a ${m.week.to}: ${pct(m.week.percent)}, ${m.week.n} operações; mês ${m.month.from} a ${m.month.to}: ${pct(m.month.percent)}, ${m.month.n} operações. Sem depósitos/saques; ${m.week.estimated || m.month.estimated ? "inclui P&L estimado." : "resultados registrados."}`,
+    });
+    facts.push({
+      id: "loss-streak",
+      text: `${m.streak} perdas consecutivas nos últimos fechamentos. Sequência não comprova erro ou overtrading. Lembrete de processo: ${m.tip}`.slice(
+        0,
+        1000,
+      ),
+    });
+  }
   facts.push({
     id: "live-availability",
     text: "Notícias e volatilidade só podem ser comentadas quando há dados verificados. Este briefing não contém evidência de mercado ao vivo; não inferir condições atuais.",

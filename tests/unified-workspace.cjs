@@ -25,6 +25,7 @@ const { chromium } = require("playwright"),
       );
       R();
     });
+    await p.locator(".elite-observed-pattern").evaluate((e) => (e.open = true));
     assert.match(await p.locator(".scene-focus").innerText(), /8 de 8/);
     await p.route("**/api/briefing", async (r) => {
       const body = r.request().postDataJSON();
@@ -89,16 +90,14 @@ const { chromium } = require("playwright"),
           route + " overflow at " + width,
         );
         if (width > 760) {
-          const nav = await p
-            .locator("#nav button")
-            .evaluateAll((es) =>
-              es
-                .filter((e) => e.getClientRects().length)
-                .map((e) => ({
-                  left: e.getBoundingClientRect().left,
-                  width: e.getBoundingClientRect().width,
-                })),
-            );
+          const nav = await p.locator("#nav button").evaluateAll((es) =>
+            es
+              .filter((e) => e.getClientRects().length)
+              .map((e) => ({
+                left: e.getBoundingClientRect().left,
+                width: e.getBoundingClientRect().width,
+              })),
+          );
           assert(
             nav.every(
               (v) =>
