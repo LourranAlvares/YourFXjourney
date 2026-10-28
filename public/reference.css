@@ -1293,3 +1293,53 @@ body.elitex-unified textarea {
   color: #a2b9bd;
   margin-left: 3px;
 }
+.elite-analysis-coach {
+  margin-top: 18px;
+}
+.elite-analysis-coach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.elite-analysis-coach-grid > section {
+  min-width: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.elite-analysis-coach h3 {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.elite-analysis-coach-grid p {
+  color: #b7cbd0;
+  line-height: 1.65;
+}
+.elite-analysis-coach-grid section:nth-child(1) .elite-icon {
+  color: #3cdbb7;
+}
+.elite-analysis-coach-grid section:nth-child(2) .elite-icon {
+  color: #ff647c;
+}
+.elite-analysis-coach-grid section:nth-child(3) .elite-icon {
+  color: #f2c55c;
+}
+.elite-analysis-coach > small {
+  display: block;
+  margin-top: 12px;
+  color: #95aeb4;
+}
+.elite-analysis-ai {
+  border-left: 2px solid #28c5ac;
+  padding: 4px 16px;
+  margin-top: 16px;
+  background: #061b20;
+  border-radius: 0 12px 12px 0;
+}
+@media (max-width: 1000px) {
+  .elite-analysis-coach-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

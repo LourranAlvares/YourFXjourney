@@ -332,5 +332,131 @@ function eliteAnalysisView(input) {
     )
     .join(
       "",
-    )}</div><div class="elite-analysis-grid"><section class="card elite-analysis-comparison"><div class="section-head"><div><div class="eyebrow">Onde estão os resultados</div><h2>Comparar por ${label.toLowerCase()}</h2></div><span class="badge">${rows.length} grupo(s)</span></div><div class="elite-analysis-switch" aria-label="Comparar resultados por">${eliteAnalysisDimensions.map(([id, title, icon]) => `<button class="b s" aria-pressed="${id === eliteAnalysisDimension}" onclick="eliteAnalysisDimension='${id}';R()">${terminalIcon(icon)}${title}</button>`).join("")}</div>${eliteAnalysisRows(rows.slice(0, 6))}${rows.length > 6 ? `<details class="elite-analysis-more"><summary>Ver os outros ${rows.length - 6} grupos</summary>${eliteAnalysisRows(rows.slice(6))}</details>` : ""}<small class="muted-note">Ordenado pelo resultado líquido. * Menos de 10 trades: amostra pequena.</small></section><aside class="card elite-analysis-highlights"><div class="section-head"><h2>Leitura rápida</h2>${terminalIcon("ana")}</div>${observation(best, "Maior resultado do período")}${rows.length > 1 ? observation(worst, "Menor resultado do período") : "<p>Há apenas um grupo para comparar.</p>"}<button class="b s" onclick="taGo('ins')">Revisar minha execução ${terminalIcon("arrow")}</button></aside></div><details class="card elite-analysis-method"><summary>Como interpretar estes dados</summary><p>Esta análise usa os trades fechados nos filtros acima. Resultado líquido é a soma do P&L registrado${ts.some((t) => t.est) ? "; há valores estimados no período" : ""}. Acerto é a proporção de trades com P&L positivo, incluindo os empates no total. Profit factor divide lucro bruto por perda bruta.</p><p>Dias, horários e sessões usam somente a entrada registrada, no fuso do arquivo. Se ela não foi informada, o grupo aparece como “Entrada não informada”. Os grupos de sessão são faixas horárias fixas, sem ajuste de horário de verão. Grupos pequenos não comprovam padrões nem justificam mudar seu risco.</p><p>Para investigar erros e cumprimento do sistema, use o Raio-X do Trader.</p></details></section>`;
+    )}</div><div class="elite-analysis-grid"><section class="card elite-analysis-comparison"><div class="section-head"><div><div class="eyebrow">Onde estão os resultados</div><h2>Comparar por ${label.toLowerCase()}</h2></div><span class="badge">${rows.length} grupo(s)</span></div><div class="elite-analysis-switch" aria-label="Comparar resultados por">${eliteAnalysisDimensions.map(([id, title, icon]) => `<button class="b s" aria-pressed="${id === eliteAnalysisDimension}" onclick="eliteAnalysisDimension='${id}';R()">${terminalIcon(icon)}${title}</button>`).join("")}</div>${eliteAnalysisRows(rows.slice(0, 6))}${rows.length > 6 ? `<details class="elite-analysis-more"><summary>Ver os outros ${rows.length - 6} grupos</summary>${eliteAnalysisRows(rows.slice(6))}</details>` : ""}<small class="muted-note">Ordenado pelo resultado líquido. * Menos de 10 trades: amostra pequena.</small></section><aside class="card elite-analysis-highlights"><div class="section-head"><h2>Leitura rápida</h2>${terminalIcon("ana")}</div>${observation(best, "Maior resultado do período")}${rows.length > 1 ? observation(worst, "Menor resultado do período") : "<p>Há apenas um grupo para comparar.</p>"}<button class="b s" onclick="taGo('ins')">Revisar minha execução ${terminalIcon("arrow")}</button></aside></div>${eliteAnalysisSummary(ts)}<details class="card elite-analysis-method"><summary>Como interpretar estes dados</summary><p>Esta análise usa os trades fechados nos filtros acima. Resultado líquido é a soma do P&L registrado${ts.some((t) => t.est) ? "; há valores estimados no período" : ""}. Acerto é a proporção de trades com P&L positivo, incluindo os empates no total. Profit factor divide lucro bruto por perda bruta.</p><p>Dias, horários e sessões usam somente a entrada registrada, no fuso do arquivo. Se ela não foi informada, o grupo aparece como “Entrada não informada”. Os grupos de sessão são faixas horárias fixas, sem ajuste de horário de verão. Grupos pequenos não comprovam padrões nem justificam mudar seu risco.</p><p>Para investigar erros e cumprimento do sistema, use o Raio-X do Trader.</p></details></section>`;
+}
+
+let eliteAnalysisCoach = { pending: false, key: null, result: null, error: "" };
+function eliteAnalysisCoachModel(rows) {
+  const s = st(rows),
+    plan = taCurrentPlan(),
+    process = insProcess(rows),
+    reviewed = insErrorRows(rows).length,
+    errors = Object.entries(insErrorCounts(rows)).sort((a, b) => b[1] - a[1]),
+    error = errors.length
+      ? INS_ERRORS.find((e) => e[0] === errors[0][0])
+      : null,
+    assets = Object.entries(grp(rows, (t) => t.symbol || "Não informado"))
+      .map(([name, g]) => ({ name, ...g }))
+      .sort((a, b) => b.net - a.net),
+    best = assets[0],
+    worst = assets.at(-1),
+    chronological = [...rows].sort((a, b) =>
+      String(b.close).localeCompare(String(a.close)),
+    ),
+    streak = chronological.findIndex((t) => t.pnl >= 0),
+    losses = streak < 0 ? chronological.length : streak,
+    describe = (g) =>
+      `${g.name}: ${g.net.toFixed(2)} ${S.currency || "(moeda não definida)"}, ${g.n} trade(s). ${g.n < 10 ? "Amostra pequena; não conclua um padrão." : "Comparação descritiva, sem previsão de retorno."}`,
+    positive =
+      best?.net > 0
+        ? `Maior contribuição por ativo: ${describe(best)}`
+        : "Nenhum ativo teve resultado positivo neste recorte. Isso não comprova falha no seu sistema.",
+    attention = error
+      ? `${error[1]} foi explicitamente registrado em ${errors[0][1]} de ${reviewed} operações com erros revisados.`
+      : worst?.net < 0
+        ? `Maior perda por ativo: ${describe(worst)} Uma perda isolada não comprova erro de execução.`
+        : "O resultado não comprova disciplina. Confira as avaliações de execução no diário.",
+    action = error
+      ? error[2]
+      : losses >= 2
+        ? `Há ${losses} perdas consecutivas nos últimos fechamentos deste recorte. Antes da próxima entrada, confira os critérios do plano e seus limites; não aumente o risco para recuperar. Essa sequência não comprova overtrading.`
+        : plan
+          ? "Antes do próximo trade, use o EliteX Analyst para conferir as evidências de entrada contra seu plano. Registre o motivo da entrada e revise a saída no diário."
+          : "Defina um Trading Plan com critérios de entrada, saída e limites de risco para comparar intenção e execução nas próximas operações.",
+    facts = [
+      {
+        id: "scope",
+        text: `Resumo do período filtrado: ${rows.length} fechamentos entre ${chronological.at(-1)?.close || "—"} e ${chronological[0]?.close || "—"}. Filtros: ${JSON.stringify(F)}. ${rows.some((t) => t.est) ? "Contém P&L estimado." : "P&L conforme os registros."}`,
+      },
+      {
+        id: "performance",
+        text: `P&L ${s.net.toFixed(2)} ${S.currency || "(moeda não definida)"}; ${s.w} ganhos, ${s.l} perdas e ${s.n - s.w - s.l} empates. Taxa de acerto ${s.wr.toFixed(1)}%. Profit factor ${Number.isFinite(s.pf) ? s.pf.toFixed(2) : "sem perdas registradas"}. Lucro não comprova aderência ao plano.`,
+      },
+      { id: "positive", text: positive },
+      { id: "attention", text: attention },
+      { id: "action", text: action },
+      {
+        id: "coverage",
+        text: `Plano avaliável em ${process.plan.n}/${rows.length} trades; erros revisados em ${reviewed}/${rows.length}. Ausência de revisão não equivale à ausência de erros. ${process.plan.value === null ? "Cobertura insuficiente para percentual do plano." : `Aderência ao plano ${process.plan.value.toFixed(1)}% entre os avaliados.`}`,
+      },
+    ];
+  if (plan)
+    facts.push({
+      id: "system",
+      text: `Sistema atual ${plan.name}, versão ${plan.version}. Critério para próximas entradas: ${(plan.criteria.find((c) => c.required) || plan.criteria[0])?.definition || "Não informado"}. Não aplicar regras atuais retroativamente.`.slice(
+        0,
+        1000,
+      ),
+    });
+  const input = {
+    plan,
+    profile: { timezone: taProfile().timezone, session: taProfile().session },
+    facts,
+  };
+  return { positive, attention, action, input, key: JSON.stringify(input) };
+}
+function eliteAnalysisSummary(rows) {
+  const m = eliteAnalysisCoachModel(rows),
+    valid = eliteAnalysisCoach.key === m.key && eliteAnalysisCoach.result,
+    ready = taConnection.authenticated && taConnection.services?.ai;
+  return `<section class="card elite-analysis-coach"><div class="section-head"><div><div class="eyebrow">Assistente EliteX</div><h2>Seu resumo e próximo foco</h2><p>O que observar no período selecionado.</p></div>${ready ? `<button class="b s" onclick="eliteGenerateAnalysisSummary()" ${eliteAnalysisCoach.pending ? "disabled" : ""}>${eliteAnalysisCoach.pending ? "Preparando resumo…" : valid ? "Atualizar resumo com IA" : "Resumir com IA"}</button>` : '<button class="b s" onclick="taGo(\'settings\')">Conectar IA</button>'}</div><div class="elite-analysis-coach-grid">${[
+    ["dash", "Pontos positivos", m.positive],
+    ["alert", "Pontos de atenção", m.attention],
+    ["idea", "Próximo passo", m.action],
+  ]
+    .map(
+      ([icon, title, text]) =>
+        `<section><h3>${terminalIcon(icon)}${title}</h3><p>${esc(text)}</p></section>`,
+    )
+    .join(
+      "",
+    )}</div>${valid ? `<div class="elite-analysis-ai" role="status"><h3>${terminalIcon("ins")} Síntese da IA</h3><p>${esc(eliteAnalysisCoach.result.action)}</p><details><summary>Fatos usados pela IA</summary>${eliteAnalysisCoach.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("")}</details></div>` : '<p class="muted-note">Resumo local calculado a partir dos registros. A síntese por IA fica disponível ao gerar acima.</p>'}${eliteAnalysisCoach.key === m.key && eliteAnalysisCoach.error ? `<p class="r" role="status">${esc(eliteAnalysisCoach.error)}</p>` : ""}<small>O envio para IA inclui o plano e fatos agregados deste período; não inclui prints nem os textos completos do diário.</small></section>`;
+}
+async function eliteGenerateAnalysisSummary() {
+  if (eliteAnalysisCoach.pending) return;
+  const rows = ft().filter((t) => t.close && rNumber(t.pnl) !== null);
+  if (!rows.length) return;
+  const m = eliteAnalysisCoachModel(rows);
+  eliteAnalysisCoach = { pending: true, key: m.key, result: null, error: "" };
+  R();
+  try {
+    const result = await taApi("/api/briefing", {
+        method: "POST",
+        body: JSON.stringify(m.input),
+      }),
+      byId = new Map(m.input.facts.map((f) => [f.id, f]));
+    if (
+      !Array.isArray(result.facts) ||
+      !result.facts.length ||
+      typeof result.action !== "string" ||
+      result.facts.some((f) => !byId.has(f.id))
+    )
+      throw Error("O resumo retornado não corresponde aos fatos enviados.");
+    if (
+      m.key ===
+      eliteAnalysisCoachModel(
+        ft().filter((t) => t.close && rNumber(t.pnl) !== null),
+      ).key
+    )
+      eliteAnalysisCoach.result = {
+        ...result,
+        facts: result.facts.map((f) => byId.get(f.id)),
+      };
+  } catch (e) {
+    eliteAnalysisCoach.error =
+      e.message + " O resumo local continua disponível.";
+  } finally {
+    eliteAnalysisCoach.pending = false;
+    if (tab === "ana") R();
+  }
 }
