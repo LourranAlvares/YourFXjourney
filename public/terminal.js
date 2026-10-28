@@ -15,7 +15,12 @@ function terminalIcon(name) {
     cal: "M4 5h16v16H4z M4 10h16 M8 3v4 M16 3v4",
     analyst: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14m5-2 6 6",
     plan: "M5 3h14v18H5z M8 8h8 M8 12h8 M8 16h5",
-    economic: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 7v5l4 2",
+    economic: "M4 4h16v17H4z M7 8h4v4H7z M14 8h3 M14 11h3 M7 16h10",
+    idea: "M9 18h6 M10 21h4 M8 14a6 6 0 1 1 8 0l-1 2H9z M12 1v1 M2 9h1 M21 9h1",
+    alert:
+      "M6 18v-7a6 6 0 0 1 12 0v7 M4 18h16v3H4z M12 1v2 M3 5l2 2 M21 5l-2 2 M10 9h2v5",
+    gold: "M5 7h14l3 11H2z M5 7l3-4h8l3 4 M2 18l5-4h10l5 4 M7 14 8 3 M17 14 16 3",
+    coin: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M15 7h-4a2 2 0 0 0 0 5h2a2 2 0 0 1 0 5H9 M12 5v14",
     ins: "M12 3v4 M12 17v4 M3 12h4 M17 12h4 M8 12l3 3 5-6",
     rev: "M5 3h14v18H5z M8 7h8 M8 11h8 M8 15h5",
     ana: "M4 20V10h4v10 M10 20V4h4v16 M16 20V7h4v13",
@@ -184,7 +189,7 @@ function terminalDrawChart(model) {
   return `<div class="terminal-chart-toolbar"><span class="terminal-chart-label">${esc(label)}</span><div class="terminal-chart-tools"><button type="button" aria-label="Pontos anteriores" data-chart-action="previous" ${state.start === 0 ? "disabled" : ""}>‹</button><button type="button" aria-label="Diminuir zoom" data-chart-action="out" ${n === data.length ? "disabled" : ""}>−</button><span>${n}/${data.length}</span><button type="button" aria-label="Aumentar zoom" data-chart-action="in" ${n <= 2 ? "disabled" : ""}>+</button><button type="button" aria-label="Próximos pontos" data-chart-action="next" ${state.end === data.length ? "disabled" : ""}>›</button><button type="button" aria-label="Restaurar gráfico" data-chart-action="reset">Tudo</button><button type="button" aria-label="${model.expanded ? "Fechar gráfico ampliado" : "Ampliar gráfico"}" data-chart-action="expand">${model.expanded ? "⤡" : "⤢"}</button></div></div><div ${readout ? 'id="chart-readout"' : ""} class="chart-readout" role="status">${esc(describe(visible.at(-1)))}</div><svg class="chart-svg terminal-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="group" aria-label="${esc(label)} por data" style="height:${H}px">${grid}<line x1="${R}" x2="${R}" y1="0" y2="${H}" stroke="var(--bd)"/><line x1="${L}" x2="${R}" y1="${areaBase}" y2="${areaBase}" stroke="var(--mu)" opacity=".25"/>${graph}<g class="terminal-crosshair" visibility="hidden"><line class="terminal-cross-x" y1="${T}" y2="${B}"/><line class="terminal-cross-y" x1="${L}" x2="${R}"/><circle r="3" fill="${color}"/></g>${marks}</svg><output class="premium-chart-tooltip" aria-hidden="true" hidden></output><div class="terminal-chart-caption">${state.start + 1}–${state.end} de ${data.length} pontos · Cursor / toque para inspecionar · Arraste para navegar · Ctrl + roda para zoom</div>`;
 }
 function terminalAfterRender() {
-  if(typeof eliteUpdateProfile==='function')eliteUpdateProfile();
+  if (typeof eliteUpdateProfile === "function") eliteUpdateProfile();
   const nav = document.querySelector("#nav");
   if (nav && innerWidth > 760) {
     nav.scrollTop = terminalNavState.top;

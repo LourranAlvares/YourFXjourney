@@ -68,7 +68,13 @@ const { chromium } = require("playwright"),
       S.balance = 10000;
       S.balanceConfirmed = true;
       S.trades = [
-        mk({ id: "t1", close: "2026-10-27T12:00", pnl: 100, risk: 50 }),
+        mk({
+          id: "t1",
+          symbol: "EURUSD",
+          close: "2026-10-27T12:00",
+          pnl: 100,
+          risk: 50,
+        }),
       ];
       taDailyReset();
       R();
@@ -87,15 +93,63 @@ const { chromium } = require("playwright"),
       path: "/tmp/elitex-reference-v2.png",
       fullPage: true,
     });
+    assert.equal(
+      await p
+        .locator("#nav")
+        .getByRole("button", { name: "Notícias", exact: true })
+        .count(),
+      1,
+    );
+    assert.equal(await p.locator(".asset-gold svg").count(), 1);
+    assert.equal(await p.locator(".reference-brief-icon.focus svg").count(), 1);
     await p
-      .getByRole("button", { name: "Buscar ferramentas", exact: true })
+      .getByRole("button", { name: "Buscar trades realizados", exact: true })
       .click();
+    await p.locator("#elite-trade-query").fill("EURUSD 27/10/2026");
+    assert.equal(await p.locator(".elite-trade-result").count(), 1);
+    await p.locator("#elite-trade-date").fill("2026-10-28");
+    assert.equal(await p.locator(".elite-trade-result").count(), 0);
+    await p.locator("#elite-trade-date").fill("2026-10-27");
+    await p.locator(".elite-trade-result").click();
+    assert.equal(await p.evaluate(() => cur.id), "t1");
+    await p.evaluate(() => document.getElementById("dlg").close());
+    await p.keyboard.press("Control+k");
+    assert(
+      await p.locator("#elite-trade-search-dialog").evaluate((e) => e.open),
+    );
+    await p.setViewportSize({ width: 320, height: 850 });
+    assert(
+      await p.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth + 1,
+      ),
+    );
+    await p.getByRole("button", { name: "Fechar", exact: true }).click();
+    await p.setViewportSize({ width: 1536, height: 1024 });
+    await p.locator(".reference-command").click();
     await p.locator("#elite-tools-query").fill("analyst");
     await p.locator(".elite-tool-result").click();
     assert.equal(await p.evaluate(() => tab), "analyst");
-    await p.keyboard.press("Control+k");
-    assert(await p.locator("#elite-tools-dialog").evaluate((e) => e.open));
+    await p.evaluate(() => taGo("dash"));
+    assert(
+      await p
+        .locator(".primary-metrics .k")
+        .evaluateAll((rows) =>
+          rows.every(
+            (e) => getComputedStyle(e).backgroundColor === "rgba(0, 0, 0, 0)",
+          ),
+        ),
+    );
+    await p.screenshot({
+      path: "/tmp/elitex-dashboard-unified.png",
+      fullPage: true,
+    });
+    await p.evaluate(() => toggleDashboardMoney());
+    await p
+      .getByRole("button", { name: "Buscar trades realizados", exact: true })
+      .click();
+    assert.match(await p.locator(".elite-trade-result").innerText(), /••••/);
     await p.getByRole("button", { name: "Fechar", exact: true }).click();
+    await p.evaluate(() => toggleDashboardMoney());
     await p.evaluate(() => taGo("home"));
     await p.getByRole("button", { name: "Ver pontos de atenção" }).click();
     assert.match(
