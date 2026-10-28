@@ -270,3 +270,24 @@ sem estatísticas ou gráficos de demonstração.
 `node tests/premium-ui.cjs` verifica roda, arraste, tooltips, ampliação, resize,
 Escape, inspeção, privacidade e movimento reduzido usando servidor local e
 registros de teste isolados. Os testes não dependem de credenciais reais.
+
+### Moeda da conta e risco simplificado
+
+O seletor no topo oferece GBP, EUR, USD e BRL. Usa a moeda global `S.currency`,
+incluída no backup existente, para formatar P&L, saldo, risco monetário,
+expectancy, tabelas e gráficos. A troca define a denominação dos registros:
+**não consulta câmbio, não converte nem modifica os valores dos trades**.
+Preços dos instrumentos, percentuais, contagens e R continuam em suas unidades.
+O calendário compartilhável permanece exclusivamente em R, sem dinheiro.
+
+A aba Risco agora prioriza um cálculo opcional de saldo × percentual, três
+indicadores observados e atalhos para completar riscos ausentes. O saldo só é
+preenchido com saldo inicial confirmado + P&L fechado completo; sem essa base,
+fica vazio. O usuário pode usar outra referência sem mudar a conta. Percentual
+não é presumido; os botões são escolhas explícitas de planejamento. Nenhum
+cálculo do planejador salva risco em trades ou modifica limites do plano.
+Os indicadores do histórico respeitam os filtros e reutilizam o drawdown atual.
+
+`node tests/currency-risk.cjs` verifica moedas, persistência, falha de armazenamento,
+privacidade, cálculo de planejamento, cobertura e preservação dos dados,
+responsividade e o módulo incorporado na versão standalone.

@@ -3196,3 +3196,196 @@ td {
 .elitex-brand-name {
   text-shadow: none;
 }
+/* Account denomination is visible throughout the workspace; no exchange-rate simulation. */
+.account-currency-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.account-currency-control > span {
+  font: 11px var(--mono);
+  color: var(--secondary);
+}
+.account-currency-control select {
+  min-height: 34px;
+  font: 12px var(--mono);
+  padding: 5px 8px;
+  width: 103px;
+  border-radius: 9px;
+  background: #0c1912;
+  border-color: #33503f;
+}
+.terminal-connection-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.terminal-breadcrumb > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cd .day-pnl {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.risk-intro p {
+  margin-bottom: 10px;
+  color: var(--secondary);
+  font-size: 16px;
+}
+.risk-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.risk-calculator .fg {
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.risk-calculator label {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.risk-presets {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.risk-presets button[aria-pressed="true"] {
+  border-color: #00e6b58c;
+  background: #153e2a;
+  color: #c6ffe5;
+}
+.risk-calculation-result {
+  padding: 22px;
+  border: 1px solid #2f6850;
+  border-radius: 15px;
+  background: #00e6b506;
+  margin: 18px 0;
+}
+.risk-calculation-result small {
+  font-size: 13px;
+  color: var(--secondary);
+}
+.risk-calculation-result output {
+  display: block;
+  font: 500 34px/1.5 var(--mono);
+  color: #d7ffed;
+  margin: 9px 0;
+  overflow-wrap: anywhere;
+}
+.risk-calculation-result p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--secondary);
+  margin: 0;
+}
+.risk-recorded-metrics {
+  display: grid;
+  gap: 8px;
+}
+.risk-recorded-metrics .k {
+  padding: 15px;
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+}
+.risk-recorded-metrics .k b {
+  font-size: 24px;
+}
+.risk-next-focus {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--bd);
+}
+.risk-next-focus b {
+  font-size: 15px;
+}
+.risk-next-focus p {
+  font-size: 14px;
+  color: var(--secondary);
+  line-height: 1.75;
+}
+.risk-missing summary {
+  font-size: 15px;
+}
+.risk-missing-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--bd);
+}
+.risk-missing-row > span:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.risk-missing-row small {
+  display: block;
+  font: 12px var(--mono);
+  margin-top: 5px;
+}
+.risk-missing-row > span:nth-child(2) {
+  font: 14px var(--mono);
+}
+@media (max-width: 1300px) {
+  .terminal-storage {
+    display: none;
+  }
+  .account-currency-control > span {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .risk-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .terminal-topbar {
+    gap: 7px;
+  }
+  .terminal-breadcrumb {
+    flex: 1;
+  }
+  .terminal-top-status {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .account-currency-control select {
+    font-size: 11px;
+    width: 76px;
+    min-height: 32px;
+    padding: 4px;
+  }
+  .terminal-top-status .terminal-connection {
+    max-width: 83px;
+    min-width: 0;
+    padding: 5px 6px;
+    gap: 5px;
+  }
+  .terminal-connection-label {
+    max-width: 60px;
+  }
+  .risk-calculator .fg {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .risk-missing-row {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .risk-missing-row .b {
+    font-size: 12px !important;
+    min-height: 34px;
+  }
+  .risk-calculation-result {
+    padding: 16px;
+  }
+  .risk-calculation-result output {
+    font-size: 30px;
+  }
+}

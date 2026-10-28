@@ -407,7 +407,7 @@ function vPlan() {
   ]
     .map(([key, label]) =>
       taInput(
-        label,
+        label + (key !== "minRR" && S.currency ? " · " + S.currency : ""),
         "tp-risk-" + key,
         p.risk[key] ?? "",
         "number",
@@ -601,7 +601,7 @@ function vAnalyst() {
             ["short", "Venda"],
             ["neutral", "Neutro"],
           ],
-        )}${taInput("R:R planejado (se conhecido)", "ta-a-rr", c.plannedRR ?? "", "number", 'min="0" step="any"')}${taInput("Risco planejado (moeda do plano)", "ta-a-risk", c.plannedRisk ?? "", "number", 'min="0" step="any"')}</div>${taText("Contexto macro", "ta-a-macro", c.macroContext)}${taText("Região de entrada e anotações", "ta-a-region", c.entryRegion)}<div class="row"><button class="b" type="submit" ${taAnalyst.pending ? "disabled" : ""}>${taAnalyst.pending ? "Analisando evidências…" : "Analisar com IA"}</button><button class="b s" type="button" onclick="taRunManual()" ${taAnalyst.pending ? "disabled" : ""}>Revisar manualmente</button></div><p class="muted-note">Critérios sem evidência suficiente permanecem “Não verificável”. Notícias sem fonte conectada não são consideradas liberadas.</p></form></div>`
+        )}${taInput("R:R planejado (se conhecido)", "ta-a-rr", c.plannedRR ?? "", "number", 'min="0" step="any"')}${taInput("Risco planejado (moeda do plano)" + (S.currency ? " · " + S.currency : ""), "ta-a-risk", c.plannedRisk ?? "", "number", 'min="0" step="any"')}</div>${taText("Contexto macro", "ta-a-macro", c.macroContext)}${taText("Região de entrada e anotações", "ta-a-region", c.entryRegion)}<div class="row"><button class="b" type="submit" ${taAnalyst.pending ? "disabled" : ""}>${taAnalyst.pending ? "Analisando evidências…" : "Analisar com IA"}</button><button class="b s" type="button" onclick="taRunManual()" ${taAnalyst.pending ? "disabled" : ""}>Revisar manualmente</button></div><p class="muted-note">Critérios sem evidência suficiente permanecem “Não verificável”. Notícias sem fonte conectada não são consideradas liberadas.</p></form></div>`
   }<p class="ta-status-error" role="status">${esc(taAnalyst.error)}</p></section>${taAnalysisResult()}<details class="card"><summary>Análises anteriores (${(S.setupAnalyses || []).length})</summary><div class="ta-analysis-history">${
     (S.setupAnalyses || [])
       .slice()
