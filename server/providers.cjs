@@ -34,15 +34,28 @@ function timezone(value) {
   }
 }
 async function jsonFetch(fetchFn, url, options = {}, timeout = 15000) {
-  const response = await fetchFn(url, {
-    ...options,
-    signal: AbortSignal.timeout(timeout),
-  });
+  let response;
+  try {
+    response = await fetchFn(url, {
+      ...options,
+      signal: AbortSignal.timeout(timeout),
+    });
+  } catch (error) {
+    fail(502, "provider_unavailable", error?.name === "TimeoutError" || error?.name === "AbortError"
+      ? "A consulta ao provedor excedeu o tempo limite. Tente novamente mais tarde."
+      : "Não foi possível conectar ao provedor a partir do servidor. Verifique a disponibilidade da fonte.");
+  }
   if (!response.ok)
     fail(
       response.status === 429 ? 503 : 502,
       "provider_unavailable",
-      "O provedor não está disponível. Tente novamente mais tarde.",
+      response.status === 429
+        ? "O provedor limitou as consultas (HTTP 429). Aguarde antes de tentar novamente."
+        : response.status === 403
+          ? "O provedor recusou o acesso deste servidor (HTTP 403). Pode haver restrição de acesso ou bloqueio do endereço da hospedagem."
+          : response.status === 401
+            ? "O provedor recusou a autenticação (HTTP 401). Confira as credenciais do serviço."
+            : `O provedor retornou HTTP ${response.status}. Tente novamente mais tarde.`,
     );
   if (Number(response.headers?.get?.("content-length")) > 2 * 1024 * 1024)
     fail(
