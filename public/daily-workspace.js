@@ -91,11 +91,17 @@ function taDailyConnection() {
 function taDailyKey(kind, date = taDailyDate()) {
   const p = taDailyProfile(),
     currencies =
-      kind === "events" && (tab === "home" || taDailyState.relevantOnly)
+      kind === "events" && tab !== "home" && taDailyState.relevantOnly
         ? taDailyCurrencies()
         : [];
   return kind === "events"
-    ? "events|" + date + "|" + currencies.join(",") + "|" + p.timezone
+    ? "events|" +
+        date +
+        "|" +
+        currencies.join(",") +
+        "|" +
+        p.timezone +
+        (tab === "home" ? "|upcoming30" : "")
     : "market|" + taDailySymbols().join(",") + "|" + p.timezone;
 }
 function taDailyRequestState(kind, date = taDailyDate()) {
@@ -115,13 +121,13 @@ async function taDailyFetch(kind, date, force = false) {
   if (!force && existing && existing.expiresAt > now) return false;
   const p = taDailyProfile(),
     currencies =
-      kind === "events" && (tab === "home" || taDailyState.relevantOnly)
+      kind === "events" && tab !== "home" && taDailyState.relevantOnly
         ? taDailyCurrencies()
         : [],
     params = new URLSearchParams({ timezone: p.timezone });
   if (kind === "events") {
     params.set("from", taDailyAdd(date, -1));
-    params.set("to", taDailyAdd(date, 1));
+    params.set("to", taDailyAdd(date, tab === "home" ? 30 : 1));
     if (currencies.length) params.set("currencies", currencies.join(","));
   } else {
     const symbols = taDailySymbols();
@@ -312,6 +318,27 @@ function taDailyEvents(date = taDailyDate()) {
           allowed.includes(e.currency)),
     )
     .sort((a, b) => taDailyEventTime(a) - taDailyEventTime(b));
+}
+// Home shows the next published events, across dates and without a session-hour cutoff.
+function taUpcomingEvents(limit = 2) {
+  const data = taDailyRequestState("events", taDailyDate()).data,
+    seen = new Set();
+  return (data?.events || [])
+    .filter((e) => {
+      const time = taDailyEventTime(e);
+      if (
+        time === null ||
+        time < Date.now() ||
+        ["cancelled", "canceled"].includes(e.status)
+      )
+        return false;
+      const key = e.id || `${e.time}|${e.currency}|${e.name}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((a, b) => taDailyEventTime(a) - taDailyEventTime(b))
+    .slice(0, limit);
 }
 function taDailySource(data) {
   if (!data) return "";
@@ -579,7 +606,9 @@ function taDailyReadyCard() {
   ];
   return `<section class="card ta-ready-card"><div class="section-head"><div><div class="eyebrow">Preparação em poucos cliques</div><h2>Seu radar de hoje</h2></div><button type="button" class="b s" onclick="taAssetOpen()">${profile.instruments.length ? "Editar ativos" : "Escolher ativos"}</button></div><div class="ta-radar-assets">${profile.instruments.length ? profile.instruments.map((symbol) => `<span class="badge">${esc(symbol)}</span>`).join("") : "<p>Selecione os ativos que você acompanha, sem digitar símbolos.</p>"}</div><div class="ta-ready-steps">${rows.map((row) => `<div class="ta-ready-step"><span class="ta-ready-state ${row.ready ? "ready" : ""}" aria-hidden="true">${row.ready ? "✓" : "○"}</span><div><b>${row.label}</b><small>${esc(row.detail)}</small></div><button class="b s" onclick="taGo('${row.tab}')">${row.action}</button></div>`).join("")}</div><div class="ta-ready-recent">${recent ? `<div><span>Último fechamento registrado</span><b>${esc(recent.symbol || "Ativo não informado")} <span class="${recent.pnl < 0 ? "r" : recent.pnl > 0 ? "g" : ""}">${money(recent.pnl)}</span></b><small>${esc(recent.close.replace("T", " "))} · consulte o diário antes da próxima decisão.</small></div><button class="b s" onclick="taGo('trades')">Ver histórico</button>` : '<div><b>Já tem um histórico ou plano salvo?</b><small>Traga seu backup anterior para personalizar a preparação.</small></div><label class="b s">Restaurar backup<input type="file" accept=".json" hidden onchange="rb(this.files[0])"></label>'}</div></section>`;
 }
-function vHome(){return vHomeDetails()}
+function vHome() {
+  return vHomeDetails();
+}
 function vHomeDetails() {
   const profile = taDailyProfile(),
     parts = taDailyParts(),
@@ -607,7 +636,7 @@ function vHomeDetails() {
           : "Sua próxima sessão começa " +
             taDailyTimeLeft(session.startAt) +
             ". Prepare o plano com calma.";
-  return `${typeof eliteOffice==='function'?eliteOffice():''}<div class="elite-operational">${typeof eliteDaySummary==='function'?eliteDaySummary():''}<div class="ta-home-heading"><div><div class="eyebrow">EliteX · preparação diária</div><h1>${greeting}${profile.name ? ", " + esc(profile.name) : ""}.</h1><p>${esc(sessionCopy)}${event ? " " + esc(event.currency) + " tem evento de alto impacto " + esc(taDailyTimeLeft(event.time)) + "." : ""}</p><span class="muted-note">${esc(new Intl.DateTimeFormat("pt-PT", { dateStyle: "full", timeZone: profile.timezone }).format(new Date()))} · ${esc(profile.timezone)}</span></div><button class="b s" onclick="taDailyRefresh()" ${taDailyState.refreshing ? "disabled" : ""}>${taDailyState.refreshing ? "Atualizando…" : "Atualizar briefing"}</button></div><div class="ta-home-overview"><section class="card ta-session-card"><div class="eyebrow">Seu horário, seu processo</div><h2>Sua sessão de trading</h2>${session.configured ? `<div class="ta-session-title"><strong>${esc(session.label || profile.session.label)}</strong><span class="badge">${{ active: "Ativa", upcoming: "Próxima", finished: "Finalizada" }[session.status]}</span></div><div class="ta-session-hours">${esc(profile.session.start)} <span>—</span> ${esc(profile.session.end)}</div><p>${esc(taDailySessionCountdown(session))}</p><p class="muted-note">${esc(profile.session.timezone)} · ${esc(profile.session.days.map((n) => ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][n - 1]).join(", "))}</p><p class="muted-note">No seu fuso: ${esc(taDailyFormatTime(session.startAt))}–${esc(taDailyFormatTime(session.endAt))}</p>` : '<p class="ta-unavailable">Sua sessão ainda não foi configurada.</p>'}<button class="b s" onclick="taGo('settings')">${session.configured ? "Ajustar sessão" : "Configurar sessão"}</button><details class="elite-preparation-details"><summary>Meu perfil, plano e preparação</summary>${taDailyPreparation(week, insight)}</details></section><div class="ta-preparation-right">${taDailyMarketCard()}<section class="card ta-assistant-insight"><div class="eyebrow">Seu assistente</div><div class="section-head"><h2>Um foco para hoje</h2><span class="badge">${esc(insight.label)}</span></div>${typeof taBriefingHasResult === "function" && taBriefingHasResult() ? "" : `<p>${esc(insight.text)}</p><p class="muted-note">${esc(insight.action)}</p>`}${typeof taBriefingView === "function" ? taBriefingView() : ""}<button class="b s" onclick="taGo('${taCurrentPlan() ? "analyst" : "plan"}')">${taCurrentPlan() ? "Analisar próximo setup" : "Criar meu plano"}</button></section></div></div>${taDailyReadyCard()}${taDailyCalendarCard()}<details class="card elite-extra"><summary>Atalhos e performance semanal</summary><div class="ta-quick-actions">${[
+  return `${typeof eliteOffice === "function" ? eliteOffice() : ""}<div class="elite-operational">${typeof eliteDaySummary === "function" ? eliteDaySummary() : ""}<div class="ta-home-heading"><div><div class="eyebrow">EliteX · preparação diária</div><h1>${greeting}${profile.name ? ", " + esc(profile.name) : ""}.</h1><p>${esc(sessionCopy)}${event ? " " + esc(event.currency) + " tem evento de alto impacto " + esc(taDailyTimeLeft(event.time)) + "." : ""}</p><span class="muted-note">${esc(new Intl.DateTimeFormat("pt-PT", { dateStyle: "full", timeZone: profile.timezone }).format(new Date()))} · ${esc(profile.timezone)}</span></div><button class="b s" onclick="taDailyRefresh()" ${taDailyState.refreshing ? "disabled" : ""}>${taDailyState.refreshing ? "Atualizando…" : "Atualizar briefing"}</button></div><div class="ta-home-overview"><section class="card ta-session-card"><div class="eyebrow">Seu horário, seu processo</div><h2>Sua sessão de trading</h2>${session.configured ? `<div class="ta-session-title"><strong>${esc(session.label || profile.session.label)}</strong><span class="badge">${{ active: "Ativa", upcoming: "Próxima", finished: "Finalizada" }[session.status]}</span></div><div class="ta-session-hours">${esc(profile.session.start)} <span>—</span> ${esc(profile.session.end)}</div><p>${esc(taDailySessionCountdown(session))}</p><p class="muted-note">${esc(profile.session.timezone)} · ${esc(profile.session.days.map((n) => ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][n - 1]).join(", "))}</p><p class="muted-note">No seu fuso: ${esc(taDailyFormatTime(session.startAt))}–${esc(taDailyFormatTime(session.endAt))}</p>` : '<p class="ta-unavailable">Sua sessão ainda não foi configurada.</p>'}<button class="b s" onclick="taGo('settings')">${session.configured ? "Ajustar sessão" : "Configurar sessão"}</button><details class="elite-preparation-details"><summary>Meu perfil, plano e preparação</summary>${taDailyPreparation(week, insight)}</details></section><div class="ta-preparation-right">${taDailyMarketCard()}<section class="card ta-assistant-insight"><div class="eyebrow">Seu assistente</div><div class="section-head"><h2>Um foco para hoje</h2><span class="badge">${esc(insight.label)}</span></div>${typeof taBriefingHasResult === "function" && taBriefingHasResult() ? "" : `<p>${esc(insight.text)}</p><p class="muted-note">${esc(insight.action)}</p>`}${typeof taBriefingView === "function" ? taBriefingView() : ""}<button class="b s" onclick="taGo('${taCurrentPlan() ? "analyst" : "plan"}')">${taCurrentPlan() ? "Analisar próximo setup" : "Criar meu plano"}</button></section></div></div>${taDailyReadyCard()}${taDailyCalendarCard()}<details class="card elite-extra"><summary>Atalhos e performance semanal</summary><div class="ta-quick-actions">${[
     ["analyst", "Analisar setup", "Evidências e regras"],
     ["plan", "Meu Trading Plan", "Sua estratégia documentada"],
     ["trades", "Diário", "Operações e registros"],
@@ -628,4 +657,17 @@ function vEconomicCalendar() {
     unavailable = taDailyAvailability("events", date),
     currencies = taDailyCurrencies();
   return `<section class="card ta-economic-toolbar"><div class="section-head"><div><div class="eyebrow">Calendário econômico</div><h2>Prepare-se para os eventos</h2><p>Horários em ${esc(taDailyProfile().timezone)}. Eventos observados no provedor, sem dados simulados.</p></div><button class="b s" onclick="taDailyRefresh()" ${taDailyState.refreshing ? "disabled" : ""}>Atualizar</button></div><div class="row"><button class="b s" aria-label="Dia anterior no calendário econômico" onclick="taEconomicDate(taDailyAdd('${date}',-1))">‹</button><label>Data <input type="date" aria-label="Data do calendário econômico" value="${date}" onchange="taEconomicDate(this.value)"></label><button class="b s" aria-label="Próximo dia no calendário econômico" onclick="taEconomicDate(taDailyAdd('${date}',1))">›</button><button class="b s" onclick="taEconomicDate(taDailyDate())">Hoje</button><label class="ta-currency-filter"><input type="checkbox" ${taDailyState.relevantOnly ? "checked" : ""} ${currencies.length ? "" : "disabled"} onchange="taDailyState.relevantOnly=this.checked;R()"> Somente moedas dos meus instrumentos</label></div><p class="muted-note">${currencies.length ? "Moedas monitoradas: " + currencies.join(", ") : "Nenhuma moeda identificada nos instrumentos monitorados; exibindo todas as moedas retornadas."}</p></section><section class="card ta-economic-events">${unavailable || taDailyEventList(taDailyEvents(date))}${taDailySource(state.data)}<p class="muted-note">Atenção informativa: eventos de alto impacto dentro da sessão são destacados. Janela configurada: ${Number(taDailyProfile().newsBeforeMinutes) || 0} min antes e ${Number(taDailyProfile().newsAfterMinutes) || 0} min depois. A disponibilidade e o atraso dependem do plano contratado com o provedor.</p></section>`;
+}
+
+function taOpenUpcomingEvent(time, currency) {
+  const instant = taDailyEventTime({ time });
+  if (instant === null) return;
+  taDailyState.calendarDate = SessionEngine.zonedParts(
+    new Date(instant),
+    taDailyProfile().timezone,
+  ).date;
+  const allowed = taDailyCurrencies();
+  if (allowed.length && currency !== "ALL" && !allowed.includes(currency))
+    taDailyState.relevantOnly = false;
+  taGo("economic");
 }

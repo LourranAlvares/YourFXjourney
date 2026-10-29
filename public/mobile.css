@@ -1,0 +1,346 @@
+/* Every visual override is limited to phones. No desktop rule changes. */
+#elite-mobile-scrim,
+#elite-mobile-close {
+  display: none;
+}
+@media (max-width: 760px) {
+  body.elitex-unified {
+    font-size: 14px;
+  }
+  body.elitex-unified header {
+    position: fixed !important;
+    inset: 0 auto 0 0;
+    width: min(290px, 86vw) !important;
+    height: 100dvh !important;
+    padding: max(16px, env(safe-area-inset-top)) 14px
+      max(14px, env(safe-area-inset-bottom)) !important;
+    display: flex !important;
+    flex-direction: column;
+    z-index: 90;
+    transform: translateX(-105%);
+    visibility: hidden;
+    background: #031015 !important;
+    border-right: 1px solid #23514d;
+  }
+  body.elite-mobile-nav-open header {
+    transform: translateX(0);
+    visibility: visible;
+  }
+  body.elite-mobile-nav-open {
+    overflow: hidden;
+  }
+  #elite-mobile-close {
+    display: block;
+    align-self: flex-end;
+    margin-bottom: 12px;
+    min-height: 40px;
+  }
+  body.elitex-unified header h1 {
+    margin: 0 0 18px !important;
+    padding: 0 10px !important;
+    justify-content: flex-start;
+  }
+  body.elitex-unified header .elitex-brand-tagline {
+    display: none !important;
+  }
+  body.elitex-unified header #nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  body.elitex-unified header .ta-nav-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 6px;
+  }
+  body.elitex-unified header #nav button {
+    width: 100%;
+    min-height: 48px;
+    flex-direction: row !important;
+    padding: 12px !important;
+    gap: 14px !important;
+    font-size: 14px !important;
+    justify-content: flex-start;
+  }
+  body.elitex-unified header .elite-nav-label {
+    display: inline !important;
+    flex: 1 !important;
+    text-align: left;
+    white-space: normal;
+  }
+  body.elitex-unified header .scene-more-nav,
+  body.elitex-unified header .elite-nav-extra {
+    width: 100%;
+  }
+  body.elitex-unified header .scene-more-nav summary {
+    min-height: 46px;
+    justify-content: space-between;
+    font-size: 13px !important;
+  }
+  body.elitex-unified header .elite-profile {
+    display: flex;
+    position: static;
+    flex-shrink: 0;
+    margin-top: 12px;
+    width: 100%;
+  }
+  body.elite-mobile-nav-open #elite-mobile-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    background: #0009;
+    z-index: 85;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+  }
+  body.elitex-unified #main {
+    margin: 0 !important;
+    padding: 0 12px max(24px, env(safe-area-inset-bottom)) !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .reference-topbar {
+    margin: 0 -12px 16px !important;
+    padding: max(10px, env(safe-area-inset-top)) 12px 10px !important;
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 10px !important;
+    width: auto;
+  }
+  .reference-topbar > .terminal-icon-button {
+    width: 40px;
+    min-height: 42px;
+  }
+  .reference-search {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    box-sizing: border-box;
+    font-size: 12px;
+  }
+  .reference-search span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .reference-top-actions {
+    grid-column: 1/-1;
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .reference-top-actions .reference-clock {
+    min-width: 80px;
+  }
+  .reference-top-actions .reference-clock > b {
+    font-size: 14px;
+    padding: 9px 8px;
+  }
+  .reference-top-actions .reference-icon {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+  }
+  .reference-top-actions .reference-connection {
+    min-width: 34px;
+    width: 34px;
+    min-height: 40px;
+  }
+  .reference-top-actions .account-currency-control select {
+    height: 40px;
+    min-width: 78px;
+    padding: 6px;
+  }
+  .reference-home {
+    margin: 0 -12px;
+    min-height: 0 !important;
+    padding: 22px 14px !important;
+    gap: 18px !important;
+    background-size: auto 660px !important;
+  }
+  .reference-home .reference-left {
+    gap: 215px;
+    min-width: 0;
+  }
+  .reference-home .scene-greeting h1 {
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1.12;
+  }
+  .reference-home .scene-greeting p {
+    font-size: 14px;
+    max-width: 100%;
+  }
+  .reference-home .reference-right {
+    min-width: 0;
+  }
+  .reference-home .scene-card {
+    min-width: 0;
+    padding: 16px;
+  }
+  .reference-card-heading {
+    flex-wrap: wrap;
+  }
+  .reference-card-heading .scene-link {
+    white-space: normal;
+    margin-left: auto;
+  }
+  .reference-home .scene-bottom-actions button {
+    min-height: 48px;
+    padding: 10px;
+    font-size: 12px;
+  }
+  .reference-command {
+    min-height: 52px;
+    padding: 10px;
+    gap: 8px;
+  }
+  .reference-command span {
+    font-size: 12px;
+  }
+  .reference-event {
+    grid-template-columns: 43px 50px minmax(0, 1fr);
+    gap: 7px;
+    padding: 12px 8px;
+  }
+  .reference-event > span:nth-of-type(2) {
+    overflow-wrap: anywhere;
+  }
+  .reference-event > b {
+    grid-column: 3;
+    justify-self: start;
+    padding: 4px 8px;
+  }
+  .reference-asset-grid {
+    gap: 6px;
+  }
+  .reference-asset-grid article {
+    padding: 14px 4px;
+  }
+  .reference-asset-grid article > b {
+    font-size: 12px;
+  }
+  .reference-asset-grid article small {
+    font-size: 10px;
+  }
+  body.elitex-unified .page-top {
+    gap: 10px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+  body.elitex-unified .page-top h2 {
+    font-size: 27px;
+  }
+  body.elitex-unified .page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  body.elitex-unified .filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  body.elitex-unified .filters label {
+    width: 100%;
+    min-width: 0;
+  }
+  body.elitex-unified .filters input,
+  body.elitex-unified .filters select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    min-height: 42px;
+    font-size: 16px;
+  }
+  body.elitex-unified .card {
+    min-width: 0;
+  }
+  body.elitex-unified input,
+  body.elitex-unified textarea,
+  body.elitex-unified select {
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  .elite-dashboard .section-head {
+    flex-wrap: wrap;
+  }
+  .elite-dashboard .section-head h2 {
+    flex: 1 1 130px;
+  }
+  .elite-dashboard .section-head select {
+    max-width: 100%;
+  }
+  .elite-dash-unit {
+    gap: 8px;
+  }
+  .elite-dash-unit label {
+    margin-left: 0;
+    flex: 1 1 120px;
+    min-width: 0;
+  }
+  .elite-dash-unit select {
+    min-width: 0;
+    width: 100%;
+  }
+  .elite-dash-unit > small {
+    width: 100%;
+  }
+  .elite-dash-metrics .k > b {
+    font-size: 22px;
+  }
+  .elite-dashboard .primary-metrics .k {
+    min-height: 112px;
+  }
+  .elite-dash-distribution {
+    justify-content: flex-start;
+    gap: 20px;
+  }
+  .elite-dash-support .elite-dash-donut {
+    width: 100px;
+    height: 100px;
+  }
+  .elite-dash-support .elite-dash-bars {
+    height: 174px;
+  }
+  .elite-dash-calendar .section-head .month-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .elite-dash-calendar .cal .cd {
+    min-height: 34px !important;
+    height: 34px;
+  }
+  .elite-analysis-switch .b {
+    min-height: 42px;
+  }
+  .elite-analysis-grid .section-head {
+    flex-wrap: wrap;
+  }
+  body.elitex-unified dialog {
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+    box-sizing: border-box;
+    padding: 16px;
+    overflow-y: auto;
+  }
+}
+@media (max-width: 760px) {
+  body.elitex-unified .elite-dashboard .primary-metrics .k {
+    grid-column: auto !important;
+  }
+  .elite-dash-footer table {
+    min-width: 440px;
+  }
+  .elite-dash-footer .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

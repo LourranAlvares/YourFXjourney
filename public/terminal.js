@@ -57,6 +57,10 @@ function terminalIcon(name) {
 }
 
 function terminalToggleNav() {
+  if (innerWidth <= 760 && typeof eliteMobileToggle === "function") {
+    eliteMobileToggle();
+    return;
+  }
   terminalCollapsed = !terminalCollapsed;
   try {
     localStorage.setItem(
