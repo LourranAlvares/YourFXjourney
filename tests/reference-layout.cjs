@@ -87,12 +87,51 @@ const { chromium } = require("playwright"),
       /Semana positiva/,
     );
     assert.equal(await p.locator(".reference-event").count(), 2);
+    assert.equal(
+      await p.locator(".reference-currency .elite-news-flag").count(),
+      2,
+    );
+    assert.equal(
+      await p.getByRole("img", { name: "Estados Unidos", exact: true }).count(),
+      1,
+    );
+    const flags = await p.evaluate(() =>
+      [
+        "USD",
+        "CAD",
+        "GBP",
+        "EUR",
+        "JPY",
+        "CHF",
+        "AUD",
+        "NZD",
+        "BRL",
+        "CNY",
+        "CNH",
+        "HKD",
+        "SGD",
+        "SEK",
+        "NOK",
+        "MXN",
+        "ZAR",
+      ].map((c) => eliteNewsFlag(c)),
+    );
+    assert(
+      flags.every(
+        (f) => f.includes('class="elite-news-flag"') && !f.includes("http"),
+      ),
+    );
+    assert.match(await p.evaluate(() => eliteNewsFlag("CAD")), /Canadá/);
+
     assert.equal(await p.locator(".reference-asset-grid article").count(), 3);
     const icons = await p.evaluate(() => ({
       missing: tabs.filter(([id]) => !terminalIcon(id)).map(([id]) => id),
-      gold: eliteAssetIcon("XAU/USD"), forex: eliteAssetIcon("EURUSD"),
-      stock: eliteAssetIcon("AAPL"), oil: eliteAssetIcon("USOIL"),
-      crypto: eliteAssetIcon("BTCUSD"), index: eliteAssetIcon("US500"),
+      gold: eliteAssetIcon("XAU/USD"),
+      forex: eliteAssetIcon("EURUSD"),
+      stock: eliteAssetIcon("AAPL"),
+      oil: eliteAssetIcon("USOIL"),
+      crypto: eliteAssetIcon("BTCUSD"),
+      index: eliteAssetIcon("US500"),
       unknown: terminalIcon("nonexistent"),
     }));
     assert.deepEqual(icons.missing, []);
