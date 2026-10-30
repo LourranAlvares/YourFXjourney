@@ -105,7 +105,7 @@ function eliteOpenTools() {
     d.id = "elite-tools-dialog";
     document.body.append(d);
   }
-  d.innerHTML = `<div class="section-head"><h2>O que precisa fazer?</h2><button class="b s" onclick="document.getElementById('elite-tools-dialog').close()">Fechar</button></div><label>Buscar ferramentas<input id="elite-tools-query" placeholder="Analyst, calendário, diário…" oninput="document.getElementById('elite-tools-results').innerHTML=eliteToolRows(this.value)"></label><div id="elite-tools-results">${eliteToolRows()}</div><small>Busca de funções do SMC Elite. Não é uma conversa com IA.</small>`;
+  d.innerHTML = `<div class="section-head"><h2>O que precisa fazer?</h2><button class="b s" onclick="document.getElementById('elite-tools-dialog').close()">Fechar</button></div><label>Buscar ferramentas<input id="elite-tools-query" placeholder="Analyst, calendário, diário…" oninput="document.getElementById('elite-tools-results').innerHTML=eliteToolRows(this.value)"></label><div id="elite-tools-results">${eliteToolRows()}</div><small>Acesse rapidamente as ferramentas do seu espaço.</small>`;
   d.showModal();
   d.querySelector("input").focus();
 }

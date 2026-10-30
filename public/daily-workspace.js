@@ -386,7 +386,10 @@ function taDailyEventList(events, compact = false) {
             low: "Baixo",
             unknown: "Não informado",
           }[e.impact] || "Não informado";
-      return `<article class="ta-event ${high ? "ta-event-high" : ""}"><div class="ta-event-time"><b>${esc(taDailyFormatTime(e.time))}</b><small>${esc(taDailyTimeLeft(e.time))}</small></div><div class="ta-event-info"><div><span class="badge">${esc(e.currency || "—")}</span> <strong>${esc(e.name)}</strong></div><p class="muted-note">Impacto na fonte: ${esc(impact.toLowerCase())}${window.withinSession ? " · Durante sua sessão" : ""}${window.caution ? " · Dentro da janela de cautela" : ""}</p>${compact ? "" : `<div class="ta-event-values"><span>Anterior <b>${esc(e.previous ?? "—")}</b></span><span>Previsão <b>${esc(e.forecast ?? "—")}</b></span><span>Atual <b>${esc(e.actual ?? "—")}</b></span></div>`}</div>${high && window.withinSession ? '<span class="ta-event-warning">Atenção na sessão</span>' : ""}</article>`;
+      const elapsed = taDailyTimeLeft(e.time),
+        flag =
+          typeof eliteNewsFlag === "function" ? eliteNewsFlag(e.currency) : "";
+      return `<article class="ta-event ${high ? "ta-event-high" : ""}"><div class="ta-event-time"><b>${esc(taDailyFormatTime(e.time))}</b><small title="${esc(elapsed)}">${esc(elapsed === "Agora / já divulgado" ? "Divulgado" : elapsed)}</small></div><div class="ta-event-info"><div class="ta-event-heading"><span class="ta-event-currency">${flag}<span>${esc(e.currency || "—")}</span></span><strong>${esc(e.name)}</strong></div><div class="ta-event-meta"><span class="ta-event-impact impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${esc(impact)}</span>${high && window.withinSession ? `<span class="ta-event-warning">Atenção na sessão${window.caution ? " · cautela" : ""}</span>` : window.caution ? '<span class="ta-event-warning">Janela de cautela</span>' : window.withinSession ? "<span>Durante sua sessão</span>" : ""}</div>${compact ? "" : `<div class="ta-event-values"><span>Anterior <b>${esc(e.previous ?? "—")}</b></span><span>Previsão <b>${esc(e.forecast ?? "—")}</b></span><span>Atual <b>${esc(e.actual ?? "—")}</b></span></div>`}</div></article>`;
     })
     .join("")}</div>`;
 }

@@ -1799,3 +1799,373 @@ body.smc-shell #main:has(> .smc-home) > .reference-topbar {
     order: -1;
   }
 }
+
+/* Search surfaces use the same graphite and champagne palette as the shell. */
+body.smc-shell .elite-tool-result,
+body.smc-shell .elite-trade-result {
+  background: #11161c;
+  border-color: #34363b;
+  color: #e7e8eb;
+  min-width: 0;
+}
+body.smc-shell .elite-tool-result:hover,
+body.smc-shell .elite-trade-result:hover {
+  background: #201e1a;
+  border-color: #897044;
+}
+body.smc-shell .elite-tool-result svg,
+body.smc-shell .elite-tool-result > span:last-child .elite-icon,
+body.smc-shell .elite-trade-result > svg,
+body.smc-shell .elite-trade-result > span:last-child .elite-icon {
+  color: var(--gold);
+}
+body.smc-shell .elite-tool-result > span,
+body.smc-shell .elite-trade-result > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+body.smc-shell .elite-trade-result small,
+body.smc-shell #elite-tools-dialog > small {
+  color: #a7abb3;
+}
+body.smc-shell #elite-tools-dialog,
+body.smc-shell #elite-trade-search-dialog {
+  display: none;
+}
+body.smc-shell #elite-tools-dialog[open],
+body.smc-shell #elite-trade-search-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  max-height: 85dvh;
+  box-sizing: border-box;
+}
+body.smc-shell #elite-tools-dialog > *,
+body.smc-shell #elite-trade-search-dialog > * {
+  flex-shrink: 0;
+  min-width: 0;
+}
+body.smc-shell #elite-tools-results,
+body.smc-shell #elite-trade-results {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+body.smc-shell #elite-tools-dialog > .section-head,
+body.smc-shell #elite-trade-search-dialog > .section-head {
+  gap: 12px;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 0;
+}
+body.smc-shell #elite-tools-query {
+  margin: 6px 0 0;
+}
+body.smc-shell #elite-tools-dialog > small {
+  display: block;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Keep native date editors inside their grid cell, including WebKit intrinsic widths. */
+body.smc-shell .filters > label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+body.smc-shell input[type="date"],
+body.smc-shell input[type="month"],
+body.smc-shell input[type="time"],
+body.smc-shell input[type="datetime-local"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  min-width: 0;
+  min-inline-size: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+body.smc-shell input::-webkit-date-and-time-value {
+  min-width: 0;
+  text-align: left;
+}
+body.smc-shell input::-webkit-datetime-edit {
+  min-width: 0;
+  padding: 0;
+}
+
+/* News: two stable columns; status belongs with the title, never beside it. */
+body.smc-shell .ta-event {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px 0;
+  align-items: start;
+}
+body.smc-shell .ta-event-high {
+  padding-left: 12px;
+  border-left-color: var(--gold);
+}
+body.smc-shell .ta-event-time {
+  min-width: 0;
+}
+body.smc-shell .ta-event-time small {
+  font:
+    11px/1.4 "SMC Inter",
+    sans-serif;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+body.smc-shell .ta-event-heading {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+body.smc-shell .ta-event-currency {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  color: #c9cbd1;
+  font-size: 11px;
+}
+body.smc-shell .ta-event-currency svg {
+  width: 18px;
+  height: 13px;
+  flex-shrink: 0;
+}
+body.smc-shell .ta-event-heading strong {
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  font-weight: 550;
+}
+body.smc-shell .ta-event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  font-size: 11px;
+  color: #a8aeb7;
+}
+body.smc-shell .ta-event-impact,
+body.smc-shell .ta-event-warning {
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 3px 7px;
+  border: 1px solid #5e4c2b;
+  border-radius: 5px;
+  margin: 0;
+  color: #dfbd7c;
+  background: #d7b9820b;
+}
+body.smc-shell .ta-event-impact.impact-high {
+  color: #ef9aa5;
+  background: #ed506b10;
+  border-color: #763440;
+}
+body.smc-shell .ta-event-impact.impact-low {
+  color: #b3c3ce;
+  border-color: #3e4b56;
+}
+body.smc-shell .ta-event-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 540px;
+  margin-top: 10px;
+  font:
+    11px/1.4 "SMC Inter",
+    sans-serif;
+  color: #a3aab5;
+}
+body.smc-shell .ta-event-values span {
+  min-width: 0;
+}
+body.smc-shell .ta-event-values b {
+  display: block;
+  color: #e6e8ed;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  body.smc-shell .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+  }
+  body.smc-shell .filters > label {
+    overflow: hidden;
+    font-size: 11px;
+    gap: 6px;
+  }
+  body.smc-shell .filters input,
+  body.smc-shell .filters select {
+    width: 100%;
+    height: 44px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  body.smc-shell .ta-economic-toolbar > .row,
+  body.smc-shell .diary-heading > .row {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 38px auto;
+    gap: 8px;
+    align-items: end;
+  }
+  body.smc-shell .ta-economic-toolbar > .row > label:not(.ta-currency-filter),
+  body.smc-shell .diary-heading > .row > label {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 11px;
+  }
+  body.smc-shell .ta-economic-toolbar input[type="date"],
+  body.smc-shell .diary-heading input[type="month"] {
+    width: 100%;
+    height: 44px;
+    font-size: 16px;
+    padding: 7px;
+  }
+  body.smc-shell .ta-currency-filter {
+    grid-column: 1/-1;
+    font-size: 12px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  body.smc-shell .diary-heading > .row {
+    grid-template-columns: 38px minmax(0, 1fr) 38px;
+  }
+  body.smc-shell .diary-heading > .row > button:nth-of-type(n + 3) {
+    grid-column: 1/-1;
+  }
+  body.smc-shell .ta-economic-events {
+    padding: 12px;
+  }
+  body.smc-shell .ta-event {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px 0;
+  }
+  body.smc-shell .ta-event-high {
+    padding-left: 8px;
+  }
+  body.smc-shell .ta-event-time b {
+    font-size: 13px;
+  }
+  body.smc-shell .ta-event-time small {
+    font-size: 9px;
+  }
+  body.smc-shell .ta-event-heading {
+    display: block;
+  }
+  body.smc-shell .ta-event-currency {
+    display: flex;
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+  body.smc-shell .ta-event-heading strong {
+    display: block;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  body.smc-shell .ta-event-values {
+    gap: 6px;
+    font-size: 10px;
+    margin-top: 8px;
+  }
+  body.smc-shell .ta-event-values b {
+    font-size: 12px;
+  }
+  body.smc-shell #elite-tools-dialog[open],
+  body.smc-shell #elite-trade-search-dialog[open] {
+    padding: 16px;
+    gap: 12px;
+    width: calc(100% - 24px);
+    max-height: 82dvh;
+  }
+  body.smc-shell #elite-tools-dialog h2,
+  body.smc-shell #elite-trade-search-dialog h2 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  body.smc-shell .elite-tool-result {
+    padding: 11px;
+    min-height: 46px;
+    gap: 10px;
+    font-size: 13px;
+    border-radius: 9px;
+  }
+  body.smc-shell .elite-tool-result svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  body.smc-shell #elite-tools-dialog > small {
+    font-size: 11px;
+  }
+}
+
+/* Finish the interactive states as well as the static screens. */
+body.smc-shell .diary-day {
+  background: #10151b;
+  border-color: #30353d;
+}
+body.smc-shell .diary-day.g {
+  background: #36cfa70d;
+}
+body.smc-shell .diary-day.r {
+  background: #ed506b0d;
+}
+body.smc-shell .diary-day.selected {
+  outline-color: var(--gold);
+}
+body.smc-shell .diary-no-print {
+  background: #d7b98205;
+  border-color: #4a4131;
+}
+body.smc-shell .terminal-trade-table tbody tr:hover,
+body.smc-shell .terminal-trade-table tbody tr:focus-visible {
+  background: #d7b9820b;
+  box-shadow: inset 2px 0 #d7b98270;
+}
+body.smc-shell .primary-metrics .k[role="button"]:focus-visible {
+  outline-color: var(--gold);
+}
+body.smc-shell .share-live-day.premium-selected {
+  box-shadow: inset 0 2px #d7b9827d;
+}
+@media (max-width: 760px) {
+  body.smc-shell .diary-heading > .row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  body.smc-shell .diary-heading > .row > button:first-of-type {
+    grid-column: 1;
+  }
+  body.smc-shell .diary-heading > .row > label {
+    grid-column: 2 / span 4;
+  }
+  body.smc-shell .diary-heading > .row > button:nth-of-type(2) {
+    grid-column: 6;
+  }
+  body.smc-shell .diary-heading > .row > button:nth-of-type(3) {
+    grid-column: 1 / span 3;
+  }
+  body.smc-shell .diary-heading > .row > button:nth-of-type(4) {
+    grid-column: 4 / span 3;
+  }
+  body.smc-shell .diary-heading .grid .k b {
+    font-size: clamp(18px, 5vw, 22px);
+    letter-spacing: -0.4px;
+  }
+}
