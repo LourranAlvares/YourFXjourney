@@ -103,7 +103,7 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
     );
     return nonce;
   }
-  async function request(
+  async function rawRequest(
     endpoint,
     { method = "GET", data, token, admin = false } = {},
   ) {
@@ -137,11 +137,17 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       payload = null;
     }
     if (!response.ok) {
+      const mapped = require("./auth-flow.cjs").authError(
+        endpoint,
+        response,
+        payload,
+        APIError,
+      );
+      if (mapped) throw mapped;
+
       if (
         ["PGRST205", "PGRST202", "42P01", "42883"].includes(payload?.code) &&
-        /elitex_(account_access|coaching_shares|admin_audit|admin_manage|set_coaching_share|refresh_coaching_summary)/.test(
-          endpoint,
-        )
+        /elitex_(account_access|admin_audit|admin_manage)/.test(endpoint)
       )
         fail(
           503,
@@ -180,6 +186,9 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       );
     }
     return payload;
+  }
+  async function request(endpoint, options) {
+    return authFlow.request(endpoint, options);
   }
   function publicProfile(p, user) {
     return {
@@ -427,6 +436,23 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       const s = await establish(res, tokens);
       return { user: s.user, csrf: s.csrf };
     }
+    if (action === "resend") {
+      if (!validEmail(data.email))
+        fail(400, "invalid_email", "Informe um e-mail válido.");
+      await request(
+        "/auth/v1/resend?redirect_to=" +
+          encodeURIComponent(origin + "/account"),
+        {
+          method: "POST",
+          data: { type: "signup", email: data.email.trim().toLowerCase() },
+        },
+      );
+      return {
+        message:
+          "Se houver uma conta aguardando confirmação, o e-mail será enviado. Confira também o spam. Evite repetir o pedido durante um minuto.",
+        cooldownSeconds: 60,
+      };
+    }
     if (action === "recover") {
       if (!validEmail(data.email))
         fail(400, "invalid_email", "Informe um e-mail válido.");
@@ -569,10 +595,6 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
         mutation_id: data.mutationId,
       },
     });
-    // Reporting is optional. A reporting outage must never discard a saved diary.
-    await management
-      .sync(current, data.data, Number(saved.revision))
-      .catch(() => {});
     return saved;
   }
   async function listAccounts(current) {
@@ -632,6 +654,7 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
     } else query += "&select=revision,created_at&order=revision.desc&limit=3";
     return request(query, { token: current.token });
   }
+  const authFlow = require("./auth-flow.cjs").createAuthFlow(rawRequest);
   const management = require("./management.cjs").createManagement({
     request,
     active,
@@ -641,6 +664,10 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
   });
   return {
     management,
+    registrationHealth(current) {
+      admin(current);
+      return authFlow.health();
+    },
     enabled,
     session,
     auth,

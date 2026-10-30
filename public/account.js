@@ -1,6 +1,9 @@
 "use strict";
 let accountMode = "login",
-  accountCsrf = "";
+  accountCsrf = "",
+  accountSubmitting = false,
+  accountMailPausedUntil = 0;
+const accountCooldowns = new Map();
 const aq = (id) => document.getElementById(id),
   safe = (s) =>
     String(s ?? "").replace(
@@ -24,11 +27,23 @@ async function accountApi(path, data, method = data ? "POST" : "GET") {
     },
     ...(data ? { body: JSON.stringify(data) } : {}),
   });
-  const d = await r.json();
-  if (!r.ok)
+  let d;
+  try {
+    d = await r.json();
+  } catch {
     throw Error(
+      "O servidor não respondeu corretamente. Aguarde alguns instantes e tente novamente.",
+    );
+  }
+  if (!r.ok) {
+    const error = Error(
       d.error?.message || "Não foi possível conectar. Tente novamente.",
     );
+    error.code = d.error?.code;
+    error.status = r.status;
+    error.retryAfterSeconds = d.error?.retryAfterSeconds;
+    throw error;
+  }
   if (d.csrf) accountCsrf = d.csrf;
   return d;
 }
@@ -54,16 +69,19 @@ document.querySelectorAll(".account-password-toggle").forEach((button) => {
       aq(button.dataset.input).type === "password",
     );
 });
-function accountModeSet(mode) {
+function accountModeSet(mode, force = false) {
+  if (accountSubmitting && !force) return;
   accountMode = mode;
   document.querySelector("#account-content h2").textContent = {
     login: "Bem-vindo ao SMC Elite",
     signup: "Crie sua conta",
     recover: "Recuperar acesso",
+    resend: "Reenviar confirmação",
     password: "Nova senha",
   }[mode];
   document.querySelector(".account-tabs").hidden = mode === "password";
   aq("account-recover").hidden = mode === "password";
+  aq("account-resend").hidden = mode === "password";
   aq("account-name-fields").hidden = mode !== "signup";
   aq("account-last-name").required = mode === "signup";
   aq("account-confirm-label").hidden = !["signup", "password"].includes(mode);
@@ -75,8 +93,8 @@ function accountModeSet(mode) {
     .querySelectorAll(".account-password-toggle")
     .forEach((button) => accountPasswordVisibility(button, false));
   aq("account-name").required = mode === "signup";
-  aq("account-password-label").hidden = mode === "recover";
-  aq("account-password").required = mode !== "recover";
+  aq("account-password-label").hidden = ["recover", "resend"].includes(mode);
+  aq("account-password").required = !["recover", "resend"].includes(mode);
   aq("account-password").minLength =
     mode === "signup" || mode === "password" ? 12 : 1;
   aq("account-password").autocomplete =
@@ -90,6 +108,7 @@ function accountModeSet(mode) {
     login: "Entrar",
     signup: "Criar minha conta",
     recover: "Enviar instruções",
+    resend: "Reenviar confirmação",
     password: "Salvar nova senha",
   }[mode];
   aq("account-login-tab").setAttribute(
@@ -101,7 +120,32 @@ function accountModeSet(mode) {
     String(mode === "signup"),
   );
   aq("account-message").textContent = "";
+  accountUpdateSubmit();
 }
+function accountCooldownKey() {
+  return accountMode + "|" + aq("account-email").value.trim().toLowerCase();
+}
+function accountUpdateSubmit() {
+  const labels = {
+      login: "Entrar",
+      signup: "Criar minha conta",
+      recover: "Enviar instruções",
+      resend: "Reenviar confirmação",
+      password: "Salvar nova senha",
+    },
+    mail = ["signup", "recover", "resend"].includes(accountMode),
+    until = Math.max(
+      accountCooldowns.get(accountCooldownKey()) || 0,
+      mail ? accountMailPausedUntil : 0,
+    ),
+    remaining = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+  aq("account-submit").disabled = accountSubmitting || remaining > 0;
+  aq("account-submit").textContent = accountSubmitting
+    ? "Aguarde…"
+    : labels[accountMode] + (remaining ? " (" + remaining + "s)" : "");
+}
+setInterval(accountUpdateSubmit, 1000);
+aq("account-email").addEventListener("input", accountUpdateSubmit);
 function accountAccess(user) {
   if (user?.status === "active") {
     location.replace("/");
@@ -111,25 +155,6 @@ function accountAccess(user) {
   aq("account-access").hidden = false;
   aq("account-access").innerHTML =
     `<h2>${user?.status === "blocked" ? "Acesso bloqueado" : user?.status === "expired" ? "Prazo de acesso encerrado" : "Cadastro recebido"}</h2><p>${safe(user?.firstName || user?.name?.trim().split(/\s+/)[0] || user?.email || "")}, ${user?.status === "expired" ? "seu prazo terminou. Fale com a administração para renovar. Seu histórico foi preservado." : user?.status === "blocked" ? "fale com a administração para verificar seu acesso." : "sua conta aguarda aprovação da administração. Seus dados ficam separados dos demais usuários."}</p><button class="cloud-primary" id="account-check">Verificar acesso</button><button class="cloud-link" id="account-out">Sair da conta</button><p id="account-access-message" role="status"></p>`;
-  accountApi("/api/account/coaching")
-    .then((c) => {
-      if (!c.enabled) return;
-      const button = document.createElement("button");
-      button.className = "cloud-link";
-      button.textContent = "Revogar resumo de desempenho";
-      button.onclick = async () => {
-        button.disabled = true;
-        try {
-          await accountApi("/api/account/coaching", { enabled: false }, "PUT");
-          button.textContent = "Compartilhamento revogado";
-        } catch (e) {
-          button.disabled = false;
-          aq("account-access-message").textContent = e.message;
-        }
-      };
-      aq("account-access").append(button);
-    })
-    .catch(() => {});
   aq("account-check").onclick = async () => {
     try {
       const d = await accountApi("/api/account");
@@ -151,8 +176,12 @@ function accountAccess(user) {
 aq("account-login-tab").onclick = () => accountModeSet("login");
 aq("account-signup-tab").onclick = () => accountModeSet("signup");
 aq("account-recover").onclick = () => accountModeSet("recover");
+aq("account-resend").onclick = () => accountModeSet("resend");
 aq("account-form").onsubmit = async (e) => {
   e.preventDefault();
+  if (accountSubmitting || aq("account-submit").disabled) return;
+  const action = accountMode,
+    key = accountCooldownKey();
   if (
     ["signup", "password"].includes(accountMode) &&
     aq("account-password").value !== aq("account-password-confirm").value
@@ -162,7 +191,8 @@ aq("account-form").onsubmit = async (e) => {
     aq("account-password-confirm").focus();
     return;
   }
-  aq("account-submit").disabled = true;
+  accountSubmitting = true;
+  accountUpdateSubmit();
   aq("account-message").textContent = "Aguarde…";
   try {
     const payload =
@@ -173,7 +203,7 @@ aq("account-form").onsubmit = async (e) => {
           }
         : {
             email: aq("account-email").value.trim(),
-            ...(accountMode === "recover"
+            ...(["recover", "resend"].includes(accountMode)
               ? {}
               : { password: aq("account-password").value }),
             ...(accountMode === "signup"
@@ -184,7 +214,9 @@ aq("account-form").onsubmit = async (e) => {
                 }
               : {}),
           };
-    const d = await accountApi("/api/auth/" + accountMode, payload);
+    const d = await accountApi("/api/auth/" + action, payload);
+    if (["signup", "recover", "resend"].includes(action))
+      accountCooldowns.set(key, Date.now() + 60000);
     aq("account-password").value = "";
     aq("account-password-confirm").value = "";
     document
@@ -194,14 +226,23 @@ aq("account-form").onsubmit = async (e) => {
     else if (accountMode === "password") {
       aq("account-message").textContent =
         "Senha atualizada. Você pode entrar com a nova senha.";
-      accountModeSet("login");
+      accountModeSet("login", true);
       aq("account-message").textContent =
         "Senha atualizada. Entre com a nova senha.";
     } else aq("account-message").textContent = d.message;
   } catch (e) {
     aq("account-message").textContent = e.message;
+    if (e.status === 429) {
+      const seconds = Number.isFinite(e.retryAfterSeconds)
+        ? Math.max(1, Math.min(e.retryAfterSeconds, 86400))
+        : 60;
+      accountCooldowns.set(key, Date.now() + seconds * 1000);
+      if (e.code === "auth_email_rate_limit")
+        accountMailPausedUntil = Date.now() + seconds * 1000;
+    }
   } finally {
-    aq("account-submit").disabled = false;
+    accountSubmitting = false;
+    accountUpdateSubmit();
   }
 };
 (async () => {

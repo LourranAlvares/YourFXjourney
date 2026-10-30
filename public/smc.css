@@ -2361,37 +2361,6 @@ body.smc-shell .premium-context-tooltip {
 .smc-admin-wide {
   grid-column: 1/-1;
 }
-.smc-consent-label {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin: 18px 0;
-}
-.smc-consent-label input {
-  flex-shrink: 0;
-}
-.smc-admin-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-.smc-admin-summary > div {
-  padding: 14px;
-  border: 1px solid #35383e;
-  border-radius: 10px;
-  min-width: 0;
-  background: #10161d;
-}
-.smc-admin-summary small,
-.smc-admin-summary b {
-  display: block;
-  overflow-wrap: anywhere;
-}
-.smc-admin-summary b {
-  margin-top: 8px;
-  font-size: 20px;
-  color: var(--gold);
-}
 .smc-audit-entry {
   border-top: 1px solid #34383f;
   padding: 14px 0;
@@ -2408,9 +2377,6 @@ body.smc-shell .premium-context-tooltip {
   .smc-admin-fields {
     grid-template-columns: 1fr;
   }
-  .smc-admin-summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .smc-admin-user dl {
     grid-template-columns: 1fr 1fr;
   }
@@ -2423,4 +2389,34 @@ body.smc-shell .premium-context-tooltip {
 }
 body.smc-shell #main .card:hover {
   border-color: #554b38;
+}
+
+.smc-admin-checkbox {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 18px 0;
+}
+.smc-admin-checkbox input {
+  flex-shrink: 0;
+}
+.smc-registration-health {
+  border: 1px solid #514632;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 18px 0;
+  color: #c2b69d;
+}
+.smc-registration-health summary {
+  cursor: pointer;
+  font-size: 13px;
+}
+.smc-registration-health small {
+  display: block;
+  margin-bottom: 12px;
+  color: #a9afb8;
+}
+.account-page #account-message {
+  overflow-wrap: anywhere;
+  line-height: 1.55;
 }

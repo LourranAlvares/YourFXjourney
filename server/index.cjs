@@ -140,12 +140,18 @@ function createApp(options = {}) {
     entry.n++;
     if (map.size > 2000)
       for (const [k, v] of map) if (v.until < now) map.delete(k);
-    if (entry.n > limit)
-      throw new APIError(
+    if (entry.n > limit) {
+      const error = new APIError(
         429,
         "rate_limited",
         "Muitas tentativas. Aguarde antes de tentar novamente.",
       );
+      error.retryAfterSeconds = Math.max(
+        1,
+        Math.ceil((entry.until - now) / 1000),
+      );
+      throw error;
+    }
   }
   async function body(req, limit = 9 * 1024 * 1024) {
     if (req.headers["content-type"]?.split(";")[0] !== "application/json")
@@ -212,7 +218,34 @@ function createApp(options = {}) {
           if (req.method !== "POST")
             throw new APIError(405, "method_not_allowed", "Use POST.");
           const action = url.pathname.slice("/api/auth/".length);
-          rate(attempts, "cloud:" + req.socket.remoteAddress, 40, 15 * 60e3);
+          // Reverse proxies may share one socket address across the whole site.
+          // Keep a network cap, but isolate normal auth limits by action and identity.
+          rate(
+            attempts,
+            "cloud-network:" + req.socket.remoteAddress,
+            1000,
+            15 * 60e3,
+          );
+          const input = await body(req, 16384),
+            identity = crypto
+              .createHash("sha256")
+              .update(
+                String(
+                  input.email ||
+                    input.token_hash ||
+                    current?.user?.id ||
+                    "anonymous",
+                )
+                  .trim()
+                  .toLowerCase(),
+              )
+              .digest("hex");
+          rate(
+            attempts,
+            "cloud:" + action + ":" + identity,
+            ["signup", "recover", "resend"].includes(action) ? 6 : 30,
+            15 * 60e3,
+          );
           if (
             ["password", "logout"].includes(action) &&
             current &&
@@ -226,11 +259,7 @@ function createApp(options = {}) {
               "invalid_csrf",
               "Atualize a sessão antes de continuar.",
             );
-          json(
-            res,
-            200,
-            await cloud.auth(action, await body(req, 16384), res, current),
-          );
+          json(res, 200, await cloud.auth(action, input, res, current));
           return;
         }
         if (cloud && req.method === "GET" && url.pathname === "/api/account") {
@@ -341,33 +370,6 @@ function createApp(options = {}) {
             json(res, 200, { authenticated: false });
             return;
           }
-          if (
-            url.pathname === "/api/account/coaching" &&
-            ["GET", "PUT"].includes(req.method)
-          ) {
-            rate(
-              requests,
-              current.user.id + ":cloud:" + url.pathname,
-              120,
-              60 * 60e3,
-            );
-            let enabled;
-            if (req.method === "PUT") {
-              const input = await body(req, 1024);
-              if (
-                Object.keys(input).some((k) => k !== "enabled") ||
-                typeof input.enabled !== "boolean"
-              )
-                throw new APIError(
-                  400,
-                  "invalid_consent",
-                  "Escolha uma opção válida.",
-                );
-              enabled = input.enabled;
-            }
-            json(res, 200, await cloud.management.consent(current, enabled));
-            return;
-          }
           cloud.active(current);
           rate(
             requests,
@@ -400,6 +402,13 @@ function createApp(options = {}) {
                 url.searchParams.get("revision"),
               ),
             });
+            return;
+          }
+          if (
+            url.pathname === "/api/admin/registration-health" &&
+            req.method === "GET"
+          ) {
+            json(res, 200, cloud.registrationHealth(current));
             return;
           }
           if (url.pathname === "/api/admin/management") {
@@ -598,7 +607,19 @@ function createApp(options = {}) {
             : status === 504
               ? "O serviço demorou para responder. Tente novamente."
               : "Não foi possível concluir a solicitação.";
-      json(res, status, { error: { code, message } });
+      const retryAfterSeconds =
+        Number.isSafeInteger(e.retryAfterSeconds) && e.retryAfterSeconds > 0
+          ? e.retryAfterSeconds
+          : null;
+      if (retryAfterSeconds)
+        res.setHeader("Retry-After", String(retryAfterSeconds));
+      json(res, status, {
+        error: {
+          code,
+          message,
+          ...(retryAfterSeconds ? { retryAfterSeconds } : {}),
+        },
+      });
     }
   };
   const server = http.createServer(handler);

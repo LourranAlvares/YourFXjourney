@@ -103,3 +103,8 @@ Salve em **Save, rebuild, and deploy** e aguarde **Live**. Não publique com ape
 Os testes de API/UI simulam o limite externo Supabase Auth/REST; o SQL é testado no motor PostgreSQL. O projeto Supabase, o SMTP e o deploy real ainda precisam ser configurados e verificados com as credenciais do proprietário.
 
 O cadastro mantém primeiro nome e sobrenome separados nos metadados de autenticação e o nome completo no perfil. A saudação usa somente o primeiro nome, inclusive para contas antigas. Campos de senha/confirmacão têm botões SVG de mostrar/ocultar; a confirmação é validada no formulário e no servidor, sem ser repassada ao Supabase. Não exige alteração nas tabelas existentes.
+
+
+## Cadastro com limite de e-mail ou destinatário não autorizado
+
+Consulte [REGISTRATION.md](REGISTRATION.md) para configurar SMTP próprio e validar os envios reais. O aplicativo distingue falhas de envio e de autenticação, evita duplicatas e oferece reenvio de confirmação, sem remover a verificação de e-mail.

@@ -16,21 +16,21 @@ Não altere as variáveis já configuradas no Render. `schema.sql` também inclu
 - Novos prazos começam no momento da alteração. Meses usam calendário, com ajuste ao último dia do mês; não são cobrados pagamentos automaticamente. Data personalizada termina às 23:59:59.999 UTC do dia escolhido.
 - Observações administrativas (até 2.000 caracteres), invisíveis aos outros usuários.
 - Encerrar sessões atuais, exigindo novo login. A conta administradora é protegida.
-- Auditoria das alterações de acesso e das autorizações/revogações de compartilhamento; últimos 50 eventos por conta na interface.
+- Auditoria das alterações de acesso; últimos 50 eventos por conta na interface.
 - Busca de nome/e-mail e paginação de 100 contas por página.
 
-Vencimento é conferido no servidor a cada sessão e também no PostgreSQL/RLS para impedir leitura/gravação direta do workspace por usuário expirado. Renovar restitui o acesso sem apagar histórico. Cadastro, login, aprovação e controle de acesso não dependem de autorização de coaching.
+Vencimento é conferido no servidor a cada sessão e também no PostgreSQL/RLS para impedir leitura/gravação direta do workspace por usuário expirado. Renovar restitui o acesso sem apagar histórico. Cadastros, logins e aprovações mantêm seus fluxos habituais.
 
-## Acompanhamento autorizado
+## Privacidade e escopo
 
-Desativado por padrão. Em **Configurações → Acompanhamento pela administração**, o próprio usuário autoriza um resumo de desempenho. A administração não pode habilitar essa preferência por outra pessoa. Contas bloqueadas/expiradas também podem revogar pelo painel de acesso na página de login.
+Esta versão gerencia apenas cadastro e acesso. Não acompanha resultados, operações, diário, prints ou comportamento financeiro de outros usuários e não contém botões de autorização/compartilhamento. A relação de mentor poderá ser projetada separadamente no futuro.
 
-O servidor calcula, a partir do workspace salvo, total de operações fechadas, P&L, taxa de acerto, profit factor, drawdown, sequência atual de perdas, semana, mês e retorno sobre saldo inicial confirmado. Não compartilha prints, diário, anotações ou plano completo. Moeda é a unidade declarada, sem conversão de câmbio. Dados são registrados pelo próprio usuário e não são um extrato verificado da corretora. Sem saldo confirmado não se inventa percentual; zero operações não vira taxa de acerto zero.
+A migração remove a tabela e as duas funções da funcionalidade de acompanhamento retirada; não apaga contas, workspaces, histórico de trading, prints ou versões de backup. Os eventos administrativos antigos permanecem no banco, mas a interface consulta somente alterações de acesso. As funções de alteração exigem `service_role` e verificação administrativa no servidor; mutações HTTP exigem origem válida e CSRF.
 
-Datas usam o fechamento registrado; semana começa segunda-feira UTC. O resumo é atualizado ao autorizar e ao salvar o workspace. Falha de relatório não descarta um diário já salvo; a data do último resumo fica visível. O número de revisão impede um salvamento atrasado de substituir um resumo mais novo. Revogar limpa o resumo e impede novas consultas; isso não remove informações já vistas anteriormente pela administração.
+## Cadastro e envio de e-mails
 
-A rota administrativa consulta somente os resumos autorizados, não os workspaces privados. Não há exportação oculta de dados, impersonação de usuários, exposição de senhas ou acompanhamento escondido. As funções de gestão exigem administrador no servidor; as funções PostgreSQL de alteração e publicação exigem `service_role`. Somente a função de consentimento é executável pelo próprio usuário autenticado. Todas as mutações HTTP exigem origem válida e CSRF.
+A administração inclui um diagnóstico técnico de envio de confirmações, sem e-mails ou dados pessoais dos usuários. Ele mostra somente erros observados nesta instância e solicitações aceitas pelo provedor; não comprova entrega na caixa de entrada. Veja [REGISTRATION.md](REGISTRATION.md).
 
 ## Verificação
 
-`npm test`, `node tests/management-database.cjs`, `node tests/cloud-database.cjs`, `node tests/cloud-workspace.cjs` e `node tests/management-ui.cjs`. Os testes de banco usam PostgreSQL/WASM; testes de HTTP/UI usam contas e provedores simulados. As configurações do Supabase real ainda exigem execução do SQL acima.
+`npm test`, `node tests/management-database.cjs`, `node tests/cloud-database.cjs`, `node tests/cloud-workspace.cjs`, `node tests/management-ui.cjs` e `node tests/registration-ui.cjs`. Os testes de banco usam PostgreSQL/WASM; testes de HTTP/UI usam contas e provedores simulados. O Supabase real exige executar o SQL e configurar o SMTP.

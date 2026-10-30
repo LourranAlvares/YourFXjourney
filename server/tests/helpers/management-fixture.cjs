@@ -3,7 +3,6 @@ const { fixture } = require("./cloud-fixture.cjs");
 function managementFixture() {
   const f = fixture(),
     permissions = new Map(),
-    shares = new Map(),
     audit = [];
   const response = (data, status = 200) =>
     new Response(JSON.stringify(data), {
@@ -26,17 +25,6 @@ function managementFixture() {
           ? [...permissions.values()].filter((a) => isList || a.user_id === id)
           : [],
       );
-    if (p === "/rest/v1/elitex_coaching_shares") {
-      if (!service && !user) return response({}, 403);
-      const result = [...shares.values()].filter((a) =>
-        service
-          ? isList
-            ? a.enabled
-            : a.user_id === id
-          : a.user_id === user.id,
-      );
-      return response(result);
-    }
     if (p === "/rest/v1/elitex_admin_audit")
       return service
         ? response(audit.filter((a) => a.user_id === id).toReversed())
@@ -72,35 +60,8 @@ function managementFixture() {
       });
       return response({ ok: true });
     }
-    if (p === "/rest/v1/rpc/elitex_set_coaching_share") {
-      if (!user) return response({}, 403);
-      shares.set(user.id, {
-        user_id: user.id,
-        enabled: data.allow_sharing,
-        summary: null,
-        consent_at: new Date().toISOString(),
-        updated_at: null,
-      });
-      audit.push({
-        id: audit.length + 1,
-        user_id: user.id,
-        action: "coaching_consent",
-        created_at: new Date().toISOString(),
-        details: { enabled: data.allow_sharing },
-      });
-      return response({ enabled: data.allow_sharing });
-    }
-    if (p === "/rest/v1/rpc/elitex_refresh_coaching_summary") {
-      if (!service) return response({}, 403);
-      const share = shares.get(data.account);
-      if (share?.enabled) {
-        share.summary = data.summary_data;
-        share.updated_at = new Date().toISOString();
-      }
-      return response(null);
-    }
     return f.fetchFn(raw, options);
   }
-  return { ...f, fetchFn, permissions, shares, audit };
+  return { ...f, fetchFn, permissions, audit };
 }
 module.exports = { managementFixture };

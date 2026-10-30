@@ -364,4 +364,4 @@ Esta atualização visual não exige alterar Render ou Supabase. As variáveis `
 
 ## Administração de usuários
 
-A aba **Administração**, exclusiva da conta proprietária, oferece busca/paginação de contas, aprovação/bloqueio, trial, vencimentos, observações e encerramento de sessões, com auditoria. Para ativar no Supabase existente, execute [management.sql](server/cloud/management.sql); [guia de gestão](server/cloud/MANAGEMENT.md). Acompanhamento de desempenho exige autorização revogável do usuário e compartilha somente métricas agregadas, sem diário ou prints. As configurações atuais do Render permanecem válidas.
+A aba **Administração**, exclusiva da conta proprietária, oferece busca/paginação de contas, aprovação/bloqueio, trial, vencimentos, observações e encerramento de sessões, com auditoria. Para ativar no Supabase existente, execute [management.sql](server/cloud/management.sql); [guia de gestão](server/cloud/MANAGEMENT.md). A área administrativa não acompanha desempenho, diário ou operações dos usuários. As configurações atuais do Render permanecem válidas.

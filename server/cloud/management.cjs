@@ -31,73 +31,6 @@ function expiryFor(term, custom, now = new Date()) {
     return new Date(custom).toISOString();
   throw Error("invalid term");
 }
-function summaryFor(data, now = new Date()) {
-  const rows = (Array.isArray(data?.trades) ? data.trades : []).filter(
-      (t) =>
-        typeof t.close === "string" &&
-        /^\d{4}-\d{2}-\d{2}/.test(t.close) &&
-        typeof t.pnl === "number" &&
-        Number.isFinite(t.pnl),
-    ),
-    today = now.toISOString().slice(0, 10),
-    start = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-    );
-  start.setUTCDate(start.getUTCDate() - ((start.getUTCDay() + 6) % 7));
-  const summarize = (xs) => {
-    const wins = xs.filter((t) => t.pnl > 0),
-      losses = xs.filter((t) => t.pnl < 0),
-      net = xs.reduce((s, t) => s + t.pnl, 0),
-      gain = wins.reduce((s, t) => s + t.pnl, 0),
-      loss = -losses.reduce((s, t) => s + t.pnl, 0);
-    return {
-      trades: xs.length,
-      net,
-      winRate: xs.length ? (wins.length / xs.length) * 100 : null,
-      profitFactor: loss ? gain / loss : null,
-    };
-  };
-  const closed = rows.filter((t) => t.close.slice(0, 10) <= today),
-    s = summarize(closed),
-    week = summarize(
-      closed.filter(
-        (t) => t.close.slice(0, 10) >= start.toISOString().slice(0, 10),
-      ),
-    ),
-    month = summarize(
-      closed.filter((t) => t.close.slice(0, 7) === today.slice(0, 7)),
-    );
-  let total = 0,
-    peak = 0,
-    dd = 0,
-    streak = 0;
-  for (const t of [...closed].sort((a, b) => a.close.localeCompare(b.close))) {
-    total += t.pnl;
-    peak = Math.max(peak, total);
-    dd = Math.max(dd, peak - total);
-    streak = t.pnl < 0 ? streak + 1 : 0;
-  }
-  const baseline =
-    data.balanceConfirmed &&
-    typeof data.balance === "number" &&
-    Number.isFinite(data.balance) &&
-    data.balance > 0
-      ? data.balance
-      : null;
-  return {
-    ...s,
-    week,
-    month,
-    drawdown: dd,
-    lossStreak: streak,
-    returnPercent: baseline ? (s.net / baseline) * 100 : null,
-    currency: ["GBP", "USD", "EUR", "BRL"].includes(data.currency)
-      ? data.currency
-      : null,
-    asOf: now.toISOString(),
-    dateBasis: "recorded-close-date",
-  };
-}
 function createManagement({ request, active, admin, fail, owner }) {
   const missing = (e) => e.code === "cloud_management_missing";
   async function ownAccess(user) {
@@ -154,21 +87,14 @@ function createManagement({ request, active, admin, fail, owner }) {
           .join(",") || "00000000-0000-0000-0000-000000000000";
     try {
       const access = await request(
-          "/rest/v1/elitex_account_access?select=*&user_id=in.(" + ids + ")",
-          { admin: true },
-        ),
-        shares = await request(
-          "/rest/v1/elitex_coaching_shares?select=user_id,enabled,summary,updated_at&user_id=in.(" +
-            ids +
-            ")&enabled=eq.true",
-          { admin: true },
-        );
+        "/rest/v1/elitex_account_access?select=*&user_id=in.(" + ids + ")",
+        { admin: true },
+      );
       return {
         ready: true,
         accounts: accounts.map((u) => ({
           ...u,
           access: access.find((a) => a.user_id === u.id) || null,
-          coaching: shares.find((a) => a.user_id === u.id) || null,
         })),
         hasMore: rows.length > 100,
         offset,
@@ -254,70 +180,9 @@ function createManagement({ request, active, admin, fail, owner }) {
     return request(
       "/rest/v1/elitex_admin_audit?user_id=eq." +
         id +
-        "&select=id,action,details,created_at&order=created_at.desc,id.desc&limit=50",
+        "&action=eq.access_updated&select=id,action,details,created_at&order=created_at.desc,id.desc&limit=50",
       { admin: true },
     );
-  }
-  async function consent(current, enabled) {
-    if (!current) fail(401, "authentication_required", "Entre na sua conta.");
-    if (enabled === true) active(current);
-    if (enabled !== undefined) {
-      if (typeof enabled !== "boolean")
-        fail(400, "invalid_consent", "Escolha uma opção válida.");
-      await request("/rest/v1/rpc/elitex_set_coaching_share", {
-        method: "POST",
-        token: current.token,
-        data: { allow_sharing: enabled },
-      });
-      if (enabled) {
-        const rows = await request(
-          "/rest/v1/elitex_workspaces?user_id=eq." +
-            current.user.id +
-            "&select=data,revision",
-          { token: current.token },
-        );
-        await sync(
-          current,
-          rows?.[0]?.data || {},
-          Number(rows?.[0]?.revision || 0),
-        );
-      }
-    }
-    try {
-      const rows = await request(
-        "/rest/v1/elitex_coaching_shares?user_id=eq." +
-          current.user.id +
-          "&select=enabled,consent_at,updated_at",
-        { token: current.token },
-      );
-      return {
-        ready: true,
-        enabled: rows?.[0]?.enabled === true,
-        consentAt: rows?.[0]?.consent_at || null,
-        updatedAt: rows?.[0]?.updated_at || null,
-      };
-    } catch (e) {
-      if (missing(e) && enabled === undefined)
-        return { ready: false, enabled: false };
-      throw e;
-    }
-  }
-  async function sync(current, data, revision = 0) {
-    const rows = await request(
-      "/rest/v1/elitex_coaching_shares?user_id=eq." +
-        current.user.id +
-        "&select=enabled",
-      { token: current.token },
-    );
-    if (rows?.[0]?.enabled)
-      await request("/rest/v1/rpc/elitex_refresh_coaching_summary", {
-        admin: true,
-        method: "POST",
-        data: {
-          account: current.user.id,
-          summary_data: { ...summaryFor(data), workspaceRevision: revision },
-        },
-      });
   }
   async function legacyAccess(current, data) {
     let rows;
@@ -341,6 +206,6 @@ function createManagement({ request, active, admin, fail, owner }) {
     });
   }
 
-  return { ownAccess, list, update, audit, consent, sync, legacyAccess };
+  return { ownAccess, list, update, audit, legacyAccess };
 }
-module.exports = { createManagement, expiryFor, summaryFor };
+module.exports = { createManagement, expiryFor };
