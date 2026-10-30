@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node --env-file-if-exists=.env server/index.cjs",
-    "test": "node tests/plan-engine.cjs && node tests/session-engine.cjs && node tests/daily-workspace.cjs && node --test server/tests/*.test.cjs",
+    "test": "node tests/plan-engine.cjs && node tests/session-engine.cjs && node tests/daily-workspace.cjs && node tests/growth-engine.cjs && node --test server/tests/*.test.cjs",
     "build:offline": "python3 scripts/build_standalone.py",
     "test:ui": "node tests/terminal-ui.cjs",
     "test:premium": "node tests/premium-ui.cjs",
@@ -16,7 +16,8 @@
     "test:mt5": "node tests/mt5-import.cjs",
     "test:cloud": "node --test server/tests/cloud.test.cjs",
     "test:cloud:db": "node tests/cloud-database.cjs",
-    "test:cloud:ui": "node tests/cloud-workspace.cjs"
+    "test:cloud:ui": "node tests/cloud-workspace.cjs",
+    "test:growth": "node tests/growth-ui.cjs && node tests/growth-reviews-ui.cjs && node tests/growth-achievements-ui.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"

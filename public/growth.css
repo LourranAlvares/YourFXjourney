@@ -1,0 +1,383 @@
+/* SMC Elite personal growth: quiet surfaces, native controls, no extra dashboard grid. */
+body.smc-shell .growth-toolbar,
+body.smc-shell .growth-session-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+body.smc-shell .growth-toolbar small {
+  color: #a6adb7;
+  margin-left: auto;
+}
+body.smc-shell #growth-dialog {
+  width: min(760px, calc(100% - 24px));
+  max-height: 86dvh;
+  overflow: auto;
+  box-sizing: border-box;
+}
+body.smc-shell #growth-dialog .section-head {
+  align-items: center;
+  gap: 14px;
+}
+body.smc-shell .growth-emotions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+body.smc-shell .growth-emotions button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: 12px;
+  white-space: normal;
+}
+.growth-emotions svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--gold);
+}
+body.smc-shell .growth-guidance {
+  padding: 14px;
+  border-left: 2px solid var(--gold);
+  background: #d7b98209;
+}
+.growth-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.growth-form-grid label,
+#growth-dialog form > label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  margin: 10px 0;
+}
+body.smc-shell .growth-form-grid input,
+body.smc-shell .growth-form-grid select,
+body.smc-shell .growth-form-grid textarea,
+#growth-dialog form > label input,
+#growth-dialog form > label textarea,
+#growth-dialog form > label select {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.growth-wide,
+.growth-weekdays {
+  grid-column: 1/-1;
+}
+body.smc-shell .growth-checkbox {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 9px;
+  align-items: center;
+}
+body.smc-shell .growth-checkbox input {
+  width: 18px !important;
+  min-height: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--gold);
+}
+.growth-weekdays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: 1px solid #373940;
+  border-radius: 10px;
+}
+.growth-weekdays label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 12px;
+}
+.growth-weekdays input {
+  width: 16px !important;
+  min-height: 16px;
+  accent-color: var(--gold);
+}
+.growth-emotion-bars > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) 2fr 25px;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 12px;
+}
+.growth-emotion-bars meter {
+  width: 100%;
+  height: 10px;
+  accent-color: var(--gold);
+}
+.growth-log {
+  border-top: 1px solid #33363d;
+  padding: 14px 0;
+  font-size: 12px;
+}
+.growth-log small,
+.growth-log span {
+  display: block;
+  color: #a7afb9;
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+body.smc-shell .growth-settings-host #growth-settings,
+body.smc-shell .growth-insights-host #growth-insights {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  margin: 12px 0 0;
+  padding: 8px 0;
+}
+.growth-settings-host > summary,
+.growth-insights-host > summary {
+  cursor: pointer;
+  color: #d6bd8b;
+  font-size: 13px;
+}
+.growth-prompt {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: #17191f;
+  border: 1px solid #665332;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-size: 12px;
+}
+.growth-prompt > span {
+  margin-right: auto;
+}
+body.smc-shell .growth-prompt .b {
+  font-size: 11px;
+  min-height: 34px;
+}
+@media (max-width: 760px) {
+  .growth-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .growth-emotions button {
+    font-size: 12px;
+    padding: 11px;
+  }
+  #growth-dialog .section-head h2 {
+    font-size: 18px;
+  }
+  .growth-toolbar {
+    gap: 7px;
+  }
+  .growth-toolbar .b {
+    font-size: 12px;
+  }
+  .growth-toolbar small {
+    width: 100%;
+    margin: 0;
+  }
+  .growth-prompt {
+    margin: 8px 0;
+  }
+  .growth-prompt > span {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .growth-prompt,
+  .growth-award-toast {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+body.smc-shell #growth-review-dialog {
+  width: min(1000px, calc(100% - 24px));
+  max-height: 92dvh;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 18px;
+}
+.growth-review-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(250px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.growth-screen {
+  text-align: center;
+  min-width: 0;
+}
+#growth-story {
+  width: auto;
+  max-width: 100%;
+  height: min(70dvh, 760px);
+  aspect-ratio: 9/16;
+  display: block;
+  margin: auto;
+  border-radius: 16px;
+}
+.growth-review-controls {
+  min-width: 0;
+}
+.growth-review-controls progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--gold);
+}
+.growth-review-controls > label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 14px 0;
+  font-size: 12px;
+}
+.growth-review-controls input {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.growth-review-controls details {
+  margin: 18px 0;
+}
+.growth-review-controls details .b {
+  margin: 6px 4px 6px 0;
+}
+.growth-reflect-invite {
+  border-top: 1px solid #343840;
+  margin-top: 18px;
+  padding-top: 10px;
+  font-size: 12px;
+}
+.growth-category {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+body.smc-shell .growth-category [aria-pressed="true"] {
+  border-color: var(--gold);
+  color: #e3c68d;
+}
+.growth-achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+body.smc-shell .growth-achievement {
+  padding: 20px;
+  min-width: 0;
+}
+.growth-achievement h3 {
+  font-size: 18px;
+}
+.growth-achievement p {
+  font-size: 12px;
+  color: #b2bbc7;
+}
+.growth-achievement small {
+  display: block;
+  font-size: 11px;
+  color: #a6aebb;
+  margin: 8px 0;
+}
+.growth-achievement progress {
+  width: 100%;
+  height: 7px;
+  accent-color: var(--gold);
+}
+.growth-achievement details {
+  margin: 16px 0;
+  font-size: 12px;
+}
+.growth-medal svg {
+  width: 30px;
+  height: 30px;
+  color: #8b806b;
+}
+.earned .growth-medal svg {
+  color: var(--gold);
+}
+body.smc-shell .growth-achievement.earned {
+  border-color: #6d5936;
+}
+.growth-award-toast {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  padding: 12px;
+  border: 1px solid #7d6740;
+  border-radius: 10px;
+  background: #1c1b19;
+  margin: 12px 0;
+  animation: growth-recognition 0.6s ease-out;
+}
+@keyframes growth-recognition {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+#growth-certificate-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+body.smc-shell #growth-dialog.growth-certificate-dialog {
+  width: min(1100px, calc(100% - 24px));
+}
+.growth-rules > summary,
+.growth-cert-history > summary {
+  cursor: pointer;
+  color: #d5bd8f;
+}
+@media (max-width: 1050px) {
+  .growth-achievement-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .growth-review-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #growth-story {
+    height: min(50dvh, 560px);
+    max-width: 100%;
+  }
+  .growth-review-controls .row {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .growth-achievement-grid {
+    grid-template-columns: 1fr;
+  }
+  .growth-achievement h3 {
+    font-size: 17px;
+  }
+  body.smc-shell #growth-review-dialog {
+    padding: 14px;
+    max-height: 90dvh;
+  }
+  .growth-review-controls > label {
+    margin: 10px 0;
+  }
+  body.smc-shell #growth-review-dialog .section-head h2 {
+    font-size: 18px;
+  }
+  .growth-reflect-invite {
+    margin-top: 12px;
+  }
+}

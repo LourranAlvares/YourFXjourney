@@ -123,6 +123,20 @@ const { chromium } = require("playwright"),
           notes: "private alice note",
         }),
       ];
+      S.growth = {
+        monitor: { enabled: false },
+        checkins: [
+          {
+            id: "alice-emotion",
+            at: "2026-10-30T10:00Z",
+            emotion: "calm",
+            note: "private emotional note",
+          },
+        ],
+        reflections: {
+          "week:2026-10-26": { answers: ["Personal", "Challenge", "Goal"] },
+        },
+      };
       save();
     });
     await p.waitForFunction(
@@ -138,6 +152,10 @@ const { chromium } = require("playwright"),
       () => typeof eliteCloud !== "undefined" && eliteCloud.ready,
     );
     assert.equal(await p.evaluate(() => S.trades[0].pnl), 123);
+    assert.equal(
+      await p.evaluate(() => growthData().checkins[0].note),
+      "private emotional note",
+    );
     const alice2 = await browser.newContext(),
       p2 = await alice2.newPage();
     await login(p2, f.a.email);
@@ -152,6 +170,11 @@ const { chromium } = require("playwright"),
       () => typeof eliteCloud !== "undefined" && eliteCloud.ready,
     );
     assert.equal(await pb.evaluate(() => S.trades.length), 0);
+    assert.equal(await pb.evaluate(() => growthData().checkins.length), 0);
+    assert.equal(
+      await pb.evaluate(() => Object.keys(growthData().reflections).length),
+      0,
+    );
     assert.equal(
       await pb.evaluate(() => tabs.some(([id]) => id === "admin")),
       false,

@@ -365,3 +365,16 @@ Esta atualização visual não exige alterar Render ou Supabase. As variáveis `
 ## Administração de usuários
 
 A aba **Administração**, exclusiva da conta proprietária, oferece busca/paginação de contas, aprovação/bloqueio, trial, vencimentos, observações e encerramento de sessões, com auditoria. Para ativar no Supabase existente, execute [management.sql](server/cloud/management.sql); [guia de gestão](server/cloud/MANAGEMENT.md). A área administrativa não acompanha desempenho, diário ou operações dos usuários. As configurações atuais do Render permanecem válidas.
+
+### Smart Review, Emotional Monitor e Achievements
+
+O Painel/Diário agora oferecem Weekly Review e Monthly Review. O Diário reúne
+Emotional Insights; Configurações permite ativar check-ins nas sessões já
+cadastradas. A área Achievements reconhece execução, rotina e resultados com
+critérios visíveis e certificados pessoais exportáveis em PNG/PDF. Dados ficam
+no workspace privado existente, sem acesso administrativo ao desempenho.
+
+Veja [arquitetura, critérios e limitações](docs/SMART-GROWTH.md), incluindo
+privacidade de prints, exportação de vídeo conforme suporte do navegador,
+reflexão por regras/IA opcional e validade dos certificados após correções.
+Não é necessário executar nova migração Supabase para estes módulos.

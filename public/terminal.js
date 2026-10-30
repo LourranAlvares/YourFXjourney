@@ -10,6 +10,10 @@ try {
 function terminalIcon(name) {
   // All pictograms share a 24px vector grid, rounded strokes and semantic names.
   const paths = {
+    award:
+      "M8 3h8v7a4 4 0 0 1-8 0z M8 5H4v3a4 4 0 0 0 4 4 M16 5h4v3a4 4 0 0 1-4 4 M12 14v5 M8 21h8 M9 19h6",
+    achievements:
+      "M8 3h8v7a4 4 0 0 1-8 0z M8 5H4v3a4 4 0 0 0 4 4 M16 5h4v3a4 4 0 0 1-4 4 M12 14v5 M8 21h8",
     home: "m3 10 9-7 9 7 M5 9v12h14V9 M9 21v-8h6v8",
     dash: "M3 3v18h18 M6 15l4-5 4 3 6-8",
     trades:
