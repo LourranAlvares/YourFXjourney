@@ -95,3 +95,41 @@ function smcHomePerformance(momentum) {
 matchMedia("(max-width:760px)").addEventListener("change", () => {
   if (["home", "dash"].includes(tab) && (!CLOUD_BOOT || eliteCloud.ready)) R();
 });
+
+// Disclosure state belongs to the view; opening or closing never changes filters.
+const smcFilterDisclosure = new Map();
+function smcRememberFilters(node) {
+  if (node.isConnected) smcFilterDisclosure.set(node.dataset.view, node.open);
+}
+function filt() {
+  const names = {
+      all: "Todo o histórico",
+      week: "Esta semana",
+      month: "Este mês",
+      lastmonth: "Mês passado",
+      30: "Últimos 30 dias",
+      90: "Últimos 90 dias",
+      year: "Este ano",
+      custom: "Período personalizado",
+    },
+    date = (value) => (value ? value.split("-").reverse().join("/") : ""),
+    range =
+      rangePreset === "custom"
+        ? [date(F.from) || "Início", date(F.to) || "Hoje"].join(" – ")
+        : names[rangePreset] || "Todo o histórico",
+    active = [
+      range,
+      F.sym,
+      F.strat,
+      tab === "dash" ? eliteDashSession : "",
+      tab === "dash" && eliteDashUnit === "r" ? "R realizado" : "",
+    ].filter(Boolean),
+    changed = !!(
+      F.from ||
+      F.to ||
+      F.sym ||
+      F.strat ||
+      (tab === "dash" && eliteDashSession)
+    );
+  return `<details class="smc-filters-disclosure" data-view="${esc(tab)}" ${smcFilterDisclosure.get(tab) ? "open" : ""} ontoggle="smcRememberFilters(this)"><summary><span class="smc-filter-label">${terminalIcon("filter")}<b>Filtros</b>${changed ? '<i aria-label="Filtros ativos"></i>' : ""}</span><span class="smc-filter-summary">${active.map(esc).join(" · ")}</span><span class="smc-filter-chevron" aria-hidden="true">⌄</span></summary><div class="smc-filter-fields">${filterFields()}${tab === "dash" ? smcDashboardFilterControls(ft()) : ""}</div></details>`;
+}

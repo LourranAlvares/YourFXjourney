@@ -113,6 +113,11 @@ const { chromium, devices } = require("playwright"),
           ),
           route + " page overflow " + width,
         );
+        if (
+          (await p.locator(".smc-filters-disclosure").count()) &&
+          !(await p.locator(".smc-filters-disclosure").evaluate((e) => e.open))
+        )
+          await p.locator(".smc-filters-disclosure > summary").click();
         assert(
           await p.locator(".filters label").evaluateAll((labels) =>
             labels.every((label) => {

@@ -190,17 +190,7 @@ function eliteDashboardView(ts) {
         ? day(t).slice(0, 7)
         : insAddDays(day(t), -(new Date(day(t) + "T12:00").getDay() + 6) % 7),
     );
-  return `<section class="elite-dashboard"><div class="elite-dash-unit"><span>Visão completa do seu desempenho</span><label>Sessão <select aria-label="Sessão do painel" onchange="eliteDashSession=this.value;R()"><option value="">Todas as sessões</option>${[
-    ...new Set(ts.map(eliteDashSessionName)),
-  ]
-    .sort()
-    .map(
-      (v) =>
-        `<option value="${esc(v)}" ${v === eliteDashSession ? "selected" : ""}>${esc(v)}</option>`,
-    )
-    .join(
-      "",
-    )}</select></label><label>Unidade <select aria-label="Unidade do painel" onchange="eliteDashChangeUnit(this.value)"><option value="money" ${eliteDashUnit === "money" ? "selected" : ""}>${esc(S.currency || "Moeda da conta")}</option><option value="r" ${eliteDashUnit === "r" ? "selected" : ""} ${m.complete ? "" : "disabled"}>R realizado</option></select></label><small>${m.known}/${m.rows.length} trades com R conhecido${m.rows.some((t) => t.est) ? " · contém P&L estimado *" : ""}${eliteDashUnit === "r" ? " · calendário e histórico em moeda da conta" : ""}</small></div><div class="primary-metrics elite-dash-metrics">${
+  return `<section class="elite-dashboard"><div class="smc-result-coverage"><small>${m.known}/${m.rows.length} trades com R conhecido${m.rows.some((t) => t.est) ? " · contém P&L estimado *" : ""}</small></div><div class="primary-metrics elite-dash-metrics">${
     metricCard(
       "P&L líquido",
       has ? eliteDashSigned(s.net) : "—",
@@ -315,4 +305,19 @@ function eliteDashboardLegacyDetails(ts) {
     all = st(S.trades.filter((t) => t.close)),
     balance = S.balanceConfirmed ? S.balance + all.net : null;
   return `<section class="card"><div class="section-head"><div><div class="eyebrow">Detalhes da performance</div><h2>Além do resultado</h2><p>Estatísticas do período selecionado, salvo indicação.</p></div><span class="badge">${S.currency ? esc(S.currency) : "Moeda não informada"}</span></div><div class="secondary-metrics">${metric("Saldo registrado calculado", money(balance), "", "Histórico completo · saldo inicial + P&L")}${metric("Trades vencedores", has ? s.w : "—", "g")}${metric("Trades perdedores", has ? s.l : "—", "r")}${metric("Trades breakeven", has ? s.n - s.w - s.l : "—")}${metric("Ganho médio", s.w ? money(s.aw) : "—", "g")}${metric("Perda média", s.l ? money(-s.al) : "—", "r")}${metric("Payoff realizado", s.w && s.l ? (s.aw / s.al).toFixed(2) : "—", "", "Ganho médio ÷ perda média; não é R:R planejado")}${metric("R realizado médio", s.avgR == null ? "—" : s.avgR.toFixed(2) + "R", "", `${s.rn} de ${s.n} trades com risco informado`)}${metric("R realizado total", s.totR == null ? "—" : s.totR.toFixed(2) + "R", "", "Somente operações com risco informado")}${metric("Drawdown máximo (%)", has && S.balanceConfirmed && S.balance > 0 ? s.ddp.toFixed(2) + "%" : "—", "", "Base: saldo inicial configurado + pico de P&L no período")}${metric("Lucro bruto", has ? money(s.aw * s.w) : "—", "g")}${metric("Perda bruta", has ? money(-s.al * s.l) : "—", "r")}${metric("Comissões e taxas", "—", "", "Não armazenadas separadamente; P&L importado pode já ser líquido")}${metric("Melhor dia", daily.length ? signed(Math.max(...daily)) : "—", daily.length ? cl(Math.max(...daily)) : "")}${metric("Pior dia", daily.length ? signed(Math.min(...daily)) : "—", daily.length ? cl(Math.min(...daily)) : "")}${metric("Média diária", daily.length ? money(s.net / daily.length) : "—", cl(s.net), "Por dia com trades no período")}${metric("Sequência de ganhos", has ? s.mcw : "—", "g", "Maior sequência no período")}${metric("Sequência de perdas", has ? s.mcl : "—", "r", "Maior sequência no período")}</div><p class="muted-note">R = P&L ÷ risco monetário informado. R:R planejado e equity com posições abertas não estão disponíveis. ${ts.some((t) => t.est) ? "Há P&L estimado neste período: revise os trades marcados com *." : ""}</p>${dashboardMoneyHidden() ? '<p class="muted-note">Mostre os valores para configurar saldo e moeda.</p>' : accountConfig()}</section>`;
+}
+
+function smcDashboardFilterControls(ts) {
+  const m = eliteDashModel(ts);
+  return `<div class="elite-dash-unit"><span>Visão completa do seu desempenho</span><label>Sessão <select aria-label="Sessão do painel" onchange="eliteDashSession=this.value;R()"><option value="">Todas as sessões</option>${[
+    ...new Set(ts.map(eliteDashSessionName)),
+  ]
+    .sort()
+    .map(
+      (v) =>
+        `<option value="${esc(v)}" ${v === eliteDashSession ? "selected" : ""}>${esc(v)}</option>`,
+    )
+    .join(
+      "",
+    )}</select></label><label>Unidade <select aria-label="Unidade do painel" onchange="eliteDashChangeUnit(this.value)"><option value="money" ${eliteDashUnit === "money" ? "selected" : ""}>${esc(S.currency || "Moeda da conta")}</option><option value="r" ${eliteDashUnit === "r" ? "selected" : ""} ${m.complete ? "" : "disabled"}>R realizado</option></select></label><small>${m.known}/${m.rows.length} trades com R conhecido${m.rows.some((t) => t.est) ? " · contém P&L estimado *" : ""}${eliteDashUnit === "r" ? " · calendário e histórico em moeda da conta" : ""}</small></div>`;
 }

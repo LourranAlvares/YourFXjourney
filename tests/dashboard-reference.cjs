@@ -54,6 +54,12 @@ const { chromium } = require("playwright"),
       path: "/tmp/elitex-dashboard-reference.png",
       fullPage: true,
     });
+    assert.equal(
+      await p.locator(".smc-filters-disclosure").evaluate((e) => e.open),
+      false,
+    );
+    assert(!(await p.getByLabel("Data inicial", { exact: true }).isVisible()));
+    await p.locator(".smc-filters-disclosure > summary").click();
     await p.getByLabel("Unidade do painel", { exact: true }).selectOption("r");
     const rTotal = await p.evaluate(() => eliteDashModel(ft()).stats.net);
     assert(Math.abs(rTotal - net / 50) < 1e-8);
@@ -92,6 +98,21 @@ const { chromium } = require("playwright"),
       .selectOption("Londres (07–12)");
     assert.equal(await p.evaluate(() => eliteDashModel(ft()).stats.n), 3);
     await p.getByLabel("Sessão do painel", { exact: true }).selectOption("");
+    const filteredStats = await p.evaluate(() =>
+      JSON.stringify(eliteDashModel(ft()).stats),
+    );
+    await p.locator(".smc-filters-disclosure > summary").click();
+    assert.match(
+      await p.locator(".smc-filter-summary").innerText(),
+      /10\/10\/2026/,
+    );
+    assert.equal(
+      await p.evaluate(() => JSON.stringify(eliteDashModel(ft()).stats)),
+      filteredStats,
+    );
+    assert(
+      (await p.locator(".smc-filters-disclosure").boundingBox()).height < 64,
+    );
 
     await p
       .locator(".elite-dash-calendar .cd")
@@ -130,10 +151,15 @@ const { chromium } = require("playwright"),
       await p.locator(".elite-dashboard").innerText(),
       /Aguardando operações/,
     );
-    await p.goto("http://127.0.0.1:"+app.server.address().port+"/YourFXjourney-standalone.html");
-    await p.waitForSelector(".reference-home");await p.evaluate(()=>taGo('dash'));
-    assert.equal(await p.locator('.primary-metrics .k').count(),6);
-    assert.equal(await p.locator('script[src^="public/"]').count(),0);
+    await p.goto(
+      "http://127.0.0.1:" +
+        app.server.address().port +
+        "/YourFXjourney-standalone.html",
+    );
+    await p.waitForSelector(".reference-home");
+    await p.evaluate(() => taGo("dash"));
+    assert.equal(await p.locator(".primary-metrics .k").count(), 6);
+    assert.equal(await p.locator('script[src^="public/"]').count(), 0);
     assert.deepEqual(errors, []);
     console.log(
       "PASS reference dashboard: six metrics, real charts/donuts/groups, R coverage, monetary privacy, calendar drilldown, date filters, empty state, unchanged history and 320–1920px",

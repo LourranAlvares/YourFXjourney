@@ -17,6 +17,7 @@ function terminalIcon(name) {
     cal: "M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2 M7 3v4 M17 3v4 M3 10h18 M7 14h2 M12 14h2 M7 18h2",
     analyst:
       "M3 3h13v14H3z M6 12V9 M9 12V6 M12 12v-2 M16 13a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M19 20l3 3",
+    filter: "M4 6h16 M7 12h10 M10 18h4",
     search: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14 m5-2 6 6",
     plan: "M9 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-3 M9 2h6v5H9z M8 12l2 2 5-5 M8 18h8",
     economic: "M4 4h16v17H4z M7 8h4v4H7z M14 8h3 M14 11h3 M7 16h10",
