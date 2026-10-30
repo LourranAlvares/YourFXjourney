@@ -1,4 +1,4 @@
-# Trade Assistant · YourFXjourney
+# SMC Elite · Trading Workspace
 
 Upgrade do projeto existente para um espaço pessoal de preparação, análise e revisão de trading. Vanilla HTML/CSS/JavaScript no navegador, com backend opcional Node.js sem dependências de produção. As operações, imports, screenshots, cálculos e a chave `yfx1` do localStorage foram preservados.
 
@@ -352,3 +352,12 @@ O modo multiusuário está implementado e é ativado por configuração. Ele ofe
 Siga [o guia de ativação Supabase + Render](server/cloud/SETUP.md) e execute [o SQL das tabelas e políticas](server/cloud/schema.sql). Sem essas variáveis, o modo local já existente permanece funcionando. Nenhum histórico local é enviado automaticamente para uma conta nova; a administradora pode revisar e importar o histórico anterior do navegador.
 
 No modo nuvem, todo salvamento do diário, plano e preferências de trading passa pela mesma fila, com cache separado por usuário, revisão de versão e aviso de falhas/conflitos. Três versões anteriores podem ser recuperadas; o usuário também pode baixar um backup. A aprovação administra o acesso, sem dar leitura dos diários privados à conta mãe. As alterações visuais do sistema existente foram preservadas; cadastro e administração são telas novas.
+
+
+## Identidade SMC Elite e versão móvel
+
+A identidade atual usa preto grafite e dourado champanhe em todas as rotas, cadastro e login. Logo e cenário são arquivos locais; a fonte variável Inter também é servida localmente, com licença em `public/fonts/Inter-OFL.txt`. Gráficos e ícones usam SVG para manter a definição em telas de alta densidade.
+
+A Home reúne briefing, próximas notícias, ativos monitorados e desempenho do mês. Os valores dependem dos registros do usuário; sem dados não são inventados resultados ou condições de mercado. O painel mantém filtros, unidades monetárias/R e privacidade dos valores. No celular, comparações e estatísticas detalhadas ficam em seções expansíveis; a navegação usa gaveta com foco e fechamento por Escape.
+
+Esta atualização visual não exige alterar Render ou Supabase. As variáveis `ELITEX_*`, nomes de tabelas e identificadores internos existentes são preservados para manter contas, sessões e dados. `node tests/smc-design.cjs` verifica marca, tipografia, notícias, separação entre números e gráficos, telas de 320 a 3840 pixels, cadastro, navegação e versão standalone.

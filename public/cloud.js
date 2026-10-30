@@ -184,7 +184,7 @@ function eliteCloudAfterRender() {
 }
 function eliteCloudGate(message) {
   document.getElementById("main").innerHTML =
-    `<section class="cloud-gate"><h1>Seu espaço EliteX</h1><p role="status">${esc(message)}</p><div><button class="b" onclick="eliteCloudBoot()">Tentar novamente</button> <a href="/account">Minha conta</a></div></section>`;
+    `<section class="cloud-gate"><h1>Seu espaço SMC Elite</h1><p role="status">${esc(message)}</p><div><button class="b" onclick="eliteCloudBoot()">Tentar novamente</button> <a href="/account">Minha conta</a></div></section>`;
 }
 async function eliteCloudBoot() {
   eliteCloud.ready = false;
@@ -360,7 +360,7 @@ function vSettings() {
     eliteCloudSettingsPanel() +
     routine +
     `<section class="card"><h2>Serviços conectados</h2><p>As chaves ficam no servidor e não são expostas à sua conta.</p><div class="ta-service-grid">${[
-      ["ai", "EliteX Analyst · IA"],
+      ["ai", "SMC Elite Analyst · IA"],
       ["economicCalendar", "Notícias"],
       ["marketConditions", "Dados de mercado"],
     ]

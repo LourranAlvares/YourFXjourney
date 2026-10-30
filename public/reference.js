@@ -105,7 +105,7 @@ function eliteOpenTools() {
     d.id = "elite-tools-dialog";
     document.body.append(d);
   }
-  d.innerHTML = `<div class="section-head"><h2>O que precisa fazer?</h2><button class="b s" onclick="document.getElementById('elite-tools-dialog').close()">Fechar</button></div><label>Buscar ferramentas<input id="elite-tools-query" placeholder="Analyst, calendário, diário…" oninput="document.getElementById('elite-tools-results').innerHTML=eliteToolRows(this.value)"></label><div id="elite-tools-results">${eliteToolRows()}</div><small>Busca de funções do EliteX. Não é uma conversa com IA.</small>`;
+  d.innerHTML = `<div class="section-head"><h2>O que precisa fazer?</h2><button class="b s" onclick="document.getElementById('elite-tools-dialog').close()">Fechar</button></div><label>Buscar ferramentas<input id="elite-tools-query" placeholder="Analyst, calendário, diário…" oninput="document.getElementById('elite-tools-results').innerHTML=eliteToolRows(this.value)"></label><div id="elite-tools-results">${eliteToolRows()}</div><small>Busca de funções do SMC Elite. Não é uma conversa com IA.</small>`;
   d.showModal();
   d.querySelector("input").focus();
 }
@@ -154,7 +154,7 @@ function eliteReferenceHome() {
       .trim()
       .split(/\s+/)[0],
   )}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><div class="reference-workspace-actions"><div class="elite-office scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
-    ["analyst", "EliteX Analyst"],
+    ["analyst", "SMC Elite Analyst"],
     ["economic", "Eventos de hoje"],
     ["plan", "Revisar meu plano"],
     ["ins", "Raio-X do Trader"],
@@ -380,7 +380,7 @@ function eliteAnalysisCoachModel(rows) {
       : losses >= 2
         ? `Há ${losses} perdas consecutivas nos últimos fechamentos deste recorte. Antes da próxima entrada, confira os critérios do plano e seus limites; não aumente o risco para recuperar. Essa sequência não comprova overtrading.`
         : plan
-          ? "Antes do próximo trade, use o EliteX Analyst para conferir as evidências de entrada contra seu plano. Registre o motivo da entrada e revise a saída no diário."
+          ? "Antes do próximo trade, use o SMC Elite Analyst para conferir as evidências de entrada contra seu plano. Registre o motivo da entrada e revise a saída no diário."
           : "Defina um Trading Plan com critérios de entrada, saída e limites de risco para comparar intenção e execução nas próximas operações.",
     facts = [
       {
@@ -420,7 +420,7 @@ function eliteAnalysisSummary(rows) {
   const m = eliteAnalysisCoachModel(rows),
     valid = eliteAnalysisCoach.key === m.key && eliteAnalysisCoach.result,
     ready = taConnection.authenticated && taConnection.services?.ai;
-  return `<section class="card elite-analysis-coach" aria-labelledby="elite-analysis-summary-title"><div class="section-head"><div><div class="eyebrow">Seu assistente EliteX</div><h2 id="elite-analysis-summary-title">Resumo</h2></div>${ready ? `<button class="b s" onclick="eliteGenerateAnalysisSummary()" ${eliteAnalysisCoach.pending ? "disabled" : ""}>${eliteAnalysisCoach.pending ? "Preparando…" : "Atualizar resumo"}</button>` : '<button class="b s" onclick="taGo(\'settings\')">Conectar IA</button>'}</div><p class="elite-coach-welcome">Vamos olhar para este período com calma. Seu resultado ajuda a entender o caminho; o próximo passo é cuidar da qualidade das suas decisões.</p>${valid ? `<div class="elite-analysis-ai" role="status"><p>${esc(eliteAnalysisCoach.result.action)}</p></div>` : `<p class="muted-note" role="status">${eliteAnalysisCoach.pending ? "A IA está preparando uma orientação a partir dos seus registros…" : ready ? "O resumo com IA será preparado automaticamente para este período." : "Conecte a IA para receber sua síntese personalizada. A leitura dos registros continua disponível abaixo."}</p>`}<div class="elite-analysis-coach-grid">${[
+  return `<section class="card elite-analysis-coach" aria-labelledby="elite-analysis-summary-title"><div class="section-head"><div><div class="eyebrow">Seu assistente SMC Elite</div><h2 id="elite-analysis-summary-title">Resumo</h2></div>${ready ? `<button class="b s" onclick="eliteGenerateAnalysisSummary()" ${eliteAnalysisCoach.pending ? "disabled" : ""}>${eliteAnalysisCoach.pending ? "Preparando…" : "Atualizar resumo"}</button>` : '<button class="b s" onclick="taGo(\'settings\')">Conectar IA</button>'}</div><p class="elite-coach-welcome">Vamos olhar para este período com calma. Seu resultado ajuda a entender o caminho; o próximo passo é cuidar da qualidade das suas decisões.</p>${valid ? `<div class="elite-analysis-ai" role="status"><p>${esc(eliteAnalysisCoach.result.action)}</p></div>` : `<p class="muted-note" role="status">${eliteAnalysisCoach.pending ? "A IA está preparando uma orientação a partir dos seus registros…" : ready ? "O resumo com IA será preparado automaticamente para este período." : "Conecte a IA para receber sua síntese personalizada. A leitura dos registros continua disponível abaixo."}</p>`}<div class="elite-analysis-coach-grid">${[
     ["dash", "O que está funcionando", m.positive],
     ["alert", "O que merece atenção", m.attention],
     ["idea", "Seu próximo foco", m.action],

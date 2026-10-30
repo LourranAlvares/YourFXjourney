@@ -97,7 +97,7 @@ function vInsights() {
   const m = eliteReviewModel(),
     valid = eliteReview.result && eliteReview.key === m.key,
     ready = taConnection.authenticated && taConnection.services?.ai;
-  return `<section class="card elite-review"><div class="section-head"><div><div class="eyebrow">Assistente EliteX · sua execução</div><h2>Raio-X do Trader</h2><p>O que seus registros mostram, o que precisa de atenção e o que ainda falta avaliar.</p></div><label>Período<select aria-label="Período do Raio-X" onchange="eliteReview.scope=this.value;R()">${[
+  return `<section class="card elite-review"><div class="section-head"><div><div class="eyebrow">Assistente SMC Elite · sua execução</div><h2>Raio-X do Trader</h2><p>O que seus registros mostram, o que precisa de atenção e o que ainda falta avaliar.</p></div><label>Período<select aria-label="Período do Raio-X" onchange="eliteReview.scope=this.value;R()">${[
     ["all", "Todo o histórico"],
     ["30", "Últimos 30 dias"],
     ["90", "Últimos 90 dias"],

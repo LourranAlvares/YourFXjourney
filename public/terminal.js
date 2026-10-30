@@ -42,7 +42,8 @@ function terminalIcon(name) {
     settings:
       "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2",
     clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 7v5l3 2",
-    admin: "M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M8 17c0-4 8-4 8 0",
+    admin:
+      "M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M8 17c0-4 8-4 8 0",
     menu: "M4 6h16 M4 12h16 M4 18h16",
     contrast:
       "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 3v18 M12 3a9 9 0 0 1 0 18z",
@@ -95,7 +96,7 @@ function terminalBackdrop() {
 function terminalBeginRender() {
   terminalNavState.top = document.querySelector("#nav")?.scrollTop || 0;
   if (typeof premiumBeforeRender === "function") premiumBeforeRender();
-  document.body.classList.add("elitex-unified");
+  document.body.classList.add("elitex-unified", "smc-shell");
   terminalBackdrop();
   terminalCharts.clear();
   if (typeof premiumKeepExpanded === "function") premiumKeepExpanded();
@@ -105,7 +106,7 @@ function terminalBeginRender() {
 }
 function terminalLegacyTopbar() {
   const title = tabs.find((t) => t[0] === tab)?.[1] || "Início";
-  return `<div class="terminal-topbar"><div class="terminal-breadcrumb"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">☰</button><span class="terminal-wordmark">ELITE<strong>X</strong><span> / </span></span><span>${esc(title)}</span></div><div class="terminal-top-status">${accountCurrencyControl()}<span class="terminal-storage" title="Trades e planos permanecem no armazenamento deste navegador">Dados neste navegador</span><button class="terminal-connection" onclick="taGo('settings')"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
+  return `<div class="terminal-topbar"><div class="terminal-breadcrumb"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${terminalCollapsed ? "Expandir" : "Recolher"} navegação" aria-expanded="${!terminalCollapsed}">☰</button><span class="terminal-wordmark">SMC <strong>ELITE</strong><span> / </span></span><span>${esc(title)}</span></div><div class="terminal-top-status">${accountCurrencyControl()}<span class="terminal-storage" title="Trades e planos permanecem no armazenamento deste navegador">Dados neste navegador</span><button class="terminal-connection" onclick="taGo('settings')"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
 }
 function terminalChart(
   data,

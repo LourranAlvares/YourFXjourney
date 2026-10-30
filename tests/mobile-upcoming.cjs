@@ -110,7 +110,7 @@ const { chromium } = require("playwright"),
     await p.locator(".scene-more-nav summary").click();
     await p
       .locator("#nav")
-      .getByRole("button", { name: "EliteX Analyst", exact: true })
+      .getByRole("button", { name: "SMC Elite Analyst", exact: true })
       .click();
     assert.equal(await p.evaluate(() => tab), "analyst");
     assert.equal(await p.locator("#main").evaluate((e) => e.inert), false);

@@ -57,7 +57,7 @@ document.querySelectorAll(".account-password-toggle").forEach((button) => {
 function accountModeSet(mode) {
   accountMode = mode;
   document.querySelector("#account-content h2").textContent = {
-    login: "Bem-vindo ao EliteX",
+    login: "Bem-vindo ao SMC Elite",
     signup: "Crie sua conta",
     recover: "Recuperar acesso",
     password: "Nova senha",

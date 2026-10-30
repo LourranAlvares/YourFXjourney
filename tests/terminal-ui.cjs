@@ -47,19 +47,19 @@ const { createApp } = require("../server/index.cjs");
     assert.ok(
       await page
         .locator("header")
-        .evaluate((e) => e.getBoundingClientRect().width >= 232),
+        .evaluate((e) => e.getBoundingClientRect().width >= 218),
     );
     assert.ok(
       await page
         .locator(".ta-nav-group button")
         .first()
-        .evaluate((e) => parseFloat(getComputedStyle(e).fontSize) >= 14),
+        .evaluate((e) => parseFloat(getComputedStyle(e).fontSize) >= 13),
     );
     assert.ok(
       await page
         .locator(".card")
         .first()
-        .evaluate((e) => parseFloat(getComputedStyle(e).borderRadius) >= 16),
+        .evaluate((e) => parseFloat(getComputedStyle(e).borderRadius) >= 12),
     );
     assert.notEqual(
       await page.evaluate(
@@ -76,11 +76,14 @@ const { createApp } = require("../server/index.cjs");
     );
     await page.emulateMedia({ reducedMotion: "no-preference" });
     console.log(
-      "PASS larger sidebar and text, rounded surfaces, animated OLED background and reduced-motion preference",
+      "PASS SMC sidebar dimensions, readable navigation, rounded surfaces and reduced-motion preference",
     );
     await page.locator(".elitex-logo").evaluate((img) => img.decode());
-    assert.match(await page.title(), /EliteX/);
-    assert.match(await page.locator("header h1").innerText(), /ELITEX/);
+    assert.match(await page.title(), /SMC Elite/);
+    assert.equal(
+      await page.locator("header h1 img").getAttribute("alt"),
+      "SMC Elite",
+    );
     const rise = await page
       .locator(".ambient-rise line")
       .first()
@@ -96,7 +99,7 @@ const { createApp } = require("../server/index.cjs");
         .evaluate((e) => parseFloat(getComputedStyle(e).opacity) < 0.25),
     );
     console.log(
-      "PASS EliteX mark loads, identity matches and rising/falling ambient candles have distinct restrained colors",
+      "PASS SMC Elite mark loads, identity matches and rising/falling ambient candles have distinct restrained colors",
     );
     const snapshot = await page.evaluate(() => JSON.stringify(S));
     assert.equal(await page.locator(".primary-metrics .k").count(), 6);
@@ -169,7 +172,11 @@ const { createApp } = require("../server/index.cjs");
       "PASS dashboard real calculations, multiple chart modes, crosshair, keyboard inspection, zoom, pan controls, reset and money privacy",
     );
     await page.evaluate(() => taGo("trades"));
-    const openRecords=()=>page.locator("details").filter({has:page.locator(".terminal-trade-table")}).evaluate(e=>e.open=true);
+    const openRecords = () =>
+      page
+        .locator("details")
+        .filter({ has: page.locator(".terminal-trade-table") })
+        .evaluate((e) => (e.open = true));
     await openRecords();
     await openRecords();
     await page.locator("th").getByRole("button", { name: /^P&L/ }).click();
@@ -238,6 +245,7 @@ const { createApp } = require("../server/index.cjs");
           });
       }
     }
+    await page.setViewportSize({ width: 1440, height: 1000 });
     await page.evaluate(() => taGo("dash"));
     await page
       .getByRole("button", { name: "Recolher navegação", exact: true })

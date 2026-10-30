@@ -78,7 +78,13 @@ function eliteDashDistribution(parts, center, label) {
   const total = parts.reduce((n, p) => n + p.n, 0);
   return `<div class="elite-dash-distribution">${eliteDashDonut(parts, center, label)}<ul>${parts.map((p) => `<li><i style="background:${p.color}"></i><span>${p.label}</span><b>${p.n} <small>(${total ? ((p.n / total) * 100).toFixed(1) : "0.0"}%)</small></b></li>`).join("")}</ul></div>`;
 }
-function eliteDashBars(groups, asset = false, chronological = false) {
+function eliteDashBars(
+  groups,
+  asset = false,
+  chronological = false,
+  format = eliteDashFormat,
+  signedFormat = eliteDashSigned,
+) {
   const entries = Object.entries(groups).sort((a, b) =>
       chronological ? a[0].localeCompare(b[0]) : b[1].net - a[1].net,
     ),
@@ -105,11 +111,11 @@ function eliteDashBars(groups, asset = false, chronological = false) {
     .map((f) => {
       const v = hi - range * f,
         yy = y(v);
-      return `<line x1="55" x2="${width}" y1="${yy}" y2="${yy}" stroke="#1c363d"/><text x="49" y="${yy + 3}" text-anchor="end">${esc(eliteDashFormat(v))}</text>`;
+      return `<line x1="55" x2="${width}" y1="${yy}" y2="${yy}" stroke="#1c363d"/><text x="49" y="${yy + 3}" text-anchor="end">${esc(format(v))}</text>`;
     })
     .join(
       "",
-    )}${first.map(([name, s], i) => `<g ${asset && name !== "Outros" ? `role="button" tabindex="0" data-asset="${esc(name)}" onclick="F.sym=this.dataset.asset;R()" onkeydown="if(event.key==='Enter'){F.sym=this.dataset.asset;R()}"` : ""}><title>${esc(name)}: ${esc(eliteDashSigned(s.net))} · ${s.n} trades</title><rect x="${70 + i * 60}" y="${Math.min(zero, y(s.net))}" width="24" height="${Math.max(1, Math.abs(zero - y(s.net)))}" rx="2" fill="${s.net > 0 ? "#00d7b0" : s.net < 0 ? "#ff476b" : "#7a929e"}"/><text x="${82 + i * 60}" y="168" text-anchor="middle">${esc(name.length > 10 ? name.slice(0, 9) + "…" : name)}</text></g>`).join("")}</svg>`;
+    )}${first.map(([name, s], i) => `<g ${asset && name !== "Outros" ? `role="button" tabindex="0" data-asset="${esc(name)}" onclick="F.sym=this.dataset.asset;R()" onkeydown="if(event.key==='Enter'){F.sym=this.dataset.asset;R()}"` : ""}><title>${esc(name)}: ${esc(signedFormat(s.net))} · ${s.n} trades</title><rect x="${70 + i * 60}" y="${Math.min(zero, y(s.net))}" width="24" height="${Math.max(1, Math.abs(zero - y(s.net)))}" rx="2" fill="${s.net > 0 ? "var(--chart-positive, #00d7b0)" : s.net < 0 ? "#ff476b" : "#7a929e"}"/><text x="${82 + i * 60}" y="168" text-anchor="middle">${esc(name.length > 10 ? name.slice(0, 9) + "…" : name)}</text></g>`).join("")}</svg>`;
 }
 function eliteDashSeries(m, mode) {
   if (mode === "balance") return accountHistoryCurve();
@@ -157,7 +163,7 @@ function eliteDashboardView(ts) {
     metricCard = (label, value, color, note, visual = "") =>
       metric(label, value, color, note).replace("</div>", visual + "</div>"),
     wins = [
-      { label: "Vitórias", n: s.w, color: "#00d7b0" },
+      { label: "Vitórias", n: s.w, color: "var(--chart-positive, #00d7b0)" },
       { label: "Derrotas", n: s.l, color: "#ff476b" },
       { label: "Empates", n: s.n - s.w - s.l, color: "#718c9b" },
     ],
@@ -165,7 +171,7 @@ function eliteDashboardView(ts) {
       {
         label: "Compra",
         n: m.rows.filter((t) => t.side === "long").length,
-        color: "#00d7b0",
+        color: "var(--chart-positive, #00d7b0)",
       },
       {
         label: "Venda",
@@ -256,11 +262,11 @@ function eliteDashboardView(ts) {
       .join(
         "",
       )}</select></label></div>${terminalChart(chart, { id: "performance", height: 200, label: chartNames[chartMode], format: formatMode, netFormat: formatMode, daily: chartMode === "daily", readout: true, includeZero: chartMode !== "balance" })}<div class="elite-dash-chart-note">${chartMode === "balance" ? "Saldo inicial + P&L do histórico completo; sem depósitos, saques ou posições abertas." : chartMode === "r" && !m.complete ? `R parcial: somente ${m.known}/${m.rows.length} operações. Sem R informado não equivale a zero.` : "Resultados fechados · período selecionado."}</div><button class="scene-link" onclick="chartMode='balance';R()" ${S.balanceConfirmed ? "" : "disabled"}>Saldo desde o início</button>${!S.balanceConfirmed ? '<button class="scene-link" onclick="diaryConfigureBalance()">Configurar saldo inicial</button>' : ""}</section><section class="card terminal-context"><div class="section-head"><h2>Drawdown</h2><span class="badge">${eliteDashUnit === "r" ? "R realizado" : esc(S.currency || "Moeda da conta")}</span></div>${terminalChart(dd, { id: "dashboard-drawdown", height: 200, label: "Drawdown", color: "var(--r)", format: eliteDashFormat, netFormat: eliteDashFormat })}<div class="elite-dash-context"><span>Queda máxima <b class="r">${has ? eliteDashFormat(-s.dd) : "—"}</b></span><span>R conhecido <b>${m.known}/${m.rows.length}</b></span></div></section></div>
-    <div class="elite-dash-support"><section class="card"><h2>Distribuição de resultados</h2>${eliteDashDistribution(wins, s.n, "operações")}</section><section class="card"><h2>Resultado por ativo</h2>${eliteDashBars(
+    <details class="smc-dashboard-disclosure" ${innerWidth > 760 ? "open" : ""}><summary>Comparar resultados <span>Ativos, sessões e operações</span></summary><div class="elite-dash-support"><section class="card"><h2>Distribuição de resultados</h2>${eliteDashDistribution(wins, s.n, "operações")}</section><section class="card"><h2>Resultado por ativo</h2>${eliteDashBars(
       grp(m.values, (t) => t.symbol || "Não informado"),
       true,
     )}</section><section class="card"><h2>Resultado por sessão</h2>${eliteDashBars(sessions)}<small>Entrada registrada · fuso original.</small></section><section class="card"><h2>Tipo de operação</h2>${eliteDashDistribution(direction, s.n, "operações")}</section></div>
-    <div class="elite-dash-bottom"><section class="card elite-dash-statistics"><h2>Estatísticas detalhadas</h2><div class="secondary-metrics">${[
+    </details><div class="elite-dash-bottom"><details class="smc-dashboard-disclosure smc-statistics-disclosure" ${innerWidth > 760 ? "open" : ""}><summary>Estatísticas detalhadas <span>Ganhos, perdas e sequências</span></summary><section class="card elite-dash-statistics"><h2>Estatísticas detalhadas</h2><div class="secondary-metrics">${[
       ["Lucro bruto", has ? eliteDashSigned(s.aw * s.w) : "—", "g"],
       ["Perda bruta", has ? eliteDashFormat(-s.al * s.l) : "—", "r"],
       ["Comissões e taxas", "—", "", "Não separadas do P&L registrado"],
@@ -298,7 +304,7 @@ function eliteDashboardView(ts) {
       )
       .join(
         "",
-      )}</div><details class="elite-dash-extra"><summary>Saldo da conta e estatísticas completas</summary>${eliteDashboardLegacyDetails(m.rows)}</details></section><div class="elite-dash-calendar">${vCal(m.rows)}<div class="elite-dash-legend"><span><i class="win"></i>Dia positivo</span><span><i class="loss"></i>Dia negativo</span><span><i class="even"></i>Empate</span><span><i></i>Sem operação</span></div></div></div>
+      )}</div><details class="elite-dash-extra"><summary>Saldo da conta e estatísticas completas</summary>${eliteDashboardLegacyDetails(m.rows)}</details></section></details><div class="elite-dash-calendar">${vCal(m.rows)}<div class="elite-dash-legend"><span><i class="win"></i>Dia positivo</span><span><i class="loss"></i>Dia negativo</span><span><i class="even"></i>Empate</span><span><i></i>Sem operação</span></div></div></div>
     <div class="elite-dash-footer"><section class="card terminal-recent"><div class="section-head"><h2>Operações recentes</h2><button class="scene-link" onclick="taGo('trades')">Ver todas ${terminalIcon("arrow")}</button></div>${m.rows.length ? terminalRecentTrades(m.rows) : '<p class="mu">Sem operações neste período.</p>'}</section><section class="card"><div class="section-head"><h2>Desempenho semanal / mensal</h2><select aria-label="Agrupar desempenho" onchange="eliteDashPeriod=this.value;R()"><option value="week" ${eliteDashPeriod === "week" ? "selected" : ""}>Semanal</option><option value="month" ${eliteDashPeriod === "month" ? "selected" : ""}>Mensal</option></select></div>${eliteDashBars(period, false, true)}<small>Até oito períodos recentes com operações registradas.</small></section></div></section>`;
 }
 function eliteDashboardLegacyDetails(ts) {

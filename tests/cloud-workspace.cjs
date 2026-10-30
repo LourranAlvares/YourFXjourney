@@ -24,7 +24,7 @@ const { chromium } = require("playwright"),
     await p.goto(origin);
     await p.screenshot({ path: "/tmp/elitex-cloud-login.png", fullPage: true });
     assert(
-      await p.getByRole("heading", { name: "Bem-vindo ao EliteX" }).isVisible(),
+      await p.getByRole("heading", { name: "Bem-vindo ao SMC Elite" }).isVisible(),
     );
     await p.getByRole("button", { name: "Criar conta", exact: true }).click();
     await p.getByLabel("Primeiro nome", { exact: true }).fill("Lohan");

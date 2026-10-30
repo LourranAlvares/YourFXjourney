@@ -461,7 +461,7 @@ function createApp(options = {}) {
           "/YourFXjourney-standalone.html",
           "/public/account.html",
         ].includes(publicPath) ||
-        /^\/public\/[A-Za-z0-9_./-]+\.(?:js|css|svg|png|ico)$/.test(
+        /^\/public\/[A-Za-z0-9_./-]+\.(?:js|css|svg|png|ico|woff2)$/.test(
           publicPath,
         ) ||
         /^\/vendor\/ocr\/[A-Za-z0-9_./-]+\.(?:js|gz|wasm)$/.test(publicPath);
@@ -488,6 +488,7 @@ function createApp(options = {}) {
         ".svg": "image/svg+xml",
         ".png": "image/png",
         ".ico": "image/x-icon",
+        ".woff2": "font/woff2",
       };
       res.setHeader(
         "content-type",
@@ -512,7 +513,7 @@ function createApp(options = {}) {
       res.setHeader("referrer-policy", "no-referrer");
       res.setHeader(
         "content-security-policy",
-        "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+        "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
       );
       if (req.method === "HEAD") {
         res.end();

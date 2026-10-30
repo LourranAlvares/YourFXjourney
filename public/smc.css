@@ -1,0 +1,1801 @@
+@font-face {
+  font-family: "SMC Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("fonts/inter-latin-wght-normal.woff2") format("woff2");
+}
+:root {
+  --gold: #d7b982;
+  --gold-bright: #f1d59e;
+  --gold-muted: #a98a55;
+  --smc-bg: #07090c;
+  --smc-panel: #0b0f13;
+  --smc-line: #292b2e;
+  --chart-positive: #d6b77c;
+  --ring-track: #333a43;
+}
+body.smc-shell,
+body.account-page {
+  font-family: "SMC Inter", Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  color: #e9e9e9;
+  background: #07090c;
+  --mono: "SMC Inter", Arial, sans-serif;
+  --surface: #0c1015;
+  --workspace: #07090c;
+  --elevated: #151a20;
+  --border: #292d34;
+  --hover: #181b20;
+  --secondary: #a9afb8;
+  --positive: #36cfa7;
+  --negative: #ed506b;
+  --g: var(--positive);
+  --r: var(--negative);
+  --bd: var(--border);
+  --brand-emerald: var(--gold);
+  --ac: var(--gold);
+  --elite-panel: linear-gradient(125deg, #101419f5, #080c10f5);
+  --sidebar-width: 218px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+body.smc-shell:not(.terminal-collapsed) {
+  --sidebar-width: 218px;
+}
+body.smc-shell::before,
+body:has(.elite-dashboard).smc-shell::before {
+  background:
+    linear-gradient(100deg, #07090cf7, #080b10ed),
+    url("smc-workstation.png") left center/cover no-repeat;
+}
+body.smc-shell header {
+  background:
+    linear-gradient(180deg, #0b0e12fa, #080b0ffb),
+    url("smc-workstation.png") 12% bottom/auto 100% no-repeat !important;
+  border-color: #28292d;
+  padding: 20px 12px 14px !important;
+}
+body.smc-shell header h1 {
+  display: flex;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 0 18px !important;
+  height: 110px;
+  flex-shrink: 0;
+}
+body.smc-shell header h1 .smc-logo {
+  display: block !important;
+  width: 155px;
+  height: 104px;
+  object-fit: contain;
+}
+body.smc-shell.terminal-collapsed {
+  --sidebar-width: 78px;
+}
+body.smc-shell.terminal-collapsed header h1 .smc-logo {
+  width: 66px;
+  height: 60px;
+}
+body.smc-shell.terminal-collapsed header h1 {
+  height: 70px;
+}
+body.smc-shell #nav button {
+  border-radius: 10px;
+  min-height: 47px;
+  padding: 12px;
+  font-size: 13px !important;
+  gap: 13px !important;
+  border: 1px solid transparent;
+  color: #b8bcc4;
+}
+body.smc-shell #nav button.on {
+  background: linear-gradient(100deg, #5d492c42, #171a1d);
+  border-color: #665032;
+  color: #e6c58e;
+  box-shadow: inset 2px 0 var(--gold);
+}
+body.smc-shell #nav button.on span {
+  color: #e6c58e;
+}
+body.smc-shell #nav button:hover {
+  background-color: #ffffff04;
+  border-color: #454039;
+}
+body.smc-shell .scene-more-nav summary {
+  border-color: #343338;
+  background: #101318;
+  color: #c3b69e;
+}
+body.smc-shell .elite-profile {
+  background: linear-gradient(125deg, #191919, #0c1015);
+  border-color: #363336;
+  border-radius: 13px;
+}
+body.smc-shell .elite-profile-avatar {
+  background: #24211b;
+  border-color: #7e6741;
+  color: var(--gold-bright);
+}
+body.smc-shell .elite-profile small {
+  color: #a99e89;
+}
+body.smc-shell .reference-topbar {
+  height: 70px !important;
+  padding: 12px 24px !important;
+  gap: 12px !important;
+  background: #080b10f5 !important;
+  border-color: #25282d;
+}
+body.smc-shell .reference-search,
+body.smc-shell .reference-icon,
+body.smc-shell .reference-connection {
+  background: #0c1015;
+  border-color: #2a2f38;
+  border-radius: 9px;
+  color: #b4bac3;
+}
+body.smc-shell .reference-search {
+  min-height: 40px;
+  font-size: 12px;
+}
+body.smc-shell .reference-search kbd {
+  background: #1c222b;
+  color: #b7bcc5;
+}
+body.smc-shell .reference-icon {
+  width: 40px;
+  height: 40px;
+}
+body.smc-shell .reference-alert {
+  color: var(--gold);
+}
+body.smc-shell .reference-clock {
+  border-color: #3f3528;
+  background: #101217;
+}
+body.smc-shell .reference-clock > b {
+  background: #2721175c;
+  color: var(--gold-bright);
+  font-size: 15px;
+}
+body.smc-shell .reference-clock > span {
+  font-size: 11px;
+  padding: 10px;
+}
+body.smc-shell .reference-clock > b {
+  padding: 10px;
+}
+body.smc-shell .reference-connection {
+  font-size: 10px;
+  max-width: 135px;
+}
+body.smc-shell .reference-topbar .account-currency-control select {
+  background: #0c1015;
+  border-color: #343139;
+  color: #d7c8ae;
+  font-size: 11px;
+}
+body.smc-shell .card,
+body.smc-shell .filter-bar,
+body.smc-shell .primary-metrics,
+body.smc-shell .scene-card {
+  background: var(--elite-panel);
+  border-color: #292d34;
+  border-radius: 13px;
+  box-shadow: 0 8px 24px #0002;
+}
+body.smc-shell .card:hover,
+body.smc-shell .scene-card:hover {
+  border-color: #554b38;
+}
+body.smc-shell input,
+body.smc-shell select,
+body.smc-shell textarea {
+  background: #0c1118;
+  border-color: #333842;
+  border-radius: 9px;
+  color: #e7e9ec;
+  box-shadow: none;
+}
+body.smc-shell input:focus-visible,
+body.smc-shell select:focus-visible,
+body.smc-shell textarea:focus-visible {
+  outline: 2px solid #d7b98288;
+  outline-offset: 2px;
+}
+body.smc-shell .b {
+  background: #191b20;
+  border-color: #454038;
+  border-radius: 9px;
+  color: #ead9ba;
+}
+body.smc-shell .b:not(.s) {
+  background: linear-gradient(140deg, #dbbf8a, #ad8c50);
+  border-color: #dfc591;
+  color: #19150f;
+}
+body.smc-shell .b:hover {
+  border-color: var(--gold);
+}
+body.smc-shell .scene-link {
+  color: #d6b982;
+}
+body.smc-shell .scene-link:hover {
+  color: #f5dbaf;
+}
+body.smc-shell .badge {
+  color: #c8bba2;
+  border-color: #3f3a31;
+  border-radius: 7px;
+}
+body.smc-shell .eyebrow {
+  color: #a79a82;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+}
+body.smc-shell dialog {
+  background: linear-gradient(140deg, #171a20, #0a0e14);
+  border-color: #6d5b3f;
+  border-radius: 18px;
+}
+body.smc-shell .terminal-chart,
+body.smc-shell .table-wrap,
+body.smc-shell .secondary-metrics .k {
+  background: #090e14;
+  border-color: #292d36;
+}
+body.smc-shell th {
+  background: #121821;
+  color: #9ba5b0;
+}
+body.smc-shell td {
+  border-color: #232b35;
+}
+body.smc-shell .terminal-gridline {
+  stroke: #273039;
+}
+body.smc-shell .terminal-axis {
+  font-family: "SMC Inter", sans-serif;
+  font-size: 11px;
+  fill: #96a0ac;
+}
+body.smc-shell .terminal-chart-toolbar,
+body.smc-shell .chart-readout {
+  border-color: #252c36;
+  color: #9aa5b3;
+}
+body.smc-shell .terminal-crosshair line {
+  stroke: #ceb889;
+}
+body.smc-shell .premium-chart-tooltip {
+  background: #1c2026;
+  border-color: #9b8252;
+  color: #f1dfba;
+}
+body.smc-shell .premium-magnetic {
+  transform: none !important;
+}
+body.smc-shell .premium-lit-card::before {
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, 20%),
+    #d7b9820a,
+    transparent 80%
+  );
+}
+body.smc-shell .premium-nav-marker {
+  background: var(--gold);
+  box-shadow: none;
+}
+body.smc-shell .ta-volatility-low {
+  color: #f08c98;
+  background: #5c18292b;
+}
+body.smc-shell .ta-volatility-moderate {
+  color: #eacb85;
+  background: #604a1638;
+}
+body.smc-shell .ta-volatility-high {
+  color: #6be0b6;
+  background: #144c3638;
+}
+body.smc-shell .asset-fx {
+  color: #d8bc86;
+}
+body.smc-shell .asset-currency {
+  color: #b5c0c9;
+}
+body.smc-shell .ta-asset-chip,
+body.smc-shell .ta-asset-option[aria-selected="true"],
+body.smc-shell .ta-asset-option.selected {
+  background: #342b1e;
+  border-color: #967b4c;
+  color: #efd2a0;
+}
+body.smc-shell .elite-analysis-switch [aria-pressed="true"] {
+  background: #30271a;
+  border-color: #967b4c;
+  color: #edd3a5;
+}
+body.smc-shell .elite-analysis-summary > div,
+body.smc-shell .elite-analysis-ai {
+  background: #11171f;
+  border-color: #987d4b;
+}
+body.smc-shell .elite-analysis-ai {
+  border-left-color: var(--gold);
+}
+body.smc-shell .primary-metrics .k[role="button"]:focus-visible {
+  box-shadow: inset 0 0 0 2px #b69a64;
+}
+body.smc-shell .account-settings,
+body.smc-shell .balance-config {
+  border-color: #3d3931;
+}
+body.smc-shell .cloud-banner,
+body.smc-shell .cloud-save-notice {
+  background: #1d2027;
+  border-color: #776143;
+}
+body.smc-shell .ta-check,
+body.smc-shell .ta-weekdays label {
+  accent-color: var(--gold);
+}
+/* New Home composition: scene and short greeting left, daily intelligence right. */
+body.smc-shell #main:has(> .smc-home) {
+  padding-top: 0;
+}
+.smc-home.reference-home {
+  display: block !important;
+  padding: 20px 24px 24px !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  overflow: visible;
+  isolation: auto;
+}
+.smc-home::before {
+  display: none;
+}
+.smc-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(390px, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.smc-desk.reference-left {
+  position: relative;
+  min-height: 490px;
+  display: block;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 14px;
+}
+.smc-office-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, #080b1100 30%, #080b1122 52%, #080b11b8 100%),
+    url("smc-workstation.png") left center/auto 100% no-repeat;
+}
+.smc-office-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    #080b11eb,
+    transparent 35%,
+    transparent 70%,
+    #080b1129
+  );
+}
+.smc-home .scene-character-motion {
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  animation: smc-presence 8s ease-in-out infinite;
+  background: inherit;
+  mask-image: radial-gradient(
+    ellipse 30% 40% at 28% 53%,
+    black 20%,
+    transparent 90%
+  );
+  pointer-events: none;
+}
+@keyframes smc-presence {
+  50% {
+    transform: translateY(-2px);
+    opacity: 0.24;
+  }
+}
+.smc-home .scene-greeting {
+  position: relative;
+  margin: 44px 16px 0 auto;
+  width: 43%;
+  padding: 0;
+  background: transparent;
+}
+.smc-home .scene-greeting h1 {
+  font-family: "SMC Inter", sans-serif;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+  margin: 0 0 14px;
+}
+.smc-home .scene-greeting h1 small {
+  display: block;
+  font-size: 19px;
+  font-weight: 500;
+  color: #c6cad1;
+  line-height: 1.5;
+}
+.smc-home .scene-greeting h1 span {
+  color: #e3c18a;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.smc-home .scene-greeting p {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #b8bec8;
+  margin: 0;
+}
+.smc-home blockquote {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0 0;
+  padding: 12px;
+  border: 1px solid #665133;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #32251575, #090d14e8);
+}
+.smc-home blockquote > span {
+  color: var(--gold);
+  font:
+    50px/1 Georgia,
+    serif;
+  height: 34px;
+}
+.smc-home blockquote p {
+  font-size: 11px !important;
+}
+.smc-home .reference-workspace-actions {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  margin: 0;
+  display: block;
+}
+.smc-home .scene-composer {
+  background: #10151af2;
+  border: 1px solid #3e382d;
+  border-radius: 12px;
+  padding: 8px;
+  margin: 0;
+  box-shadow: 0 8px 24px #0004;
+}
+.smc-home .reference-command {
+  background: #131b23;
+  border-color: #333b44;
+  padding: 9px 12px;
+  min-height: 43px;
+  gap: 12px;
+  border-radius: 8px;
+  color: #aeb8c3;
+}
+.smc-home .reference-command > svg {
+  color: #d2b37b;
+}
+.smc-home .reference-command > b {
+  background: linear-gradient(140deg, #a68c58, #433721);
+  color: #f4dca8;
+  min-width: 34px;
+  width: 34px;
+  height: 32px;
+  border-radius: 7px;
+}
+.smc-home .reference-command > span {
+  font-size: 12px;
+}
+.smc-home .scene-bottom-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.smc-home .scene-bottom-actions > button {
+  font-size: 10px;
+  line-height: 1.4;
+  min-height: 39px;
+  border-radius: 8px;
+  border-color: #292f39;
+  background: #0d121af2;
+  padding: 8px;
+  gap: 7px;
+  white-space: normal;
+}
+.smc-home .scene-bottom-actions > button svg {
+  color: #cfb17a;
+  width: 18px;
+  height: 18px;
+}
+.smc-home .reference-right {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+}
+.smc-home .scene-card {
+  padding: 14px;
+  border-radius: 13px;
+  border-color: #303034;
+  background: linear-gradient(125deg, #11151bf5, #080d13f7);
+}
+.smc-home .reference-card-heading {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 10px;
+  align-items: center;
+}
+.smc-home .reference-card-heading h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+.smc-home .reference-card-heading > svg {
+  color: var(--gold);
+  width: 22px;
+  height: 22px;
+}
+.smc-home .reference-card-heading .scene-link {
+  margin-left: auto;
+  font-size: 10px;
+  white-space: normal;
+}
+.smc-home .reference-briefing-body {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.smc-home .reference-brief-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  background: linear-gradient(120deg, #151a22a8, #0f141aaa);
+  border: 1px solid #252b35;
+  border-radius: 10px;
+  min-width: 0;
+}
+.smc-home .reference-brief-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #25252869;
+  color: var(--gold);
+  font-size: 20px;
+}
+.smc-home .reference-brief-icon svg {
+  width: 25px;
+  height: 25px;
+}
+.smc-home .reference-brief-row > div {
+  min-width: 0;
+  flex: 1;
+}
+.smc-home .reference-brief-row h3 {
+  font-size: 12px;
+  margin: 0 0 4px;
+  color: #dfc18d;
+}
+.smc-home .reference-brief-row p {
+  font-size: 11px !important;
+  line-height: 1.65 !important;
+  color: #aab2be;
+  margin: 0;
+}
+.smc-home .reference-brief-row:not(.smc-week-row) h3 {
+  color: #e1e3e8;
+}
+.smc-home .elite-momentum {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto !important;
+  gap: 8px;
+  align-items: flex-end;
+  max-width: 100px;
+  white-space: normal;
+}
+.smc-home .elite-momentum span {
+  display: flex;
+  flex-direction: column;
+  font-size: 9px;
+  align-items: flex-end;
+  color: #929dab;
+}
+.smc-home .elite-momentum b {
+  font-size: 19px;
+  line-height: 1.2;
+  color: #dfbe85;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.smc-home .reference-method {
+  font-size: 10px;
+  margin-top: 8px;
+  color: #929dac;
+}
+.smc-home .reference-method .elite-momentum {
+  align-items: stretch;
+  max-width: none;
+}
+.smc-home .reference-method .elite-momentum span {
+  align-items: flex-start;
+}
+.smc-home .smc-arrow-action {
+  border: 0;
+  background: none;
+  color: #9ea8b5;
+  padding: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.smc-arrow-action svg {
+  width: 19px;
+  height: 19px;
+}
+.smc-home .smc-percent-setup {
+  font-size: 10px;
+  margin-top: 6px;
+}
+.smc-home .reference-event {
+  grid-template-columns: 44px 60px minmax(0, 1fr) 44px;
+  gap: 7px;
+  padding: 9px 4px;
+  font-size: 11px;
+  border: 0;
+  border-bottom: 1px solid #232933;
+  background: transparent;
+  position: relative;
+  min-height: 45px;
+}
+.smc-home .reference-event time {
+  background: none;
+  padding: 0;
+  font-size: 11px;
+}
+.smc-home .reference-event b {
+  padding: 4px 6px;
+  font-size: 10px;
+  min-width: 0;
+  border-radius: 6px;
+}
+.smc-home .reference-event:hover {
+  background: #d2b27a08;
+}
+.smc-home .reference-event b.impact-low {
+  background: #0e4b342b;
+  color: #7cd1b0;
+}
+.smc-home .reference-event b.impact-high {
+  background: #65172a38;
+  color: #f2728d;
+}
+.smc-home .reference-event b.impact-medium {
+  background: #604d283b;
+  color: #dec28b;
+}
+.smc-home .reference-events > p,
+.smc-home .reference-events > small {
+  font-size: 11px;
+  color: #9da7b5;
+}
+.smc-home .reference-currency {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 10px;
+}
+.smc-asset-strip {
+  position: absolute;
+  top: 244px;
+  right: 16px;
+  width: 43%;
+  min-width: 0;
+}
+.smc-asset-strip > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: #b3ad9f;
+  font-size: 10px;
+  margin-bottom: 7px;
+}
+.smc-asset-strip .scene-link {
+  font-size: 10px;
+}
+.smc-asset-strip .scene-link svg {
+  width: 12px;
+  height: 12px;
+}
+.smc-home .reference-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+.smc-home .reference-asset-grid article {
+  padding: 8px 4px;
+  gap: 5px;
+  border-radius: 8px;
+  border-color: #39362f;
+  background: #10151ac9;
+  font-size: 9px;
+}
+.smc-home .reference-asset-grid article > span {
+  font-size: 9px;
+}
+.smc-asset-symbol {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+.smc-asset-symbol b {
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+.smc-asset-symbol .asset-fx {
+  font-size: 9px;
+}
+.smc-asset-symbol svg {
+  width: 13px;
+  height: 13px;
+}
+.smc-home .reference-asset-grid small {
+  font-size: 8px;
+  color: #9ca7b5;
+}
+/* Shared metrics: diagrams occupy their own grid cells and can never cover a value. */
+body.smc-shell .elite-dash-metrics,
+.smc-home-metrics {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 9px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+body.smc-shell .elite-dash-metrics .k {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  grid-template-rows: auto auto auto;
+  align-items: center;
+  gap: 5px 7px;
+  min-width: 0;
+  min-height: 106px;
+  padding: 12px !important;
+  border: 1px solid #30333a !important;
+  border-radius: 10px;
+  background: linear-gradient(125deg, #10161c, #090e14) !important;
+  overflow: hidden;
+  grid-column: auto !important;
+}
+body.smc-shell .elite-dash-metrics .k > small:first-child {
+  grid-column: 1/-1;
+  grid-row: 1;
+  font-family: "SMC Inter", sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #c9cdd5;
+  margin: 0;
+}
+body.smc-shell .elite-dash-metrics .k > b {
+  grid-column: 1/-1;
+  grid-row: 2;
+  font:
+    600 clamp(19px, 1.45vw, 27px) / 1.35 "SMC Inter",
+    sans-serif;
+  letter-spacing: -0.65px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+body.smc-shell .elite-dash-metrics .k > small:last-of-type {
+  grid-column: 1;
+  grid-row: 3;
+  font-size: 9px;
+  max-width: none;
+  line-height: 1.4;
+  margin: 0;
+  position: static;
+  color: #8e9aa9;
+}
+body.smc-shell .elite-dash-metrics .elite-dash-spark {
+  position: static !important;
+  width: 48px;
+  height: 25px;
+  grid-column: 2;
+  grid-row: 3;
+  opacity: 0.8;
+}
+body.smc-shell .elite-dash-metrics .elite-dash-donut.mini {
+  position: static !important;
+  width: 40px;
+  height: 40px;
+  grid-column: 2;
+  grid-row: 2/4;
+  opacity: 1;
+}
+body.smc-shell .elite-dash-metrics .k:has(.mini) > b {
+  grid-column: 1;
+}
+body.smc-shell .elite-dash-metrics .k:has(.mini) > small:last-of-type {
+  grid-column: 1;
+}
+body.smc-shell .elite-dash-metrics .k::after {
+  display: none;
+}
+.smc-home-performance {
+  margin-top: 12px;
+  min-width: 0;
+}
+.smc-performance-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 9px;
+  color: #999eaa;
+  font-size: 10px;
+}
+.smc-performance-heading .scene-link {
+  font-size: 10px;
+}
+.smc-performance-heading .scene-link svg {
+  width: 15px;
+  height: 15px;
+}
+.smc-performance-charts {
+  margin-top: 10px;
+}
+.smc-performance-charts > summary {
+  cursor: pointer;
+  color: #c9b284;
+}
+.smc-home-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+.smc-home-chart-grid > .card {
+  padding: 12px;
+  margin: 0;
+  min-width: 0;
+}
+.smc-home-chart-grid h2 {
+  font-size: 13px;
+  margin: 0;
+}
+.smc-home-chart-grid .section-head {
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.smc-home-chart-grid .badge {
+  font-size: 9px;
+}
+.smc-home-chart-grid .terminal-chart {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+}
+.smc-home-chart-grid .terminal-chart-toolbar {
+  font-size: 9px;
+  min-height: 20px;
+  padding: 2px;
+}
+.smc-home-chart-grid .terminal-chart-label {
+  max-width: 50%;
+  font-size: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.smc-home-chart-grid .terminal-chart-tools button {
+  min-height: 22px;
+  min-width: 22px;
+  padding: 2px;
+  font-size: 10px;
+}
+.smc-home-chart-grid .terminal-chart-tools > span {
+  font-size: 9px;
+}
+.smc-home-chart-grid .terminal-chart-caption,
+.smc-home-chart-grid .chart-readout {
+  display: none;
+}
+.smc-home-chart-grid .terminal-axis {
+  font-size: 10px;
+}
+.smc-home-chart-grid .terminal-chart-svg polygon {
+  opacity: 0.15;
+}
+.smc-home-chart-grid .elite-dash-bars {
+  height: 172px;
+}
+.smc-shell .elite-dash-bars text {
+  fill: #9da6b3;
+}
+.smc-shell .elite-dashboard .card {
+  border-color: #30333a;
+  background: var(--elite-panel);
+  border-radius: 12px;
+}
+.smc-shell .elite-dashboard .secondary-metrics .k {
+  background: #111820;
+  border-color: #28313b;
+  border-radius: 8px;
+}
+.smc-shell .secondary-metrics .k b {
+  font-family: "SMC Inter", sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+.smc-shell .elite-dashboard .terminal-chart {
+  background: transparent;
+}
+body.smc-shell .filters,
+body.smc-shell:has(.elite-dashboard) .filters {
+  background: #10151c;
+  border-color: #30333a;
+}
+.smc-shell .elite-dash-calendar {
+  background: #0d131a;
+  border-color: #30333a;
+}
+.smc-shell .elite-dash-calendar .cal .cd {
+  background: #17222e;
+  border-color: #2c3743;
+}
+.smc-shell .elite-dash-calendar .cal .cd.gb2 {
+  background: #1a6b51;
+  border-color: #338868;
+}
+.smc-shell .elite-dash-calendar .cal .cd.rb2 {
+  background: #79283b;
+  border-color: #a33c56;
+}
+.smc-shell .elite-dash-calendar .cal .cd.today {
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.smc-shell .terminal-chart-tools button {
+  color: #9fadb9;
+  background: transparent;
+}
+.smc-shell .smc-home .terminal-chart-tools button:hover,
+.smc-shell .terminal-chart-tools button:hover {
+  background: #c5a87512;
+  color: #f1d5a5;
+}
+.smc-shell .terminal-chart-svg polyline {
+  stroke-width: 1.7;
+}
+.smc-shell .elite-dash-unit select,
+.smc-shell .elite-dashboard .section-head select {
+  background: #0d131b;
+  border-color: #363b45;
+  color: #d1c8b8;
+}
+/* Registration uses the same identity, locally bundled type and comfortable form spacing. */
+body.account-page {
+  background:
+    linear-gradient(90deg, #080b10a8, #080b10f7 63%),
+    url("smc-workstation.png") left center/cover fixed no-repeat;
+}
+.account-page .account-layout {
+  max-width: 1320px;
+  gap: 70px;
+}
+.account-page .account-brand {
+  display: inline-block;
+  height: 105px;
+  line-height: 1;
+}
+.account-page .account-brand img {
+  width: 168px;
+  height: 112px;
+  object-fit: contain;
+}
+.account-page .account-eyebrow {
+  color: #c1a572;
+  letter-spacing: 2.5px;
+}
+.account-page .account-intro h1 {
+  font-weight: 650;
+  letter-spacing: -1.5px;
+  color: #f1ede7;
+}
+.account-page .account-intro > p {
+  color: #b9b9be;
+}
+.account-page .account-card {
+  background: linear-gradient(140deg, #15191ef5, #0c1117f5);
+  border-color: #77603a;
+  border-radius: 19px;
+  box-shadow: 0 18px 65px #0006;
+}
+.account-page .account-features span {
+  border-color: #62513a;
+  color: #d6bf95;
+}
+.account-page input {
+  background: #0d141d;
+  border-color: #3a414e;
+  color: #ededef;
+  border-radius: 9px;
+}
+.account-page .account-tabs button {
+  background: #131a22;
+  border-color: #373e48;
+  color: #afb7c1;
+}
+.account-page .account-tabs button[aria-pressed="true"] {
+  background: #4034227a;
+  border-color: #a88a55;
+  color: #f0d29d;
+}
+.account-page .cloud-primary {
+  background: linear-gradient(140deg, #e0c491, #b18d4f);
+  color: #201a11;
+  border-color: #e5c992;
+  border-radius: 10px;
+}
+.account-page .cloud-link {
+  color: #dfc18a;
+}
+.account-page .account-password-toggle {
+  color: #bca77e;
+}
+.account-page .account-password-toggle:hover {
+  background: #c5a87514;
+  color: #f1d49a;
+}
+.account-page label {
+  color: #c8cbd2;
+}
+.account-page .account-card p {
+  color: #afb6c1;
+}
+.account-page :focus-visible {
+  outline: 2px solid #dfbf82;
+  outline-offset: 3px;
+}
+.account-page .account-features {
+  gap: 9px;
+}
+.account-page .account-eyebrow {
+  margin-top: 34px;
+}
+@media (min-width: 761px) {
+  .smc-performance-charts > summary {
+    display: none;
+  }
+  .smc-shell .reference-home .reference-left {
+    gap: 0;
+  }
+  .smc-shell .reference-home .scene-bottom-actions {
+    margin-top: 8px;
+  }
+  .smc-shell .smc-home .reference-right {
+    gap: 12px;
+  }
+}
+@media (min-width: 1900px) {
+  .smc-hero-grid {
+    grid-template-columns: minmax(0, 1.4fr) minmax(460px, 1fr);
+  }
+  .smc-desk.reference-left {
+    min-height: 550px;
+  }
+  .smc-home .scene-greeting {
+    margin-top: 64px;
+    width: 43%;
+    margin-right: 30px;
+  }
+  .smc-home .scene-greeting h1 {
+    font-size: 42px;
+  }
+  .smc-home .scene-greeting h1 small {
+    font-size: 24px;
+  }
+  .smc-home .scene-greeting p {
+    font-size: 14px;
+  }
+  .smc-asset-strip {
+    right: 30px;
+    top: 290px;
+  }
+  .smc-home .reference-brief-row {
+    padding: 16px;
+  }
+  .smc-home .reference-brief-row h3 {
+    font-size: 14px;
+  }
+  .smc-home .reference-brief-row p {
+    font-size: 13px !important;
+  }
+  .smc-home .reference-card-heading h2 {
+    font-size: 18px;
+  }
+  .smc-home .reference-event {
+    font-size: 13px;
+    min-height: 51px;
+  }
+  .smc-home .scene-bottom-actions > button {
+    font-size: 12px;
+  }
+  .smc-home-metrics .k > b {
+    font-size: 27px;
+  }
+}
+@media (max-width: 1250px) and (min-width: 761px) {
+  body.smc-shell:not(.terminal-collapsed) {
+    --sidebar-width: 184px;
+  }
+  .smc-home.reference-home {
+    padding: 18px !important;
+  }
+  .smc-hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 1fr);
+    gap: 12px;
+  }
+  .smc-desk.reference-left {
+    min-height: 510px;
+  }
+  .smc-home .scene-greeting {
+    width: 50%;
+    margin: 30px 9px 0 auto;
+  }
+  .smc-home .scene-greeting h1 {
+    font-size: 29px;
+  }
+  .smc-asset-strip {
+    width: calc(100% - 24px);
+    top: auto;
+    bottom: 140px;
+    right: 12px;
+  }
+  .smc-home .reference-workspace-actions {
+    left: 8px;
+    right: 8px;
+  }
+  .smc-home .scene-bottom-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  body.smc-shell .elite-dash-metrics,
+  .smc-home-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .smc-home-chart-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .smc-home-chart-grid > .card:last-child {
+    grid-column: 1/-1;
+  }
+  .smc-home .reference-brief-row {
+    gap: 8px;
+    padding: 10px 8px;
+  }
+  .smc-home .reference-brief-icon {
+    width: 28px;
+    min-width: 28px;
+    height: 32px;
+  }
+  .smc-home .elite-momentum {
+    max-width: 74px;
+  }
+  .smc-home .elite-momentum b {
+    font-size: 16px;
+  }
+  .smc-home .reference-event {
+    grid-template-columns: 39px 53px minmax(0, 1fr) 40px;
+    gap: 4px;
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .smc-home .scene-character-motion {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+body.smc-shell #main:has(> .smc-home) > .reference-topbar {
+  margin: 0 !important;
+  width: auto;
+}
+.smc-home .reference-brief-row p {
+  margin: 0 !important;
+}
+.smc-home .elite-momentum {
+  margin: 0 !important;
+  gap: 5px !important;
+}
+.smc-home .elite-momentum span + span {
+  flex-direction: row;
+  gap: 4px;
+}
+.smc-home .elite-momentum span + span b {
+  font-size: 12px;
+}
+.smc-shell .reference-command svg,
+.smc-shell .scene-link svg {
+  color: inherit;
+}
+.smc-home .reference-command > b svg {
+  color: #f2d9a5;
+}
+@media (max-width: 760px) {
+  body.smc-shell,
+  body.smc-shell:not(.terminal-collapsed),
+  body.smc-shell.terminal-collapsed {
+    --sidebar-width: 0px;
+  }
+  body.smc-shell header {
+    padding: max(14px, env(safe-area-inset-top)) 14px
+      max(12px, env(safe-area-inset-bottom)) !important;
+    background: #0b0e13 !important;
+  }
+  body.smc-shell header h1 {
+    height: 95px !important;
+    margin-bottom: 12px !important;
+  }
+  body.smc-shell header h1 .smc-logo {
+    width: 145px;
+    height: 95px;
+  }
+  body.smc-shell header #nav button {
+    min-height: 46px;
+    padding: 11px !important;
+    font-size: 14px !important;
+  }
+  body.smc-shell header .scene-more-nav summary {
+    font-size: 13px !important;
+  }
+  body.smc-shell .elite-profile {
+    font-size: 13px;
+  }
+  body.smc-shell .reference-topbar {
+    height: auto !important;
+    min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+  body.smc-shell #main:has(> .smc-home) > .reference-topbar {
+    margin: 0 -12px 12px !important;
+  }
+  body.smc-shell .reference-topbar > .terminal-icon-button {
+    width: 38px;
+    min-height: 42px;
+  }
+  body.smc-shell .reference-search {
+    width: 100%;
+    min-height: 42px;
+    font-size: 12px;
+    padding: 10px;
+    gap: 9px;
+  }
+  body.smc-shell .reference-top-actions {
+    width: 100%;
+    grid-column: 1/-1;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  body.smc-shell .reference-top-actions .reference-icon {
+    width: 36px;
+    min-width: 36px;
+    height: 38px;
+  }
+  body.smc-shell .reference-top-actions .reference-clock {
+    min-width: 74px;
+  }
+  body.smc-shell .reference-clock > b {
+    padding: 8px;
+    font-size: 13px;
+  }
+  body.smc-shell .reference-top-actions .account-currency-control select {
+    width: 78px;
+    min-width: 78px;
+    height: 38px;
+    padding: 5px;
+    font-size: 12px;
+  }
+  body.smc-shell .reference-top-actions .reference-connection {
+    width: 30px;
+    min-width: 30px;
+    min-height: 38px;
+    padding: 5px;
+  }
+  .smc-home.reference-home {
+    margin: 0 -12px;
+    padding: 0 12px 24px !important;
+  }
+  .smc-hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .smc-desk.reference-left {
+    display: flex !important;
+    flex-direction: column;
+    min-height: 0 !important;
+    gap: 0 !important;
+    overflow: hidden;
+    padding: 20px 10px 10px;
+    border-radius: 12px;
+  }
+  .smc-office-scene {
+    height: 440px;
+    inset: 0 0 auto;
+    background-position: 18% bottom;
+    background-size: auto 440px;
+  }
+  .smc-office-scene::after {
+    background: linear-gradient(
+      180deg,
+      #080b1188,
+      transparent 35%,
+      transparent 70%,
+      #080b11
+    );
+  }
+  .smc-home .scene-character-motion {
+    display: none;
+  }
+  .smc-home .scene-greeting {
+    position: static;
+    width: 100%;
+    margin: 0;
+    padding: 0 2px;
+    order: 0;
+  }
+  .smc-home .scene-greeting h1 {
+    font-size: 32px;
+    line-height: 1.15;
+    max-width: 100%;
+  }
+  .smc-home .scene-greeting h1 small {
+    font-size: 17px;
+  }
+  .smc-home .scene-greeting p {
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 270px;
+  }
+  .smc-home blockquote {
+    display: none;
+  }
+  .smc-home .reference-workspace-actions {
+    position: static;
+    order: 1;
+    margin-top: 205px;
+    width: 100%;
+  }
+  .smc-home .scene-composer {
+    padding: 6px;
+    border-radius: 10px;
+  }
+  .smc-home .reference-command {
+    min-height: 48px;
+    padding: 9px;
+    font-size: 12px;
+    gap: 8px;
+  }
+  .smc-home .reference-command > span {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .smc-home .reference-command > b {
+    width: 34px;
+    min-width: 34px;
+  }
+  .smc-home .scene-bottom-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .smc-home .scene-bottom-actions > button {
+    min-height: 43px;
+    font-size: 11px;
+    padding: 9px;
+  }
+  .smc-asset-strip {
+    position: static;
+    order: 2;
+    width: 100%;
+    margin-top: 12px;
+  }
+  .smc-home .reference-asset-grid {
+    gap: 7px;
+  }
+  .smc-home .reference-asset-grid article {
+    padding: 10px 5px;
+    gap: 6px;
+  }
+  .smc-home .reference-asset-grid article > span {
+    font-size: 10px;
+  }
+  .smc-asset-symbol b {
+    font-size: 10px;
+  }
+  .smc-asset-symbol svg {
+    width: 16px;
+    height: 16px;
+  }
+  .smc-asset-symbol .asset-fx {
+    font-size: 10px;
+  }
+  .smc-home .reference-asset-grid small {
+    font-size: 9px;
+  }
+  .smc-home .scene-card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  .smc-home .reference-card-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .smc-home .reference-card-heading h2 {
+    font-size: 15px;
+  }
+  .smc-home .reference-card-heading .scene-link {
+    font-size: 10px;
+    min-height: 32px;
+  }
+  .smc-home .reference-brief-row {
+    gap: 9px;
+    padding: 12px 9px;
+  }
+  .smc-home .reference-brief-icon {
+    min-width: 30px;
+    width: 30px;
+    height: 34px;
+  }
+  .smc-home .reference-brief-icon svg {
+    width: 23px;
+    height: 23px;
+  }
+  .smc-home .reference-brief-row h3 {
+    font-size: 12px;
+  }
+  .smc-home .reference-brief-row p {
+    font-size: 12px !important;
+    line-height: 1.65 !important;
+  }
+  .smc-home .smc-week-row {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+  .smc-week-row > .reference-brief-icon {
+    grid-column: 1;
+    grid-row: 1/3;
+  }
+  .smc-week-row > div:not(.elite-momentum) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .smc-home .smc-week-row > .elite-momentum {
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px !important;
+    max-width: none;
+    width: 100%;
+  }
+  .smc-home .elite-momentum span {
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    font-size: 10px;
+  }
+  .smc-home .elite-momentum b {
+    font-size: 17px;
+    margin-left: 0;
+  }
+  .smc-home .elite-momentum span + span b {
+    font-size: 14px;
+  }
+  .smc-home .reference-method {
+    font-size: 11px;
+  }
+  .smc-home .reference-event {
+    grid-template-columns: 42px 59px minmax(0, 1fr);
+    gap: 6px;
+    min-height: 62px;
+    padding: 10px 2px;
+    font-size: 11px;
+  }
+  .smc-home .reference-event > b {
+    grid-column: 3;
+    justify-self: start;
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+  .smc-home .reference-event > span:nth-of-type(2) {
+    overflow-wrap: anywhere;
+  }
+  .smc-home .reference-currency {
+    font-size: 10px;
+  }
+  .smc-home .reference-events > p,
+  .smc-home .reference-events > small {
+    font-size: 12px;
+  }
+  body.smc-shell .elite-dash-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  body.smc-shell .elite-dash-metrics .k {
+    min-height: 106px;
+    padding: 12px !important;
+    grid-template-columns: minmax(0, 1fr) 36px;
+    gap: 5px;
+  }
+  body.smc-shell .elite-dash-metrics .k > b {
+    font-size: 21px;
+    letter-spacing: -0.6px;
+  }
+  body.smc-shell .elite-dash-metrics .k > small:first-child {
+    font-size: 11px;
+  }
+  body.smc-shell .elite-dash-metrics .elite-dash-spark {
+    width: 36px;
+    height: 23px;
+  }
+  body.smc-shell .elite-dash-metrics .elite-dash-donut.mini {
+    width: 32px;
+    height: 32px;
+  }
+  body.smc-shell .smc-home-metrics .k:nth-child(3),
+  body.smc-shell .smc-home-metrics .k:nth-child(4) {
+    display: none;
+  }
+  .smc-performance-heading {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .smc-performance-heading .scene-link {
+    font-size: 10px;
+  }
+  .smc-performance-charts {
+    border: 1px solid #34312c;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #10151c;
+  }
+  .smc-performance-charts > summary {
+    min-height: 25px;
+    font-size: 12px;
+    padding: 4px;
+  }
+  .smc-home-chart-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .smc-home-chart-grid > .card {
+    width: 100%;
+    padding: 12px;
+  }
+  .smc-home-chart-grid h2 {
+    font-size: 14px;
+  }
+  .smc-home-chart-grid .terminal-chart-toolbar {
+    font-size: 10px;
+  }
+  .smc-home-chart-grid .terminal-chart-tools button {
+    min-width: 25px;
+    min-height: 28px;
+  }
+  body.smc-shell .elite-dashboard .card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+  body.smc-shell .elite-dashboard .section-head {
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+  .smc-shell .elite-dash-unit {
+    font-size: 11px;
+    gap: 9px;
+  }
+  .smc-shell .elite-dash-unit label {
+    margin-left: 0;
+  }
+  .smc-shell .elite-dash-charts {
+    gap: 10px;
+  }
+  .smc-shell .elite-dash-support {
+    gap: 10px;
+  }
+  .smc-shell .elite-dash-bottom {
+    gap: 12px;
+  }
+  .smc-shell .elite-dash-calendar {
+    padding: 13px;
+  }
+  .smc-shell .elite-dash-footer {
+    gap: 12px;
+  }
+  .smc-shell .elite-dash-footer table {
+    min-width: 460px;
+  }
+  .smc-shell .elite-dash-footer .table-wrap {
+    overflow: auto;
+  }
+  .smc-shell .secondary-metrics .k b {
+    font-size: 17px;
+  }
+  .smc-shell .elite-analysis-summary b {
+    font-size: 22px;
+  }
+  .smc-shell .elite-analysis-main > .card {
+    padding: 15px;
+  }
+  .smc-shell .elite-analysis-switch {
+    gap: 6px;
+  }
+  .smc-shell .elite-analysis-switch .b {
+    font-size: 11px;
+    padding: 9px;
+    min-height: 41px;
+  }
+  .smc-shell .elite-analysis-coach p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .smc-shell .elite-analysis-coach h3 {
+    font-size: 14px;
+  }
+  body.account-page {
+    background:
+      linear-gradient(180deg, #080b10dd, #080b10fb 55%),
+      url("smc-workstation.png") left top/auto 610px no-repeat;
+  }
+  .account-page .account-layout {
+    padding: 18px 16px 28px;
+    gap: 18px;
+    grid-template-columns: 1fr;
+    min-height: 100dvh;
+  }
+  .account-page .account-intro {
+    padding: 0 5px;
+  }
+  .account-page .account-brand {
+    height: 87px;
+    display: block;
+    text-align: center;
+  }
+  .account-page .account-brand img {
+    width: 132px;
+    height: 88px;
+  }
+  .account-page .account-eyebrow {
+    display: none;
+  }
+  .account-page .account-intro h1 {
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+    margin: 14px 0 9px;
+  }
+  .account-page .account-intro h1 br {
+    display: none;
+  }
+  .account-page .account-intro > p {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .account-page .account-features {
+    display: none;
+  }
+  .account-page .account-card {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+  .account-page .account-card h2 {
+    font-size: 23px;
+  }
+  .account-page input {
+    font-size: 16px;
+    min-height: 47px;
+    padding: 11px;
+  }
+  .account-page .account-tabs {
+    margin: 20px 0;
+  }
+  .account-page .account-tabs button {
+    min-height: 43px;
+  }
+  .account-page .cloud-primary {
+    min-height: 47px;
+    font-size: 14px;
+  }
+  .account-page .account-password-toggle {
+    height: 40px;
+    width: 40px;
+  }
+  .account-page label {
+    font-size: 12px;
+    margin: 13px 0;
+  }
+  .account-page .account-name-fields {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* Secondary dashboard data stays one tap away on phones. */
+.smc-shell .smc-dashboard-disclosure {
+  min-width: 0;
+}
+.smc-shell .smc-dashboard-disclosure > summary {
+  display: none;
+}
+@media (max-width: 760px) {
+  .smc-shell .smc-dashboard-disclosure {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #0d1217;
+    overflow: hidden;
+  }
+  .smc-shell .smc-dashboard-disclosure > summary {
+    display: list-item;
+    padding: 17px;
+    cursor: pointer;
+    color: #e1c18a;
+    font-weight: 600;
+  }
+  .smc-shell .smc-dashboard-disclosure > summary span {
+    display: block;
+    color: #a4abb4;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 5px;
+  }
+  .smc-shell .smc-dashboard-disclosure[open] > summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .smc-shell .smc-dashboard-disclosure .elite-dash-support {
+    padding: 10px;
+  }
+  .smc-shell .smc-dashboard-disclosure .elite-dash-statistics {
+    border: 0;
+  }
+  .smc-shell .elite-dash-bottom .elite-dash-calendar {
+    order: -1;
+  }
+}

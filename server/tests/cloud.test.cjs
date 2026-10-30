@@ -278,10 +278,10 @@ test("workspaces derive ownership from session, enforce CSRF/origin and revision
 });
 test("landing routes, encrypted cookie rotation/restart, recovery and logout revoke sessions", async (t) => {
   const f = await start(t);
-  assert.match((await f.call("/")).data, /Bem-vindo ao EliteX/);
+  assert.match((await f.call("/")).data, /Bem-vindo ao SMC Elite/);
   assert.match(
     (await f.call("/YourFXjourney.html")).data,
-    /Bem-vindo ao EliteX/,
+    /Bem-vindo ao SMC Elite/,
   );
   assert.equal(
     (

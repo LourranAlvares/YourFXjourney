@@ -13,7 +13,7 @@ const { chromium } = require("playwright"),
     await p.waitForSelector(".elite-function-actions");
     assert.equal(await p.locator("#elite-question").count(), 0);
     await p
-      .getByRole("button", { name: "EliteX Analyst", exact: true })
+      .getByRole("button", { name: "SMC Elite Analyst", exact: true })
       .click();
     assert.equal(await p.evaluate(() => tab), "analyst");
     assert.match(await p.locator("#main").innerText(), /Defina as regras/);
