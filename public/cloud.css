@@ -1,0 +1,301 @@
+.account-page {
+  margin: 0;
+  background: #020b10;
+  color: #e7f3f4;
+  font:
+    15px/1.6 Inter,
+    Arial,
+    sans-serif;
+  color-scheme: dark;
+  min-height: 100dvh;
+}
+.account-page * {
+  box-sizing: border-box;
+}
+.account-layout {
+  min-height: 100dvh;
+  max-width: 1200px;
+  margin: auto;
+  padding: 56px 32px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 70px;
+  align-items: center;
+}
+.account-intro {
+  padding: 28px;
+}
+.account-brand {
+  font-size: 40px;
+  letter-spacing: 3px;
+  font-weight: 800;
+  text-decoration: none;
+  color: #f3fafb;
+}
+.account-brand span {
+  color: #00dfb5;
+}
+.account-eyebrow {
+  color: #87c5bc;
+  font-size: 11px;
+  letter-spacing: 3px;
+  margin-top: 70px;
+}
+.account-intro h1 {
+  font-size: clamp(36px, 4vw, 54px);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+}
+.account-intro > p {
+  max-width: 470px;
+  color: #a4bec5;
+}
+.account-features {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+.account-features span {
+  font-size: 12px;
+  border: 1px solid #17433e;
+  padding: 7px 12px;
+  border-radius: 30px;
+}
+.account-card {
+  padding: 34px;
+  border: 1px solid #21594f;
+  border-radius: 24px;
+  background: linear-gradient(130deg, #061e23, #040f16);
+  box-shadow: 0 20px 80px #0005;
+}
+.account-card h2 {
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+.account-card p {
+  color: #abc2c8;
+}
+.account-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0;
+}
+.account-page button,
+.account-page input {
+  font: inherit;
+}
+.account-page button {
+  cursor: pointer;
+}
+.account-tabs button {
+  flex: 1;
+  border-radius: 12px;
+  border: 1px solid #285156;
+  background: #07151d;
+  color: #b1c8cd;
+  padding: 10px;
+}
+.account-tabs button[aria-pressed="true"] {
+  background: #063b30;
+  color: #6bf1cd;
+  border-color: #179b7e;
+}
+.account-page label {
+  display: block;
+  margin: 16px 0;
+  color: #c5dce0;
+  font-size: 13px;
+}
+.account-page input {
+  display: block;
+  width: 100%;
+  border: 1px solid #2a4c55;
+  background: #04121a;
+  color: #edf5f8;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 6px;
+  font-size: 16px;
+}
+.cloud-primary {
+  border: 1px solid #0bd5af;
+  background: #00bf9e;
+  color: #00261f;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.account-page .cloud-primary {
+  width: 100%;
+  margin-top: 18px;
+}
+.cloud-link {
+  border: 0;
+  background: none;
+  color: #58ddc4;
+  padding: 12px 0;
+  cursor: pointer;
+}
+.account-page button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.account-page [hidden] {
+  display: none !important;
+}
+.account-page :focus-visible {
+  outline: 2px solid #67f3d5;
+  outline-offset: 3px;
+}
+.cloud-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #a2c9c3;
+}
+.cloud-status[data-state="error"],
+.cloud-status[data-state="conflict"] {
+  color: #ff94a9;
+}
+.cloud-status[data-state="saved"] {
+  color: #4adebb;
+}
+.cloud-top-account {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.cloud-top-account button {
+  font-size: 11px;
+}
+.cloud-account-panel {
+  margin-top: 18px;
+}
+.cloud-account-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cloud-admin-search {
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+.cloud-admin-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.cloud-admin-table .cloud-account-actions {
+  gap: 6px;
+}
+.cloud-gate {
+  min-height: 70dvh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: 30px;
+  color: #d2e5e9;
+}
+.cloud-banner {
+  padding: 14px 18px;
+  border: 1px solid #345d5a;
+  border-radius: 12px;
+  background: #072023;
+  margin: 12px 0;
+}
+.cloud-banner p {
+  margin: 4px 0 10px;
+}
+.cloud-conflict-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+@media (max-width: 760px) {
+  .account-layout {
+    padding: 24px 16px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .account-intro {
+    padding: 6px 8px;
+  }
+  .account-eyebrow {
+    margin-top: 20px;
+  }
+  .account-intro h1 {
+    font-size: 36px;
+  }
+  .account-intro > p {
+    font-size: 14px;
+  }
+  .account-features {
+    display: none;
+  }
+  .account-card {
+    padding: 24px;
+  }
+  .cloud-top-account {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .cloud-status {
+    font-size: 10px;
+  }
+  .cloud-admin-table {
+    min-width: 580px;
+  }
+}
+.cloud-save-notice {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  max-width: min(420px, calc(100vw - 36px));
+  background: #11242c;
+  border: 1px solid #ad5f73;
+  border-radius: 14px;
+  padding: 14px 18px;
+  z-index: 100;
+  box-shadow: 0 10px 35px #0008;
+}
+.cloud-save-notice p {
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+.cloud-admin-table [hidden] {
+  display: none;
+}
+.cloud-account-panel .cloud-status {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.cloud-account-panel .cloud-account-actions .b {
+  white-space: normal;
+}
+@media (max-width: 760px) {
+  .cloud-save-notice {
+    bottom: 10px;
+    right: 10px;
+    max-width: calc(100vw - 20px);
+  }
+}
+
+.account-page {
+  background:
+    radial-gradient(ellipse at 15% 15%, #06322d, transparent 55%), #020b10;
+}
+.reference-connection[data-cloud-state="saving"] i,
+.reference-connection[data-cloud-state="pending"] i {
+  background: #e1b95d;
+}
+.reference-connection[data-cloud-state="error"] i,
+.reference-connection[data-cloud-state="conflict"] i {
+  background: #ff5d7d;
+}
+
+.cloud-account-panel > p {
+  overflow-wrap: anywhere;
+}

@@ -344,3 +344,11 @@ Filtros de datas, ativo e estratégia continuam compartilhados; o filtro adicion
 O início mostra até dois próximos eventos publicados em ordem cronológica, sem corte por horário da sessão nem restrição ao dia atual. Solicita um intervalo de até 30 dias à frente em uma única consulta, com cache separado da navegação diária de Notícias; a cobertura efetiva depende da fonte. Inclui todas as moedas e identifica a data quando o evento é de outro dia. Não inventa eventos para preencher espaços fora da cobertura. Clicar no evento abre Notícias na data correta; moedas fora da seleção tornam visível a lista completa.
 
 A folha `mobile.css` aplica as alterações visuais somente até 760px. O celular usa navegação em gaveta, fechamento por toque/Escape, foco contido enquanto aberta, área de fundo inativa, filtros ajustados, alvos de toque maiores e tabelas com rolagem interna. Ao voltar para uma tela maior, os controles exclusivos do celular são ocultados e o fundo volta a ser interativo. O teste compara capturas do computador com a folha de celular habilitada/desabilitada, além de testar todas as rotas de 320 a 760px e a versão standalone.
+
+## Contas individuais e nuvem
+
+O modo multiusuário está implementado e é ativado por configuração. Ele oferece página de cadastro/login, confirmação de e-mail, recuperação de senha, aprovação/bloqueio pela administradora e espaço privado por usuário. Não utiliza o disco temporário do Render como banco.
+
+Siga [o guia de ativação Supabase + Render](server/cloud/SETUP.md) e execute [o SQL das tabelas e políticas](server/cloud/schema.sql). Sem essas variáveis, o modo local já existente permanece funcionando. Nenhum histórico local é enviado automaticamente para uma conta nova; a administradora pode revisar e importar o histórico anterior do navegador.
+
+No modo nuvem, todo salvamento do diário, plano e preferências de trading passa pela mesma fila, com cache separado por usuário, revisão de versão e aviso de falhas/conflitos. Três versões anteriores podem ser recuperadas; o usuário também pode baixar um backup. A aprovação administra o acesso, sem dar leitura dos diários privados à conta mãe. As alterações visuais do sistema existente foram preservadas; cadastro e administração são telas novas.

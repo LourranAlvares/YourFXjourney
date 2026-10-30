@@ -2,7 +2,7 @@
   "name": "trade-assistant-yourfxjourney",
   "version": "3.0.0",
   "private": true,
-  "description": "Personal trading workspace with a local journal and authenticated optional AI services",
+  "description": "Trading workspace with optional multi-user cloud accounts, private journal and authenticated AI services",
   "engines": {
     "node": ">=22.17.0"
   },
@@ -13,6 +13,12 @@
     "test:ui": "node tests/terminal-ui.cjs",
     "test:premium": "node tests/premium-ui.cjs",
     "test:diary": "node tests/diary-workspace.cjs",
-    "test:mt5": "node tests/mt5-import.cjs"
+    "test:mt5": "node tests/mt5-import.cjs",
+    "test:cloud": "node --test server/tests/cloud.test.cjs",
+    "test:cloud:db": "node tests/cloud-database.cjs",
+    "test:cloud:ui": "node tests/cloud-workspace.cjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.13"
   }
 }

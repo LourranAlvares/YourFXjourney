@@ -11,6 +11,7 @@ function eliteToggleContrast() {
   R();
 }
 function eliteUpdateProfile() {
+  if(typeof eliteCloudAfterRender === "function")queueMicrotask(eliteCloudAfterRender);
   if (typeof eliteMobileAfterRender === "function") eliteMobileAfterRender();
   document.body.classList.toggle("elite-high-contrast", eliteContrast);
   let button = document.querySelector(".elite-profile");

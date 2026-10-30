@@ -268,7 +268,7 @@ function importMT5(parsed) {
   }
   const next = { ...S, trades: [...S.trades, ...fresh] };
   try {
-    localStorage.setItem(K, JSON.stringify(next));
+    persistState(next);
   } catch {
     return {
       err: "Não foi possível salvar o histórico. Libere espaço ou exporte um backup; os registros anteriores foram mantidos.",

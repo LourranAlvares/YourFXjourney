@@ -58,6 +58,11 @@ function createApp(options = {}) {
       throw new Error("Origens públicas exigem HTTPS.");
     if (u.protocol === "https:") secure = true;
   }
+  const cloud = require("./cloud/accounts.cjs").createCloud({
+    env,
+    fetchFn: options.fetchFn || global.fetch,
+    secure,
+  });
   const timingEqual = (a, b) =>
       a.length === b.length && crypto.timingSafeEqual(a, b),
     json = (res, status, data) => {
@@ -97,7 +102,7 @@ function createApp(options = {}) {
       csrf: sessionSignature("csrf|" + id + "." + rawExpires),
     };
   }
-  function trustOrigin(req) {
+  function trustOrigin(req, allowNavigation = false) {
     let host;
     try {
       host = new URL("http://" + req.headers.host);
@@ -107,7 +112,11 @@ function createApp(options = {}) {
     if (allowedOrigin) {
       const target = new URL(allowedOrigin);
       if (host.host !== target.host) return false;
-      if (req.headers.origin && req.headers.origin !== allowedOrigin)
+      if (
+        req.headers.origin &&
+        req.headers.origin !== allowedOrigin &&
+        !allowNavigation
+      )
         return false;
     } else {
       if (!["localhost", "127.0.0.1", "[::1]"].includes(host.hostname))
@@ -119,7 +128,7 @@ function createApp(options = {}) {
       )
         return false;
     }
-    return req.headers["sec-fetch-site"] !== "cross-site";
+    return allowNavigation || req.headers["sec-fetch-site"] !== "cross-site";
   }
   function rate(map, key, limit, window) {
     const now = Date.now();
@@ -138,10 +147,10 @@ function createApp(options = {}) {
         "Muitas tentativas. Aguarde antes de tentar novamente.",
       );
   }
-  async function body(req) {
+  async function body(req, limit = 9 * 1024 * 1024) {
     if (req.headers["content-type"]?.split(";")[0] !== "application/json")
       throw new APIError(415, "invalid_content_type", "Use JSON.");
-    if (Number(req.headers["content-length"]) > 9 * 1024 * 1024)
+    if (Number(req.headers["content-length"]) > limit)
       throw new APIError(
         413,
         "body_too_large",
@@ -151,7 +160,7 @@ function createApp(options = {}) {
       chunks = [];
     for await (const chunk of req) {
       size += chunk.length;
-      if (size > 9 * 1024 * 1024)
+      if (size > limit)
         throw new APIError(
           413,
           "body_too_large",
@@ -187,12 +196,63 @@ function createApp(options = {}) {
       return;
     }
     try {
-      if (!trustOrigin(req))
+      if (
+        !trustOrigin(
+          req,
+          !!cloud &&
+            ["/", "/account"].includes(url.pathname) &&
+            ["GET", "HEAD"].includes(req.method) &&
+            req.headers["sec-fetch-mode"] === "navigate",
+        )
+      )
         throw new APIError(403, "invalid_origin", "Origem não autorizada.");
       if (url.pathname.startsWith("/api/")) {
-        let current = session(req);
+        let current = cloud ? await cloud.session(req, res) : session(req);
+        if (cloud && url.pathname.startsWith("/api/auth/")) {
+          if (req.method !== "POST")
+            throw new APIError(405, "method_not_allowed", "Use POST.");
+          const action = url.pathname.slice("/api/auth/".length);
+          rate(attempts, "cloud:" + req.socket.remoteAddress, 40, 15 * 60e3);
+          if (
+            ["password", "logout"].includes(action) &&
+            current &&
+            !timingEqual(
+              Buffer.from(req.headers["x-csrf-token"] || ""),
+              Buffer.from(current.csrf),
+            )
+          )
+            throw new APIError(
+              403,
+              "invalid_csrf",
+              "Atualize a sessão antes de continuar.",
+            );
+          json(
+            res,
+            200,
+            await cloud.auth(action, await body(req, 16384), res, current),
+          );
+          return;
+        }
+        if (cloud && req.method === "GET" && url.pathname === "/api/account") {
+          json(res, 200, {
+            cloud: true,
+            user: current?.user || null,
+            csrf: current?.csrf || null,
+          });
+          return;
+        }
+        if (cloud && url.pathname === "/api/login")
+          throw new APIError(
+            400,
+            "email_login_required",
+            "Entre com e-mail e senha na página de acesso.",
+          );
         if (req.method === "GET" && url.pathname === "/api/status") {
-          if (current && current.expires - Date.now() < 7 * 24 * 3600e3) {
+          if (
+            !cloud &&
+            current &&
+            current.expires - Date.now() < 7 * 24 * 3600e3
+          ) {
             const id = current.token.split(".")[0],
               expires = Date.now() + sessionSeconds * 1000,
               unsigned = id + "." + expires;
@@ -204,9 +264,11 @@ function createApp(options = {}) {
             res.setHeader("set-cookie", cookie(current.token, sessionSeconds));
           }
           json(res, 200, {
-            authenticated: !!current,
+            authenticated:
+              !!current && (!cloud || current.user.status === "active"),
+            ...(cloud ? { cloud: true, user: current?.user || null } : {}),
             csrf: current?.csrf || null,
-            authConfigured: configured,
+            authConfigured: !!cloud || configured,
             services: {
               ai: !!env.TRADE_AI_KEY,
               economicCalendar:
@@ -220,7 +282,7 @@ function createApp(options = {}) {
                 : "fmp",
               marketConditions: !!env.TRADE_MARKET_KEY,
             },
-            mode: "single-owner-local",
+            mode: cloud ? "multi-user-cloud" : "single-owner-local",
             serverTime: new Date().toISOString(),
           });
           return;
@@ -273,6 +335,61 @@ function createApp(options = {}) {
             "invalid_csrf",
             "Sessão de segurança inválida. Atualize o login.",
           );
+        if (cloud) {
+          if (req.method === "POST" && url.pathname === "/api/logout") {
+            await cloud.auth("logout", {}, res, current);
+            json(res, 200, { authenticated: false });
+            return;
+          }
+          cloud.active(current);
+          rate(
+            requests,
+            current.user.id + ":cloud:" + url.pathname,
+            120,
+            60 * 60e3,
+          );
+          if (
+            url.pathname === "/api/workspace" &&
+            ["GET", "PUT"].includes(req.method)
+          ) {
+            json(
+              res,
+              200,
+              await cloud.workspace(
+                current,
+                req.method,
+                req.method === "PUT" ? await body(req, 25 * 1024 * 1024) : null,
+              ),
+            );
+            return;
+          }
+          if (
+            req.method === "GET" &&
+            url.pathname === "/api/workspace/history"
+          ) {
+            json(res, 200, {
+              versions: await cloud.history(
+                current,
+                url.searchParams.get("revision"),
+              ),
+            });
+            return;
+          }
+          if (url.pathname === "/api/admin/accounts") {
+            if (req.method === "GET") {
+              json(res, 200, { accounts: await cloud.listAccounts(current) });
+              return;
+            }
+            if (req.method === "PATCH") {
+              json(
+                res,
+                200,
+                await cloud.setAccess(current, await body(req, 16384)),
+              );
+              return;
+            }
+          }
+        }
         if (req.method === "POST" && url.pathname === "/api/logout") {
           revokeSession(current);
           res.setHeader("set-cookie", cookie("", 0));
@@ -284,7 +401,11 @@ function createApp(options = {}) {
         );
         rate(
           requests,
-          aiRoute ? "owner:ai" : current.token + ":" + url.pathname,
+          aiRoute
+            ? cloud
+              ? current.user.id + ":ai"
+              : "owner:ai"
+            : current.token + ":" + url.pathname,
           aiRoute ? 20 : 120,
           60 * 60e3,
         );
@@ -322,11 +443,24 @@ function createApp(options = {}) {
       } catch {
         throw new APIError(400, "invalid_path", "Caminho inválido.");
       }
-      const publicPath = pathname === "/" ? "/YourFXjourney.html" : pathname;
+      let publicPath = pathname === "/" ? "/YourFXjourney.html" : pathname;
+      if (pathname === "/account") publicPath = "/public/account.html";
+      if (
+        cloud &&
+        ["/", "/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(
+          pathname,
+        )
+      ) {
+        const account = await cloud.session(req, res);
+        if (!account || account.user.status !== "active")
+          publicPath = "/public/account.html";
+      }
       const allowed =
-        ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(
-          publicPath,
-        ) ||
+        [
+          "/YourFXjourney.html",
+          "/YourFXjourney-standalone.html",
+          "/public/account.html",
+        ].includes(publicPath) ||
         /^\/public\/[A-Za-z0-9_./-]+\.(?:js|css|svg|png|ico)$/.test(
           publicPath,
         ) ||
@@ -359,11 +493,23 @@ function createApp(options = {}) {
         "content-type",
         types[path.extname(real)] || "application/octet-stream",
       );
-      res.setHeader("content-length", stat.size);
+      const appDocument =
+        cloud &&
+        ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(
+          publicPath,
+        );
+      const payload = appDocument
+        ? (await fs.readFile(real, "utf8")).replace(
+            "<head>",
+            '<head><meta name="elitex-cloud" content="1">',
+          )
+        : await fs.readFile(real);
+      res.setHeader("content-length", Buffer.byteLength(payload));
       res.setHeader(
         "cache-control",
         publicPath.startsWith("/vendor/") ? "public,max-age=86400" : "no-cache",
       );
+      res.setHeader("referrer-policy", "no-referrer");
       res.setHeader(
         "content-security-policy",
         "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self' blob:; font-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
@@ -372,7 +518,7 @@ function createApp(options = {}) {
         res.end();
         return;
       }
-      res.end(await fs.readFile(real));
+      res.end(payload);
     } catch (e) {
       if (res.headersSent) {
         res.destroy();
@@ -422,11 +568,16 @@ if (require.main === module) {
   server.listen(port, host, () => {
     console.log(`Trade Assistant ativo na porta ${port}.`);
     if (
-      !process.env.TRADE_ASSISTANT_PASSWORD ||
-      process.env.TRADE_ASSISTANT_PASSWORD.length < 12
+      !process.env.SUPABASE_URL &&
+      (!process.env.TRADE_ASSISTANT_PASSWORD ||
+        process.env.TRADE_ASSISTANT_PASSWORD.length < 12)
     )
       console.log(
         "Serviços online bloqueados: configure TRADE_ASSISTANT_PASSWORD com pelo menos 12 caracteres.",
+      );
+    if (process.env.SUPABASE_URL)
+      console.log(
+        "EliteX: contas individuais e nuvem ativadas. Consulte server/cloud/SETUP.md.",
       );
     console.log(
       "Credenciais ficam somente no servidor. Consulte server/SETUP.md.",

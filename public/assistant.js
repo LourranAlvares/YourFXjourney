@@ -79,7 +79,7 @@ function taCurrentPlan() {
 function taPersist(patch) {
   const next = { ...S, ...patch };
   try {
-    localStorage.setItem(K, JSON.stringify(next));
+    persistState(next);
     S = next;
     return true;
   } catch (e) {
@@ -127,6 +127,7 @@ async function taApi(path, options = {}) {
     }
     if (!response.ok) {
       if (response.status === 401) taConnection.authenticated = false;
+      if(typeof CLOUD_BOOT !== 'undefined' && CLOUD_BOOT && ['account_blocked','account_pending','authentication_required'].includes(data.error?.code))eliteCloudLock();
       const error = new Error(
         data.error?.message ||
           data.error ||
@@ -306,7 +307,7 @@ function taSessionPreset(label) {
     $("#ta-session-end").value = values[2];
   }
 }
-function vSettings() {
+function vSettingsLegacy() {
   const p = taProfile(),
     connected = taConnection.services || {};
   return `<section class="card ta-settings"><div class="section-head"><div><div class="eyebrow">Seu ritmo de trading</div><h2>Perfil e rotina</h2><p>Os horários da sessão seguem seu fuso, inclusive no horário de verão.</p></div><span class="badge">${esc(taApiState())}</span></div><form onsubmit="event.preventDefault();taSaveProfile()"><div class="fg">${taInput("Seu nome", "ta-name", p.name, "text", 'maxlength="60"')}${taInput("Seu fuso IANA", "ta-zone", p.timezone, "text", 'list="ta-zones" required')}</div>${taAssetPicker(p.instruments)}<datalist id="ta-zones">${["Europe/London", "America/New_York", "America/Sao_Paulo", "Asia/Tokyo", "Europe/Lisbon", "Etc/UTC"].map((z) => `<option>${z}</option>`).join("")}</datalist><div class="ta-section-divider"></div><label class="ta-check"><input id="ta-session-enabled" type="checkbox" ${p.session.enabled ? "checked" : ""}> Ativar minha sessão de trading</label><div class="fg">${taSelect(
