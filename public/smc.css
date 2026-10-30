@@ -2420,3 +2420,319 @@ body.smc-shell #main .card:hover {
   overflow-wrap: anywhere;
   line-height: 1.55;
 }
+
+/* Home is a preparation workspace; performance remains in the dedicated views. */
+.smc-home .smc-desk.reference-left {
+  display: flex !important;
+  flex-direction: column;
+  gap: 22px !important;
+  padding: clamp(24px, 2vw, 40px) 20px 14px;
+  min-height: 650px;
+}
+.smc-home .scene-greeting {
+  width: 49%;
+  margin: 0 0 0 auto;
+}
+.smc-home .scene-greeting h1 {
+  font-size: clamp(36px, 2.8vw, 54px);
+  line-height: 1.12;
+}
+.smc-home .scene-greeting h1 small {
+  font-size: clamp(21px, 1.5vw, 28px);
+}
+.smc-home .scene-greeting p,
+.smc-home .scene-greeting blockquote p {
+  font-size: 15px;
+  line-height: 1.65;
+}
+.smc-home .smc-asset-strip {
+  position: static;
+  width: 100%;
+  margin: auto 0 0;
+}
+.smc-home .smc-asset-strip > div:first-child,
+.smc-home .smc-asset-strip .scene-link {
+  font-size: 14px;
+}
+.smc-home .reference-asset-grid {
+  gap: 10px;
+}
+.smc-home .reference-asset-grid article {
+  padding: 14px 10px;
+  gap: 8px;
+}
+.smc-home .reference-asset-grid article > span,
+.smc-home .smc-asset-symbol b,
+.smc-home .smc-asset-symbol .asset-fx {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.smc-home .smc-asset-symbol {
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.smc-home .smc-asset-symbol svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.smc-home .reference-asset-grid small {
+  font-size: 12px;
+}
+.smc-home .reference-workspace-actions {
+  position: static;
+  width: 100%;
+  margin: 0;
+}
+.smc-home .reference-command,
+.smc-home .reference-command > span,
+.smc-home .scene-bottom-actions > button {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.smc-home .reference-card-heading h2 {
+  font-size: 20px;
+}
+.smc-home .reference-brief-row h3 {
+  font-size: 16px;
+}
+.smc-home .reference-brief-row p {
+  font-size: 14px !important;
+}
+.smc-home .reference-card-heading .scene-link {
+  font-size: 12px;
+}
+@media (min-width: 761px) and (max-width: 1250px) {
+  .smc-home .scene-greeting {
+    width: 65%;
+  }
+  .smc-home .smc-desk.reference-left {
+    padding: 24px 14px 14px;
+  }
+}
+@media (max-width: 760px) {
+  .smc-home .smc-desk.reference-left {
+    min-height: 0;
+    padding: 20px 10px 10px;
+    gap: 18px !important;
+  }
+  .smc-home .scene-greeting {
+    width: 100%;
+  }
+  .smc-home .scene-greeting h1 {
+    font-size: 38px;
+  }
+  .smc-home .scene-greeting p {
+    font-size: 15px;
+  }
+  .smc-home .reference-workspace-actions {
+    margin-top: 175px;
+  }
+  .smc-home .smc-asset-strip {
+    margin-top: 0;
+  }
+  .smc-home .reference-asset-grid {
+    gap: 7px;
+  }
+  .smc-home .reference-asset-grid article {
+    padding: 12px 6px;
+  }
+  .smc-home .reference-asset-grid article > span,
+  .smc-home .smc-asset-symbol b,
+  .smc-home .smc-asset-symbol .asset-fx {
+    font-size: 13px;
+  }
+  .smc-home .reference-card-heading h2 {
+    font-size: 18px;
+  }
+}
+
+/* Wrapped navigation labels determine their button height, rather than the icon size. */
+body.smc-shell #nav .elite-nav-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+body.smc-shell #nav button {
+  height: auto;
+  flex-shrink: 0;
+  align-items: center;
+}
+body.smc-shell #nav button > .elite-nav-label {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+body.smc-shell #nav button > span:first-child {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+/* Shared SMC interaction palette: decorative accents never use result colors. */
+body.smc-shell #main .card:hover,
+body.smc-shell #main .scene-card:hover {
+  border-color: #79643f;
+}
+body.smc-shell .terminal-performance,
+body.smc-shell .ta-session-card {
+  border-top-color: var(--border);
+}
+body.smc-shell .ta-preparation-plan li,
+body.smc-shell .ins.g {
+  border-left-color: var(--gold);
+}
+body.smc-shell .insight-block.strong {
+  border-top-color: var(--gold);
+}
+body.smc-shell .insight-block.strong .eyebrow {
+  color: var(--gold);
+}
+body.smc-shell .ta-preparation-focus,
+body.smc-shell .ta-radar-assets .badge,
+body.smc-shell .risk-calculation-result {
+  border-color: #6f5d3e;
+  background: #d7b98208;
+}
+body.smc-shell .risk-calculation-result output {
+  color: var(--gold-bright);
+}
+body.smc-shell .risk-presets button[aria-pressed="true"] {
+  color: var(--gold-bright);
+  border-color: var(--gold-muted);
+  background: #30271a;
+}
+body.smc-shell input:focus,
+body.smc-shell select:focus,
+body.smc-shell textarea:focus {
+  border-color: var(--gold-muted);
+}
+body.smc-shell .premium-analysis-pending button[type="submit"] {
+  border-color: var(--gold-muted);
+  box-shadow: inset 0 0 0 1px #d7b98230;
+}
+body.smc-shell .premium-lit-card::before {
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, 20%),
+    #d7b9820d,
+    transparent 80%
+  );
+}
+body.smc-shell #nav button:hover {
+  box-shadow: inset 0 0 0 1px #d7b98230;
+}
+body.smc-shell .primary-metrics .k[role="button"]:hover,
+body.smc-shell .primary-metrics .k[role="button"]:focus-visible {
+  background: #d7b9820a;
+}
+body.smc-shell .primary-metrics .k[role="button"]::after {
+  color: var(--gold);
+}
+body.smc-shell .cd.today,
+body.smc-shell .cd.premium-selected,
+body.smc-shell .share-live-day.premium-selected {
+  box-shadow: inset 0 2px #d7b98280;
+}
+body.smc-shell .elite-review-columns > section,
+body.smc-shell .ta-asset-option {
+  border-color: var(--border);
+  background: #0e1319;
+}
+body.smc-shell .ta-asset-groups button {
+  background: #15191f;
+}
+body.smc-shell .ta-asset-option:hover {
+  background: #211e18;
+  border-color: var(--gold-muted);
+}
+body.smc-shell .ta-asset-option.selected,
+body.smc-shell .ta-asset-option[aria-selected="true"],
+body.smc-shell .ta-asset-groups button[aria-pressed="true"] {
+  border-color: var(--gold-muted);
+  color: var(--gold-bright);
+  background: #30271a;
+}
+body.smc-shell :focus-visible {
+  outline-color: var(--gold);
+}
+body.smc-shell input[type="checkbox"],
+body.smc-shell input[type="radio"],
+body.smc-shell input[type="range"] {
+  accent-color: var(--gold);
+}
+body.smc-shell.elite-high-contrast .card,
+body.smc-shell.elite-high-contrast .filter-bar,
+body.smc-shell.elite-high-contrast .primary-metrics {
+  border-color: #877557 !important;
+  background: #07090c !important;
+}
+body.smc-shell .cd:hover,
+body.smc-shell .share-live-day:not(:disabled):hover {
+  border-color: var(--gold-muted);
+  box-shadow: inset 0 0 0 1px #d7b98225;
+}
+/* The ring contains only the total. Its caption lives below, outside the graphic. */
+body.smc-shell .elite-dash-distribution {
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+body.smc-shell .elite-dash-donut:not(.mini) {
+  display: grid;
+  grid-template-columns: 112px;
+  grid-template-rows: 112px auto;
+  width: 112px;
+  height: auto;
+  gap: 8px;
+  flex: 0 0 112px;
+}
+body.smc-shell .elite-dash-donut:not(.mini) > svg {
+  grid-area: 1 / 1;
+  display: block;
+  width: 112px;
+  height: 112px;
+}
+body.smc-shell .elite-dash-donut:not(.mini) > span {
+  position: static;
+  grid-area: 1 / 1;
+  padding: 0 22px;
+  min-width: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+body.smc-shell .elite-dash-donut:not(.mini) > span b {
+  line-height: 1.2;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+body.smc-shell .elite-dash-donut-label {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--secondary);
+  grid-area: 2 / 1;
+}
+body.smc-shell .elite-dash-distribution ul {
+  flex: 1 1 170px;
+  font-size: 12px;
+}
+body.smc-shell .elite-dash-distribution li {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  gap: 8px;
+  margin: 12px 0;
+}
+body.smc-shell .elite-dash-distribution li b {
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: right;
+}
+body.smc-shell .elite-dash-distribution li small {
+  color: var(--secondary);
+}

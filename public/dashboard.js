@@ -63,7 +63,7 @@ function eliteDashDonut(parts, center, label, small = false) {
   const total = parts.reduce((n, p) => n + p.n, 0),
     c = 251.327;
   let offset = 0;
-  return `<div class="elite-dash-donut ${small ? "mini" : ""}"><svg viewBox="0 0 100 100" role="img" aria-label="${esc(parts.map((p) => p.label + ": " + p.n).join(", "))}"><circle cx="50" cy="50" r="40" fill="none" stroke="#1f3841" stroke-width="10"/>${parts
+  return `<div class="elite-dash-donut ${small ? "mini" : ""}"><svg viewBox="0 0 100 100" role="img" aria-label="${esc(parts.map((p) => p.label + ": " + p.n).join(", "))}"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--ring-track, #333a43)" stroke-width="10"/>${parts
     .map((p) => {
       const length = total ? (p.n / total) * c : 0,
         mark = `<circle cx="50" cy="50" r="40" fill="none" stroke="${p.color}" stroke-width="10" stroke-dasharray="${length} ${c - length}" stroke-dashoffset="${-offset}" transform="rotate(-90 50 50)"/>`;
@@ -72,7 +72,7 @@ function eliteDashDonut(parts, center, label, small = false) {
     })
     .join(
       "",
-    )}</svg>${small ? "" : `<span><b>${center}</b><small>${label}</small></span>`}</div>`;
+    )}</svg>${small ? "" : `<span><b style="font-size:${Math.min(24, Math.max(10, 104 / Math.max(1, String(center).length)))}px">${esc(center)}</b></span><small class="elite-dash-donut-label">${esc(label)}</small>`}</div>`;
 }
 function eliteDashDistribution(parts, center, label) {
   const total = parts.reduce((n, p) => n + p.n, 0);

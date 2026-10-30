@@ -11330,6 +11330,322 @@ body.smc-shell #main .card:hover {
   overflow-wrap: anywhere;
   line-height: 1.55;
 }
+
+/* Home is a preparation workspace; performance remains in the dedicated views. */
+.smc-home .smc-desk.reference-left {
+  display: flex !important;
+  flex-direction: column;
+  gap: 22px !important;
+  padding: clamp(24px, 2vw, 40px) 20px 14px;
+  min-height: 650px;
+}
+.smc-home .scene-greeting {
+  width: 49%;
+  margin: 0 0 0 auto;
+}
+.smc-home .scene-greeting h1 {
+  font-size: clamp(36px, 2.8vw, 54px);
+  line-height: 1.12;
+}
+.smc-home .scene-greeting h1 small {
+  font-size: clamp(21px, 1.5vw, 28px);
+}
+.smc-home .scene-greeting p,
+.smc-home .scene-greeting blockquote p {
+  font-size: 15px;
+  line-height: 1.65;
+}
+.smc-home .smc-asset-strip {
+  position: static;
+  width: 100%;
+  margin: auto 0 0;
+}
+.smc-home .smc-asset-strip > div:first-child,
+.smc-home .smc-asset-strip .scene-link {
+  font-size: 14px;
+}
+.smc-home .reference-asset-grid {
+  gap: 10px;
+}
+.smc-home .reference-asset-grid article {
+  padding: 14px 10px;
+  gap: 8px;
+}
+.smc-home .reference-asset-grid article > span,
+.smc-home .smc-asset-symbol b,
+.smc-home .smc-asset-symbol .asset-fx {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.smc-home .smc-asset-symbol {
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.smc-home .smc-asset-symbol svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.smc-home .reference-asset-grid small {
+  font-size: 12px;
+}
+.smc-home .reference-workspace-actions {
+  position: static;
+  width: 100%;
+  margin: 0;
+}
+.smc-home .reference-command,
+.smc-home .reference-command > span,
+.smc-home .scene-bottom-actions > button {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.smc-home .reference-card-heading h2 {
+  font-size: 20px;
+}
+.smc-home .reference-brief-row h3 {
+  font-size: 16px;
+}
+.smc-home .reference-brief-row p {
+  font-size: 14px !important;
+}
+.smc-home .reference-card-heading .scene-link {
+  font-size: 12px;
+}
+@media (min-width: 761px) and (max-width: 1250px) {
+  .smc-home .scene-greeting {
+    width: 65%;
+  }
+  .smc-home .smc-desk.reference-left {
+    padding: 24px 14px 14px;
+  }
+}
+@media (max-width: 760px) {
+  .smc-home .smc-desk.reference-left {
+    min-height: 0;
+    padding: 20px 10px 10px;
+    gap: 18px !important;
+  }
+  .smc-home .scene-greeting {
+    width: 100%;
+  }
+  .smc-home .scene-greeting h1 {
+    font-size: 38px;
+  }
+  .smc-home .scene-greeting p {
+    font-size: 15px;
+  }
+  .smc-home .reference-workspace-actions {
+    margin-top: 175px;
+  }
+  .smc-home .smc-asset-strip {
+    margin-top: 0;
+  }
+  .smc-home .reference-asset-grid {
+    gap: 7px;
+  }
+  .smc-home .reference-asset-grid article {
+    padding: 12px 6px;
+  }
+  .smc-home .reference-asset-grid article > span,
+  .smc-home .smc-asset-symbol b,
+  .smc-home .smc-asset-symbol .asset-fx {
+    font-size: 13px;
+  }
+  .smc-home .reference-card-heading h2 {
+    font-size: 18px;
+  }
+}
+
+/* Wrapped navigation labels determine their button height, rather than the icon size. */
+body.smc-shell #nav .elite-nav-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+body.smc-shell #nav button {
+  height: auto;
+  flex-shrink: 0;
+  align-items: center;
+}
+body.smc-shell #nav button > .elite-nav-label {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+body.smc-shell #nav button > span:first-child {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+/* Shared SMC interaction palette: decorative accents never use result colors. */
+body.smc-shell #main .card:hover,
+body.smc-shell #main .scene-card:hover {
+  border-color: #79643f;
+}
+body.smc-shell .terminal-performance,
+body.smc-shell .ta-session-card {
+  border-top-color: var(--border);
+}
+body.smc-shell .ta-preparation-plan li,
+body.smc-shell .ins.g {
+  border-left-color: var(--gold);
+}
+body.smc-shell .insight-block.strong {
+  border-top-color: var(--gold);
+}
+body.smc-shell .insight-block.strong .eyebrow {
+  color: var(--gold);
+}
+body.smc-shell .ta-preparation-focus,
+body.smc-shell .ta-radar-assets .badge,
+body.smc-shell .risk-calculation-result {
+  border-color: #6f5d3e;
+  background: #d7b98208;
+}
+body.smc-shell .risk-calculation-result output {
+  color: var(--gold-bright);
+}
+body.smc-shell .risk-presets button[aria-pressed="true"] {
+  color: var(--gold-bright);
+  border-color: var(--gold-muted);
+  background: #30271a;
+}
+body.smc-shell input:focus,
+body.smc-shell select:focus,
+body.smc-shell textarea:focus {
+  border-color: var(--gold-muted);
+}
+body.smc-shell .premium-analysis-pending button[type="submit"] {
+  border-color: var(--gold-muted);
+  box-shadow: inset 0 0 0 1px #d7b98230;
+}
+body.smc-shell .premium-lit-card::before {
+  background: radial-gradient(
+    240px circle at var(--spot-x, 50%) var(--spot-y, 20%),
+    #d7b9820d,
+    transparent 80%
+  );
+}
+body.smc-shell #nav button:hover {
+  box-shadow: inset 0 0 0 1px #d7b98230;
+}
+body.smc-shell .primary-metrics .k[role="button"]:hover,
+body.smc-shell .primary-metrics .k[role="button"]:focus-visible {
+  background: #d7b9820a;
+}
+body.smc-shell .primary-metrics .k[role="button"]::after {
+  color: var(--gold);
+}
+body.smc-shell .cd.today,
+body.smc-shell .cd.premium-selected,
+body.smc-shell .share-live-day.premium-selected {
+  box-shadow: inset 0 2px #d7b98280;
+}
+body.smc-shell .elite-review-columns > section,
+body.smc-shell .ta-asset-option {
+  border-color: var(--border);
+  background: #0e1319;
+}
+body.smc-shell .ta-asset-groups button {
+  background: #15191f;
+}
+body.smc-shell .ta-asset-option:hover {
+  background: #211e18;
+  border-color: var(--gold-muted);
+}
+body.smc-shell .ta-asset-option.selected,
+body.smc-shell .ta-asset-option[aria-selected="true"],
+body.smc-shell .ta-asset-groups button[aria-pressed="true"] {
+  border-color: var(--gold-muted);
+  color: var(--gold-bright);
+  background: #30271a;
+}
+body.smc-shell :focus-visible {
+  outline-color: var(--gold);
+}
+body.smc-shell input[type="checkbox"],
+body.smc-shell input[type="radio"],
+body.smc-shell input[type="range"] {
+  accent-color: var(--gold);
+}
+body.smc-shell.elite-high-contrast .card,
+body.smc-shell.elite-high-contrast .filter-bar,
+body.smc-shell.elite-high-contrast .primary-metrics {
+  border-color: #877557 !important;
+  background: #07090c !important;
+}
+body.smc-shell .cd:hover,
+body.smc-shell .share-live-day:not(:disabled):hover {
+  border-color: var(--gold-muted);
+  box-shadow: inset 0 0 0 1px #d7b98225;
+}
+/* The ring contains only the total. Its caption lives below, outside the graphic. */
+body.smc-shell .elite-dash-distribution {
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+body.smc-shell .elite-dash-donut:not(.mini) {
+  display: grid;
+  grid-template-columns: 112px;
+  grid-template-rows: 112px auto;
+  width: 112px;
+  height: auto;
+  gap: 8px;
+  flex: 0 0 112px;
+}
+body.smc-shell .elite-dash-donut:not(.mini) > svg {
+  grid-area: 1 / 1;
+  display: block;
+  width: 112px;
+  height: 112px;
+}
+body.smc-shell .elite-dash-donut:not(.mini) > span {
+  position: static;
+  grid-area: 1 / 1;
+  padding: 0 22px;
+  min-width: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+body.smc-shell .elite-dash-donut:not(.mini) > span b {
+  line-height: 1.2;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+body.smc-shell .elite-dash-donut-label {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--secondary);
+  grid-area: 2 / 1;
+}
+body.smc-shell .elite-dash-distribution ul {
+  flex: 1 1 170px;
+  font-size: 12px;
+}
+body.smc-shell .elite-dash-distribution li {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  gap: 8px;
+  margin: 12px 0;
+}
+body.smc-shell .elite-dash-distribution li b {
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: right;
+}
+body.smc-shell .elite-dash-distribution li small {
+  color: var(--secondary);
+}
 </style><style>/* SMC Elite personal growth: quiet surfaces, native controls, no extra dashboard grid. */
 body.smc-shell .growth-toolbar,
 body.smc-shell .growth-session-controls {
@@ -17299,7 +17615,7 @@ function eliteDashDonut(parts, center, label, small = false) {
   const total = parts.reduce((n, p) => n + p.n, 0),
     c = 251.327;
   let offset = 0;
-  return `<div class="elite-dash-donut ${small ? "mini" : ""}"><svg viewBox="0 0 100 100" role="img" aria-label="${esc(parts.map((p) => p.label + ": " + p.n).join(", "))}"><circle cx="50" cy="50" r="40" fill="none" stroke="#1f3841" stroke-width="10"/>${parts
+  return `<div class="elite-dash-donut ${small ? "mini" : ""}"><svg viewBox="0 0 100 100" role="img" aria-label="${esc(parts.map((p) => p.label + ": " + p.n).join(", "))}"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--ring-track, #333a43)" stroke-width="10"/>${parts
     .map((p) => {
       const length = total ? (p.n / total) * c : 0,
         mark = `<circle cx="50" cy="50" r="40" fill="none" stroke="${p.color}" stroke-width="10" stroke-dasharray="${length} ${c - length}" stroke-dashoffset="${-offset}" transform="rotate(-90 50 50)"/>`;
@@ -17308,7 +17624,7 @@ function eliteDashDonut(parts, center, label, small = false) {
     })
     .join(
       "",
-    )}</svg>${small ? "" : `<span><b>${center}</b><small>${label}</small></span>`}</div>`;
+    )}</svg>${small ? "" : `<span><b style="font-size:${Math.min(24, Math.max(10, 104 / Math.max(1, String(center).length)))}px">${esc(center)}</b></span><small class="elite-dash-donut-label">${esc(label)}</small>`}</div>`;
 }
 function eliteDashDistribution(parts, center, label) {
   const total = parts.reduce((n, p) => n + p.n, 0);
@@ -18126,11 +18442,6 @@ document.addEventListener("visibilitychange", () => {
 function eliteReferenceHome() {
   return smcHomeView();
 }
-function smcPercent(value) {
-  return value === null
-    ? "—"
-    : (value > 0 ? "+" : "") + value.toFixed(2).replace(".", ",") + "%";
-}
 function smcAssetStrip() {
   const p = taProfile(),
     instruments = taDailyRequestState("market").data?.instruments || [];
@@ -18151,7 +18462,7 @@ function smcAssetStrip() {
 function smcHomeView() {
   const p = taProfile(),
     h = Number(taDailyParts().hour),
-    m = eliteMomentumModel(),
+    session = taDailySession(),
     insight = taDailyInsight(taDailyWeekStats()),
     valid = taBriefingHasResult(),
     ready = taConnection.authenticated && taConnection.services?.ai,
@@ -18159,14 +18470,21 @@ function smcHomeView() {
     name = String(p.name || "trader")
       .trim()
       .split(/\s+/)[0],
-    regime = m.week.n
-      ? m.week.net > 0
-        ? "Semana positiva"
-        : m.week.net < 0
-          ? "Semana em atenção"
-          : "Semana equilibrada"
-      : "Seu ritmo nesta semana",
-    focus = valid ? taBriefing.result.action : insight.text;
+    sessionTitle = session.configured
+      ? session.label || p.session.label
+      : "Prepare sua sessão",
+    sessionText = session.configured
+      ? `${p.session.start}–${p.session.end} · ${p.session.timezone}. ${taDailySessionCountdown(session)}.`
+      : "Defina seu horário e seu fuso para preparar o dia com clareza.",
+    tip =
+      insight.label === "Preparação inicial"
+        ? "Antes de executar, confira o contexto, os critérios de entrada e o risco previsto no seu plano."
+        : insight.action,
+    focus = valid
+      ? taBriefing.result.action
+      : insight.label === "Registro observado"
+        ? insight.action
+        : insight.text;
   return `<section class="smc-home reference-home"><div class="smc-hero-grid"><section class="smc-desk reference-left"><div class="smc-office-scene" aria-hidden="true"><div class="scene-character-motion"></div></div><div class="scene-greeting"><h1><small>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},</small><span>${esc(name)}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p><blockquote><span aria-hidden="true">“</span><p>Disciplina hoje,<br>clareza na próxima decisão.</p></blockquote></div>${smcAssetStrip()}<div class="reference-workspace-actions"><div class="scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
     ["analyst", "SMC Elite Analyst"],
     ["economic", "Eventos de hoje"],
@@ -18179,41 +18497,7 @@ function smcHomeView() {
     )
     .join(
       "",
-    )}</div></div></section><div class="reference-right"><section class="scene-card reference-briefing scene-focus"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Briefing do Dia</h2><button class="scene-link" onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando…" : ready ? "Atualizar foco com IA" : "Conectar IA"}</button></div><div class="reference-briefing-body"><div class="reference-brief-row smc-week-row"><span class="reference-brief-icon">${terminalIcon("ana")}</span><div><h3>${regime}</h3><p>${esc(m.tip)}</p></div><div class="elite-momentum"><span>Semana <b class="${m.week.percent === null ? "" : cl(m.week.percent)}">${smcPercent(m.week.percent)}${m.week.estimated ? " *" : ""}</b></span><span>Mês <b class="${m.month.percent === null ? "" : cl(m.month.percent)}">${smcPercent(m.month.percent)}${m.month.estimated ? " *" : ""}</b></span></div></div><div class="reference-brief-row"><span class="reference-brief-icon">${terminalIcon("ins")}</span><div><h3>Foco de hoje</h3><p>${esc(focus)}</p></div><button class="smc-arrow-action" onclick="taGo('ins')" aria-label="Revisar execução">${terminalIcon("arrow")}</button></div><div class="reference-brief-row"><span class="reference-brief-icon focus">${terminalIcon("idea")}</span><div><h3>Dica do dia</h3><p>${esc(insight.action || "Antes da próxima entrada, confira seus critérios e registre a decisão no diário.")}</p></div><button class="smc-arrow-action" onclick="taGo('plan')" aria-label="Abrir meu plano">${terminalIcon("arrow")}</button></div></div>${m.month.percent === null ? '<button class="scene-link smc-percent-setup" onclick="taGo(\'dash\');diaryConfigureBalance()">Ativar percentuais ↗</button>' : ""}<details class="reference-method"><summary>Base do briefing</summary>${eliteMomentumView(m)}${valid ? taBriefing.result.facts.map((f) => `<p>${esc(f.text)}</p>`).join("") : `<p>${esc(insight.label)}. Observações apoiadas nos registros, sem inferir erros a partir de perdas.</p>`}${taBriefing.error ? `<p role="status">${esc(taBriefing.error)}</p>` : ""}</details></section><section class="scene-card reference-events"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Próximos eventos</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ${terminalIcon("arrow")}</button></div>${events.length ? events.map((e) => `<button class="reference-event" data-time="${esc(e.time)}" data-currency="${esc(e.currency)}" onclick="taOpenUpcomingEvent(this.dataset.time,this.dataset.currency)"><time>${esc(taDailyFormatTime(e.time))}</time><span class="reference-currency">${eliteNewsFlag(e.currency)} ${esc(e.currency)}</span><span>${SessionEngine.zonedParts(new Date(e.time), p.timezone).date !== taDailyDate() ? esc(taDailyFormatTime(e.time, { day: "2-digit", month: "2-digit" })) + " · " : ""}${esc(e.name)}</span><b class="impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${{ high: "Alto", medium: "Médio", low: "Baixo" }[e.impact] || "—"}</b></button>`).join("") : "<p>Nenhum próximo evento publicado na cobertura disponível.</p><small>Consulte Notícias para verificar a fonte e o período coberto.</small>"}</section></div></div>${smcHomePerformance(m)}</section>`;
-}
-function smcHomePerformance(momentum) {
-  const rows = insUniverse().filter(
-      (t) => day(t) >= momentum.month.from && day(t) <= taDailyDate(),
-    ),
-    s = st(rows),
-    moneyFormat = (n) => (hideDashboardMoney ? "••••" : money(n)),
-    signedFormat = (n) =>
-      (!hideDashboardMoney && n > 0 ? "+" : "") + moneyFormat(n),
-    pnl = chartData(rows, "pnl"),
-    dd = chartData(rows, "dd"),
-    wins = [
-      { label: "Ganhos", n: s.w, color: "var(--chart-positive)" },
-      { label: "Perdas", n: s.l, color: "var(--r)" },
-      { label: "Empates", n: s.n - s.w - s.l, color: "var(--mu)" },
-    ],
-    card = (label, value, color, note, visual = "") =>
-      `<div class="k"><small>${label}</small><b class="${color}">${value}</b><small>${note}</small>${visual}</div>`;
-  return `<section class="smc-home-performance" aria-label="Desempenho do mês"><div class="smc-performance-heading"><span>Seu desempenho no mês</span><button class="scene-link" onclick="taGo('dash')">Abrir painel completo ${terminalIcon("arrow")}</button></div><div class="smc-home-metrics elite-dash-metrics">${card("P&L líquido", s.n ? signedFormat(s.net) : "—", cl(s.net), "Resultado no mês", eliteDashSpark(s.cv, "var(--gold)"))}${card("Taxa de acerto", s.n ? s.wr.toFixed(1) + "%" : "—", "", "Ganhos / fechamentos", eliteDashDonut(wins, "", "", true))}${card("Profit factor", s.n && (s.w || s.l) ? (Number.isFinite(s.pf) ? s.pf.toFixed(2) : "∞") : "—", "", "Lucro bruto / perda bruta")}${card("Expectancy", s.n ? signedFormat(s.ex) : "—", cl(s.ex), "Por trade")}${card(
-    "Drawdown máximo",
-    s.n ? moneyFormat(-s.dd) : "—",
-    s.dd ? "r" : "",
-    "Queda desde o pico",
-    eliteDashSpark(
-      dd.map((p) => p.value),
-      "var(--r)",
-    ),
-  )}${card("Total de operações", s.n, "", "Fechadas no mês")}</div><details class="smc-performance-charts" ${innerWidth > 760 ? "open" : ""}><summary>Ver gráficos do mês</summary><div class="smc-home-chart-grid"><section class="card terminal-performance"><div class="section-head"><h2>Evolução do resultado</h2><span class="badge">${esc(S.currency || "Moeda da conta")}</span></div>${terminalChart(pnl, { id: "smc-home-performance", height: 172, label: "P&L acumulado no mês", format: moneyFormat, netFormat: moneyFormat, color: "var(--gold)" })}</section><section class="card terminal-context"><div class="section-head"><h2>Drawdown</h2><span class="badge">No mês</span></div>${terminalChart(dd, { id: "smc-home-drawdown", height: 172, label: "Drawdown no mês", format: moneyFormat, netFormat: moneyFormat, color: "var(--r)" })}</section><section class="card"><div class="section-head"><h2>Resultado por ativo</h2><span class="badge">No mês</span></div>${eliteDashBars(
-    grp(rows, (t) => t.symbol || "Não informado"),
-    false,
-    false,
-    moneyFormat,
-    signedFormat,
-  )}</section></div></details></section>`;
+    )}</div></div></section><div class="reference-right"><section class="scene-card reference-briefing scene-focus"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Briefing do Dia</h2><button class="scene-link" onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando…" : ready ? "Atualizar foco com IA" : "Conectar IA"}</button></div><div class="reference-briefing-body"><div class="reference-brief-row smc-session-row"><span class="reference-brief-icon">${terminalIcon("clock")}</span><div><h3>${esc(sessionTitle)}</h3><p>${esc(sessionText)}</p></div><button class="smc-arrow-action" onclick="taGo('settings')" aria-label="Ajustar minha sessão">${terminalIcon("arrow")}</button></div><div class="reference-brief-row"><span class="reference-brief-icon">${terminalIcon("ins")}</span><div><h3>Foco de hoje</h3><p>${esc(focus)}</p></div><button class="smc-arrow-action" onclick="taGo('ins')" aria-label="Revisar execução">${terminalIcon("arrow")}</button></div><div class="reference-brief-row"><span class="reference-brief-icon focus">${terminalIcon("idea")}</span><div><h3>Dica do dia</h3><p>${esc(tip || "Antes da próxima entrada, confira seus critérios e registre a decisão no diário.")}</p></div><button class="smc-arrow-action" onclick="taGo('plan')" aria-label="Abrir meu plano">${terminalIcon("arrow")}</button></div></div><details class="reference-method"><summary>Base do briefing</summary><p>${valid ? "Orientação da integração de IA, apoiada no plano e nos registros disponíveis." : esc(insight.label) + ". Prepare sua execução com os critérios do seu plano."}</p>${taBriefing.error ? `<p role="status">${esc(taBriefing.error)}</p>` : ""}</details></section><section class="scene-card reference-events"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Próximos eventos</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ${terminalIcon("arrow")}</button></div>${events.length ? events.map((e) => `<button class="reference-event" data-time="${esc(e.time)}" data-currency="${esc(e.currency)}" onclick="taOpenUpcomingEvent(this.dataset.time,this.dataset.currency)"><time>${esc(taDailyFormatTime(e.time))}</time><span class="reference-currency">${eliteNewsFlag(e.currency)} ${esc(e.currency)}</span><span>${SessionEngine.zonedParts(new Date(e.time), p.timezone).date !== taDailyDate() ? esc(taDailyFormatTime(e.time, { day: "2-digit", month: "2-digit" })) + " · " : ""}${esc(e.name)}</span><b class="impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${{ high: "Alto", medium: "Médio", low: "Baixo" }[e.impact] || "—"}</b></button>`).join("") : "<p>Nenhum próximo evento publicado na cobertura disponível.</p><small>Consulte Notícias para verificar a fonte e o período coberto.</small>"}</section></div></div></section>`;
 }
 // Rendering stays local; no extra model calls or changes to stored trading data.
 matchMedia("(max-width:760px)").addEventListener("change", () => {

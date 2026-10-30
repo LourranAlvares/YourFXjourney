@@ -100,8 +100,8 @@ const { chromium } = require("playwright"),
       "Lourran!",
     );
     assert.equal(await p.locator(".reference-event").count(), 3);
-    assert.equal(await p.locator(".smc-home-metrics .k").count(), 6);
-    assert.equal(await p.locator(".smc-home-chart-grid .card").count(), 3);
+    assert.equal(await p.locator(".smc-home-metrics .k").count(), 0);
+    assert.equal(await p.locator(".smc-home-chart-grid .card").count(), 0);
     assert.equal(await p.locator("#elite-question").count(), 0);
     assert(await p.evaluate(() => document.fonts.check('16px "SMC Inter"')));
     await p.screenshot({ path: "/tmp/smc-home-desktop.png", fullPage: true });
@@ -252,7 +252,7 @@ const { chromium } = require("playwright"),
     );
     assert.deepEqual(errors, []);
     console.log(
-      "PASS SMC brand, real monthly preview, upcoming news/flags, local typography, desktop 1024–3840, all key views, long-number chart separation and registration identity",
+      "PASS SMC brand, preparation-only home, upcoming news/flags, local typography, desktop 1024–3840, all key views, long-number chart separation and registration identity",
     );
   } finally {
     await b.close();
