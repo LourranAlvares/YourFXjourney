@@ -26,6 +26,69 @@ const { chromium } = require("playwright"),
     assert(
       await p.getByRole("heading", { name: "Bem-vindo ao EliteX" }).isVisible(),
     );
+    await p.getByRole("button", { name: "Criar conta", exact: true }).click();
+    await p.getByLabel("Primeiro nome", { exact: true }).fill("Lohan");
+    await p.getByLabel("Sobrenome", { exact: true }).fill("Alves");
+    await p.getByLabel("E-mail", { exact: true }).fill("lohan@example.test");
+    await p
+      .getByLabel("Senha", { exact: true })
+      .fill("Example-test-password-123");
+    await p
+      .getByLabel("Confirmar senha", { exact: true })
+      .fill("does-not-match");
+    await p.getByRole("button", { name: "Mostrar senha", exact: true }).click();
+    assert.equal(
+      await p.locator("#account-password").getAttribute("type"),
+      "text",
+    );
+    await p.getByRole("button", { name: "Ocultar senha", exact: true }).click();
+    assert.equal(
+      await p.locator("#account-password").getAttribute("type"),
+      "password",
+    );
+    await p
+      .getByRole("button", {
+        name: "Mostrar confirmação de senha",
+        exact: true,
+      })
+      .click();
+    assert.equal(
+      await p.locator("#account-password-confirm").getAttribute("type"),
+      "text",
+    );
+    for (const width of [320, 390, 760, 1536]) {
+      await p.setViewportSize({ width, height: 900 });
+      assert(
+        await p.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth + 1,
+        ),
+        "signup overflow " + width,
+      );
+    }
+    await p
+      .getByRole("button", { name: "Criar minha conta", exact: true })
+      .click();
+    assert.match(
+      await p.locator("#account-message").innerText(),
+      /não coincidem/,
+    );
+    assert.equal(f.users.has("lohan@example.test"), false);
+    await p
+      .getByLabel("Confirmar senha", { exact: true })
+      .fill("Example-test-password-123");
+    await p
+      .getByRole("button", { name: "Criar minha conta", exact: true })
+      .click();
+    await p.waitForFunction(() =>
+      document
+        .getElementById("account-message")
+        .textContent.includes("Confira seu e-mail"),
+    );
+    assert.deepEqual(f.users.get("lohan@example.test").user_metadata, {
+      name: "Lohan Alves",
+      first_name: "Lohan",
+      last_name: "Alves",
+    });
     await p.evaluate(() =>
       localStorage.setItem(
         "yfx1",
@@ -185,7 +248,7 @@ const { chromium } = require("playwright"),
     );
     await po.evaluate(() => taGo("admin"));
     await po.waitForSelector("[data-account-search]");
-    assert.equal(await po.locator(".cloud-admin-table tbody tr").count(), 4);
+    assert.equal(await po.locator(".cloud-admin-table tbody tr").count(), 5);
     const row = po.locator("tr").filter({ hasText: f.pending.email });
     await row
       .getByRole("button", { name: "Liberar acesso", exact: true })

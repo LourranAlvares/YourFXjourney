@@ -65,7 +65,7 @@ Salve em **Save, rebuild, and deploy** e aguarde **Live**. Não publique com ape
 ## 5. Criar a conta administradora e trazer o histórico
 
 1. Abra o site e escolha **Criar conta**.
-2. Cadastre o mesmo e-mail de `ELITEX_ADMIN_EMAIL`, seu nome e uma senha de pelo menos 12 caracteres.
+2. Cadastre o mesmo e-mail de `ELITEX_ADMIN_EMAIL`, primeiro nome, sobrenome e uma senha de pelo menos 12 caracteres, com confirmação.
 3. Confirme o e-mail recebido e entre.
 4. A conta verificada recebe automaticamente o papel de administradora.
 5. Se o navegador contém o histórico antigo `yfx1`, aparece **Revisar e importar meu histórico** no início e em Configurações. Confira se os dados são seus e confirme a importação. O histórico antigo não é apagado automaticamente.
@@ -101,3 +101,5 @@ Salve em **Save, rebuild, and deploy** e aguarde **Live**. Não publique com ape
 - `npm run test:cloud:ui`: cadastro/acesso, isolamento, salvamento, outro dispositivo, queda de rede, conflito, administração e telas pequenas (requer Playwright e Chromium no ambiente de testes).
 
 Os testes de API/UI simulam o limite externo Supabase Auth/REST; o SQL é testado no motor PostgreSQL. O projeto Supabase, o SMTP e o deploy real ainda precisam ser configurados e verificados com as credenciais do proprietário.
+
+O cadastro mantém primeiro nome e sobrenome separados nos metadados de autenticação e o nome completo no perfil. A saudação usa somente o primeiro nome, inclusive para contas antigas. Campos de senha/confirmacão têm botões SVG de mostrar/ocultar; a confirmação é validada no formulário e no servidor, sem ser repassada ao Supabase. Não exige alteração nas tabelas existentes.

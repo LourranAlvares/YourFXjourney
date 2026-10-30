@@ -376,3 +376,38 @@ test("cloud configuration names missing or invalid variables without revealing t
   );
   assert.equal(createCloud({ env: {} }), null);
 });
+
+test("split names persist as full name plus metadata; confirmation mismatches are rejected before signup", async (t) => {
+  const f = await start(t),
+    payload = {
+      firstName: "Lohan",
+      lastName: "Alves",
+      email: "lohan@example.test",
+      password: "Example-test-password-123",
+      passwordConfirmation: "different-password",
+    };
+  const rejected = await f.call("/api/auth/signup", {
+    method: "POST",
+    data: payload,
+  });
+  assert.equal(rejected.r.status, 400);
+  assert.equal(f.users.has(payload.email), false);
+  const created = await f.call("/api/auth/signup", {
+    method: "POST",
+    data: { ...payload, passwordConfirmation: payload.password },
+  });
+  assert.equal(created.r.status, 200);
+  const metadata = f.users.get(payload.email).user_metadata;
+  assert.deepEqual(metadata, {
+    name: "Lohan Alves",
+    first_name: "Lohan",
+    last_name: "Alves",
+  });
+  const confirmed = await f.call("/api/auth/verify", {
+    method: "POST",
+    data: { token_hash: payload.email, type: "email" },
+  });
+  assert.equal(confirmed.data.user.name, "Lohan Alves");
+  assert.equal(confirmed.data.user.firstName, "Lohan");
+  assert.equal(confirmed.data.user.lastName, "Alves");
+});

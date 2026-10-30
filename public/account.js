@@ -32,6 +32,28 @@ async function accountApi(path, data) {
   if (d.csrf) accountCsrf = d.csrf;
   return d;
 }
+function accountPasswordIcon(visible = false) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>${visible ? '<path d="m3 3 18 18"/>' : ""}</svg>`;
+}
+function accountPasswordVisibility(button, visible) {
+  const input = aq(button.dataset.input);
+  input.type = visible ? "text" : "password";
+  button.setAttribute("aria-pressed", String(visible));
+  button.setAttribute(
+    "aria-label",
+    (visible ? "Ocultar " : "Mostrar ") +
+      (input.id === "account-password" ? "senha" : "confirmação de senha"),
+  );
+  button.innerHTML = accountPasswordIcon(visible);
+}
+document.querySelectorAll(".account-password-toggle").forEach((button) => {
+  accountPasswordVisibility(button, false);
+  button.onclick = () =>
+    accountPasswordVisibility(
+      button,
+      aq(button.dataset.input).type === "password",
+    );
+});
 function accountModeSet(mode) {
   accountMode = mode;
   document.querySelector("#account-content h2").textContent = {
@@ -42,7 +64,16 @@ function accountModeSet(mode) {
   }[mode];
   document.querySelector(".account-tabs").hidden = mode === "password";
   aq("account-recover").hidden = mode === "password";
-  aq("account-name-label").hidden = mode !== "signup";
+  aq("account-name-fields").hidden = mode !== "signup";
+  aq("account-last-name").required = mode === "signup";
+  aq("account-confirm-label").hidden = !["signup", "password"].includes(mode);
+  aq("account-password-confirm").required = ["signup", "password"].includes(
+    mode,
+  );
+  aq("account-password-confirm").value = "";
+  document
+    .querySelectorAll(".account-password-toggle")
+    .forEach((button) => accountPasswordVisibility(button, false));
   aq("account-name").required = mode === "signup";
   aq("account-password-label").hidden = mode === "recover";
   aq("account-password").required = mode !== "recover";
@@ -79,7 +110,7 @@ function accountAccess(user) {
   aq("account-content").hidden = true;
   aq("account-access").hidden = false;
   aq("account-access").innerHTML =
-    `<h2>${user?.status === "blocked" ? "Acesso bloqueado" : "Cadastro recebido"}</h2><p>${safe(user?.name || user?.email || "")}, ${user?.status === "blocked" ? "fale com a administração para verificar seu acesso." : "sua conta aguarda aprovação da administração. Seus dados ficam separados dos demais usuários."}</p><button class="cloud-primary" id="account-check">Verificar acesso</button><button class="cloud-link" id="account-out">Sair da conta</button><p id="account-access-message" role="status"></p>`;
+    `<h2>${user?.status === "blocked" ? "Acesso bloqueado" : "Cadastro recebido"}</h2><p>${safe(user?.firstName || user?.name?.trim().split(/\s+/)[0] || user?.email || "")}, ${user?.status === "blocked" ? "fale com a administração para verificar seu acesso." : "sua conta aguarda aprovação da administração. Seus dados ficam separados dos demais usuários."}</p><button class="cloud-primary" id="account-check">Verificar acesso</button><button class="cloud-link" id="account-out">Sair da conta</button><p id="account-access-message" role="status"></p>`;
   aq("account-check").onclick = async () => {
     try {
       const d = await accountApi("/api/account");
@@ -103,23 +134,43 @@ aq("account-signup-tab").onclick = () => accountModeSet("signup");
 aq("account-recover").onclick = () => accountModeSet("recover");
 aq("account-form").onsubmit = async (e) => {
   e.preventDefault();
+  if (
+    ["signup", "password"].includes(accountMode) &&
+    aq("account-password").value !== aq("account-password-confirm").value
+  ) {
+    aq("account-message").textContent =
+      "As senhas não coincidem. Confira a confirmação de senha.";
+    aq("account-password-confirm").focus();
+    return;
+  }
   aq("account-submit").disabled = true;
   aq("account-message").textContent = "Aguarde…";
   try {
     const payload =
       accountMode === "password"
-        ? { password: aq("account-password").value }
+        ? {
+            password: aq("account-password").value,
+            passwordConfirmation: aq("account-password-confirm").value,
+          }
         : {
             email: aq("account-email").value.trim(),
             ...(accountMode === "recover"
               ? {}
               : { password: aq("account-password").value }),
             ...(accountMode === "signup"
-              ? { name: aq("account-name").value.trim() }
+              ? {
+                  firstName: aq("account-name").value.trim(),
+                  lastName: aq("account-last-name").value.trim(),
+                  passwordConfirmation: aq("account-password-confirm").value,
+                }
               : {}),
           };
     const d = await accountApi("/api/auth/" + accountMode, payload);
     aq("account-password").value = "";
+    aq("account-password-confirm").value = "";
+    document
+      .querySelectorAll(".account-password-toggle")
+      .forEach((button) => accountPasswordVisibility(button, false));
     if (accountMode === "login") accountAccess(d.user);
     else if (accountMode === "password") {
       aq("account-message").textContent =

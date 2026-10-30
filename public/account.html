@@ -1,1 +1,109 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>EliteX · Sua conta</title><link rel="stylesheet" href="/public/cloud.css"></head><body class="account-page"><main class="account-layout"><section class="account-intro"><a class="account-brand" href="/account">ELITE<span>X</span></a><p class="account-eyebrow">SEU PROCESSO. SEU ESPAÇO.</p><h1>Seu trading,<br>sempre com você.</h1><p>Diário, plano e desempenho no mesmo lugar. Entre na sua conta para continuar de onde parou, no computador ou no celular.</p><div class="account-features"><span>Histórico pessoal</span><span>Plano de trading</span><span>Dados na nuvem</span></div></section><section class="account-card"><div id="account-content"><h2>Bem-vindo ao EliteX</h2><p>Entre para acessar seu espaço.</p><div class="account-tabs"><button id="account-login-tab" type="button" aria-pressed="true">Entrar</button><button id="account-signup-tab" type="button" aria-pressed="false">Criar conta</button></div><form id="account-form"><label id="account-name-label" hidden>Seu nome<input id="account-name" autocomplete="name" maxlength="100"></label><label>E-mail<input id="account-email" type="email" autocomplete="email" required maxlength="254"></label><label id="account-password-label">Senha<input id="account-password" type="password" autocomplete="current-password" required maxlength="256"></label><small id="account-password-hint" hidden>Use pelo menos 12 caracteres.</small><button id="account-submit" class="cloud-primary" type="submit">Entrar</button></form><button id="account-recover" class="cloud-link" type="button">Esqueci minha senha</button><p id="account-message" role="status" aria-live="polite"></p></div><div id="account-access" hidden></div></section></main><script src="/public/account.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <title>EliteX · Sua conta</title>
+    <link rel="stylesheet" href="/public/cloud.css" />
+  </head>
+  <body class="account-page">
+    <main class="account-layout">
+      <section class="account-intro">
+        <a class="account-brand" href="/account">ELITE<span>X</span></a>
+        <p class="account-eyebrow">SEU PROCESSO. SEU ESPAÇO.</p>
+        <h1>Seu trading,<br />sempre com você.</h1>
+        <p>
+          Diário, plano e desempenho no mesmo lugar. Entre na sua conta para
+          continuar de onde parou, no computador ou no celular.
+        </p>
+        <div class="account-features">
+          <span>Histórico pessoal</span><span>Plano de trading</span
+          ><span>Dados na nuvem</span>
+        </div>
+      </section>
+      <section class="account-card">
+        <div id="account-content">
+          <h2>Bem-vindo ao EliteX</h2>
+          <p>Entre para acessar seu espaço.</p>
+          <div class="account-tabs">
+            <button id="account-login-tab" type="button" aria-pressed="true">
+              Entrar</button
+            ><button id="account-signup-tab" type="button" aria-pressed="false">
+              Criar conta
+            </button>
+          </div>
+          <form id="account-form">
+            <div class="account-name-fields" id="account-name-fields" hidden>
+              <label id="account-name-label"
+                >Primeiro nome<input
+                  id="account-name"
+                  autocomplete="given-name"
+                  maxlength="50" /></label
+              ><label
+                >Sobrenome<input
+                  id="account-last-name"
+                  autocomplete="family-name"
+                  maxlength="50"
+              /></label>
+            </div>
+            <label
+              >E-mail<input
+                id="account-email"
+                type="email"
+                autocomplete="email"
+                required
+                maxlength="254"
+            /></label>
+            <div id="account-password-label">
+              <label for="account-password">Senha</label>
+              <div class="account-password-field">
+                <input
+                  id="account-password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  maxlength="256"
+                /><button
+                  type="button"
+                  class="account-password-toggle"
+                  data-input="account-password"
+                  aria-label="Mostrar senha"
+                  aria-pressed="false"
+                ></button>
+              </div>
+            </div>
+            <div id="account-confirm-label" hidden>
+              <label for="account-password-confirm">Confirmar senha</label>
+              <div class="account-password-field">
+                <input
+                  id="account-password-confirm"
+                  type="password"
+                  autocomplete="new-password"
+                  maxlength="256"
+                /><button
+                  type="button"
+                  class="account-password-toggle"
+                  data-input="account-password-confirm"
+                  aria-label="Mostrar confirmação de senha"
+                  aria-pressed="false"
+                ></button>
+              </div>
+            </div>
+            <small id="account-password-hint" hidden
+              >Use pelo menos 12 caracteres.</small
+            ><button id="account-submit" class="cloud-primary" type="submit">
+              Entrar
+            </button>
+          </form>
+          <button id="account-recover" class="cloud-link" type="button">
+            Esqueci minha senha
+          </button>
+          <p id="account-message" role="status" aria-live="polite"></p>
+        </div>
+        <div id="account-access" hidden></div>
+      </section>
+    </main>
+    <script src="/public/account.js"></script>
+  </body>
+</html>

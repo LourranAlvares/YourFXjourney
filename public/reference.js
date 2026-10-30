@@ -11,7 +11,8 @@ function eliteToggleContrast() {
   R();
 }
 function eliteUpdateProfile() {
-  if(typeof eliteCloudAfterRender === "function")queueMicrotask(eliteCloudAfterRender);
+  if (typeof eliteCloudAfterRender === "function")
+    queueMicrotask(eliteCloudAfterRender);
   if (typeof eliteMobileAfterRender === "function") eliteMobileAfterRender();
   document.body.classList.toggle("elite-high-contrast", eliteContrast);
   let button = document.querySelector(".elite-profile");
@@ -148,7 +149,11 @@ function eliteReferenceHome() {
           ? "Semana em atenção"
           : "Semana equilibrada"
       : "Seu ritmo nesta semana";
-  return `<section class="elite-scene reference-home" data-state="${eliteDesk.state}"><div class="scene-character-motion" aria-hidden="true"></div><div class="reference-left"><div class="scene-greeting"><h1>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},<br><span>${esc(p.name || "trader")}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><div class="reference-workspace-actions"><div class="elite-office scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
+  return `<section class="elite-scene reference-home" data-state="${eliteDesk.state}"><div class="scene-character-motion" aria-hidden="true"></div><div class="reference-left"><div class="scene-greeting"><h1>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},<br><span>${esc(
+    String(p.name || "trader")
+      .trim()
+      .split(/\s+/)[0],
+  )}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><div class="reference-workspace-actions"><div class="elite-office scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
     ["analyst", "EliteX Analyst"],
     ["economic", "Eventos de hoje"],
     ["plan", "Revisar meu plano"],

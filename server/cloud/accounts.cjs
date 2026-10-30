@@ -174,6 +174,17 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       id: user.id,
       email: user.email,
       name: p.name || "",
+      firstName:
+        String(user.user_metadata?.first_name || p.name || "")
+          .trim()
+          .split(/\s+/)[0] || "",
+      lastName:
+        user.user_metadata?.last_name ||
+        String(p.name || "")
+          .trim()
+          .split(/\s+/)
+          .slice(1)
+          .join(" "),
       role:
         p.role === "admin" && user.email.toLowerCase() === owner
           ? "admin"
@@ -316,14 +327,47 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   async function auth(action, data, res, current) {
     if (action === "signup") {
+      const splitName =
+        data.firstName !== undefined || data.lastName !== undefined;
+      const firstName =
+          typeof data.firstName === "string"
+            ? data.firstName.trim().replace(/\s+/g, " ")
+            : "",
+        lastName =
+          typeof data.lastName === "string"
+            ? data.lastName.trim().replace(/\s+/g, " ")
+            : "";
+      const name = splitName ? firstName + " " + lastName : data.name;
+      if (
+        splitName &&
+        (!firstName ||
+          !lastName ||
+          firstName.length > 50 ||
+          lastName.length > 50)
+      )
+        fail(
+          400,
+          "invalid_registration",
+          "Informe seu primeiro nome e sobrenome.",
+        );
+      if (
+        splitName &&
+        (typeof data.passwordConfirmation !== "string" ||
+          data.passwordConfirmation !== data.password)
+      )
+        fail(
+          400,
+          "password_mismatch",
+          "As senhas não coincidem. Confira a confirmação de senha.",
+        );
       if (
         !validEmail(data.email) ||
         typeof data.password !== "string" ||
         data.password.length < 12 ||
         data.password.length > 256 ||
-        typeof data.name !== "string" ||
-        !data.name.trim() ||
-        data.name.length > 100
+        typeof name !== "string" ||
+        !name.trim() ||
+        name.length > 101
       )
         fail(
           400,
@@ -338,7 +382,12 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
           data: {
             email: data.email.trim().toLowerCase(),
             password: data.password,
-            data: { name: data.name.trim() },
+            data: {
+              name: name.trim(),
+              ...(splitName
+                ? { first_name: firstName, last_name: lastName }
+                : {}),
+            },
           },
         },
       );
@@ -403,6 +452,11 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       return { user: s.user, csrf: s.csrf };
     }
     if (action === "password") {
+      if (
+        data.passwordConfirmation !== undefined &&
+        data.passwordConfirmation !== data.password
+      )
+        fail(400, "password_mismatch", "As senhas não coincidem.");
       if (!current)
         fail(
           401,

@@ -74,7 +74,11 @@ function fixture() {
       return u ? response(tokens(u)) : response({ error: "invalid" }, 400);
     }
     if (p === "/auth/v1/signup") {
-      if (!users.has(data.email)) add(data.email, "pending", false);
+      if (!users.has(data.email)) {
+        const added = add(data.email, "pending", false);
+        added.user_metadata = data.data || {};
+        profiles.get(added.id).name = data.data?.name || "";
+      }
       return response({ user: {} });
     }
     if (p === "/auth/v1/recover") return response({});

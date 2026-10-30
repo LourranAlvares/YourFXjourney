@@ -61,7 +61,7 @@ const { chromium } = require("playwright"),
     await p.evaluate(() => {
       S.assistantProfile = {
         ...taProfile(),
-        name: "Lourran",
+        name: "Lourran Alvares",
         timezone: "Europe/London",
         instruments: ["GBPUSD", "EURUSD", "XAUUSD"],
       };
@@ -82,6 +82,10 @@ const { chromium } = require("playwright"),
     await p.waitForSelector(".reference-asset-grid article");
     await p.waitForFunction(() => document.querySelector(".reference-event"));
     assert.equal(await p.locator("#elite-question").count(), 0);
+    assert.equal(
+      await p.locator(".scene-greeting h1 span").innerText(),
+      "Lourran!",
+    );
     assert.match(
       await p.locator(".reference-briefing").innerText(),
       /Semana positiva/,

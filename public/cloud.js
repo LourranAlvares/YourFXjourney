@@ -221,7 +221,10 @@ async function eliteCloudBoot() {
       if (cached.revision !== remote.revision) eliteCloud.conflict = true;
     } else S = { ...eliteCloudDefault(), ...remote.data };
     if (!S.assistantProfile?.name && user.name)
-      S.assistantProfile = { ...taProfile(), name: user.name };
+      S.assistantProfile = {
+        ...taProfile(),
+        name: user.firstName || user.name.trim().split(/\s+/)[0],
+      };
     if (user.role === "admin" && !tabs.some(([id]) => id === "admin"))
       tabs.push(["admin", "Administração"]);
     else if (user.role !== "admin") {
