@@ -13,17 +13,27 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       .trim()
       .toLowerCase(),
     origin = env.TRADE_ALLOWED_ORIGIN;
-  if (
-    !/^https:\/\/[a-zA-Z0-9.-]+$/.test(url) ||
-    !anon ||
-    !service ||
-    !secret ||
-    secret.length < 32 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(owner) ||
-    !origin
-  )
+  // Report names only: setup logs must never expose supplied secrets or values.
+  const issues = [];
+  if (!/^https:\/\/[a-zA-Z0-9.-]+$/.test(url))
+    issues.push("SUPABASE_URL (ausente ou URL HTTPS inválida)");
+  if (typeof anon !== "string" || !anon.trim())
+    issues.push("SUPABASE_ANON_KEY (ausente)");
+  if (typeof service !== "string" || !service.trim())
+    issues.push("SUPABASE_SERVICE_ROLE_KEY (ausente)");
+  if (typeof secret !== "string" || secret.length < 32)
+    issues.push(
+      "ELITEX_SESSION_SECRET (ausente ou com menos de 32 caracteres)",
+    );
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(owner))
+    issues.push("ELITEX_ADMIN_EMAIL (ausente ou e-mail inválido)");
+  if (typeof origin !== "string" || !origin.trim())
+    issues.push("TRADE_ALLOWED_ORIGIN (ausente)");
+  if (issues.length)
     throw Error(
-      "Configure Supabase, ELITEX_ADMIN_EMAIL, ELITEX_SESSION_SECRET (32+ caracteres) e TRADE_ALLOWED_ORIGIN antes de ativar a nuvem.",
+      "Configuração da nuvem incompleta ou inválida. Corrija no Render → Environment: " +
+        issues.join("; ") +
+        ". Nenhum valor secreto é exibido neste log.",
     );
   const key = crypto.createHash("sha256").update(secret).digest(),
     refreshing = new Map();

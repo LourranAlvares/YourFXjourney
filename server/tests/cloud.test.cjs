@@ -338,3 +338,41 @@ test("landing routes, encrypted cookie rotation/restart, recovery and logout rev
   assert(logout.r.headers.getSetCookie().every((c) => c.includes("Max-Age=0")));
   assert.equal((await f.call("/api/status", a)).data.authenticated, false);
 });
+
+test("cloud configuration names missing or invalid variables without revealing their values", () => {
+  const { createCloud } = require("../cloud/accounts.cjs"),
+    f = fixture();
+  const env = {
+    ...f.env("https://cloud.example"),
+    SUPABASE_URL: "invalid-private-url-marker",
+    SUPABASE_SERVICE_ROLE_KEY: "",
+    ELITEX_SESSION_SECRET: "short-secret-marker",
+    ELITEX_ADMIN_EMAIL: "invalid-private-email-marker",
+  };
+  assert.throws(
+    () => createCloud({ env }),
+    (e) => {
+      for (const name of [
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "ELITEX_SESSION_SECRET",
+        "ELITEX_ADMIN_EMAIL",
+      ])
+        assert(e.message.includes(name));
+      for (const value of [
+        "invalid-private-url-marker",
+        "short-secret-marker",
+        "invalid-private-email-marker",
+        "public-test-key",
+      ])
+        assert(!e.message.includes(value));
+      assert(!e.message.includes("SUPABASE_ANON_KEY"));
+      return true;
+    },
+  );
+  assert.throws(
+    () => createCloud({ env: { ELITEX_CLOUD_ENABLED: "true" } }),
+    /SUPABASE_ANON_KEY/,
+  );
+  assert.equal(createCloud({ env: {} }), null);
+});
