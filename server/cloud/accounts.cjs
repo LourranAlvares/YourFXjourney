@@ -137,6 +137,18 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       payload = null;
     }
     if (!response.ok) {
+      if (
+        ["PGRST205", "PGRST202", "42P01", "42883"].includes(payload?.code) &&
+        /elitex_(account_access|coaching_shares|admin_audit|admin_manage|set_coaching_share|refresh_coaching_summary)/.test(
+          endpoint,
+        )
+      )
+        fail(
+          503,
+          "cloud_management_missing",
+          "Ative a gestão de contas executando server/cloud/management.sql no Supabase. As contas e históricos existentes são preservados.",
+        );
+
       if (response.status === 409 || payload?.code === "PT409")
         fail(
           409,
@@ -227,7 +239,7 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       p = { ...p, role: "admin", status: "active" };
     }
     return {
-      ...publicProfile(p, user),
+      ...(await management.ownAccess(publicProfile(p, user))),
       sessionVersion: Number(p.session_version || 0),
     };
   }
@@ -313,7 +325,9 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
         "account_" + current.user.status,
         current.user.status === "blocked"
           ? "Seu acesso foi bloqueado. Fale com a administração."
-          : "Seu cadastro aguarda aprovação da administração.",
+          : current.user.status === "expired"
+            ? "Seu prazo de acesso terminou. Fale com a administração para renovar."
+            : "Seu cadastro aguarda aprovação da administração.",
       );
   }
   function admin(current) {
@@ -546,7 +560,7 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
         "invalid_workspace",
         "O formato dos dados não é válido. Nenhuma alteração foi salva na nuvem.",
       );
-    return request("/rest/v1/rpc/elitex_save_workspace", {
+    const saved = await request("/rest/v1/rpc/elitex_save_workspace", {
       method: "POST",
       token: current.token,
       data: {
@@ -555,6 +569,11 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
         mutation_id: data.mutationId,
       },
     });
+    // Reporting is optional. A reporting outage must never discard a saved diary.
+    await management
+      .sync(current, data.data, Number(saved.revision))
+      .catch(() => {});
+    return saved;
   }
   async function listAccounts(current) {
     admin(current);
@@ -589,6 +608,8 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
       rows[0].email.toLowerCase() === owner
     )
       fail(400, "owner_protected", "Não é possível alterar este acesso.");
+    const managed = await management.legacyAccess(current, data);
+    if (managed) return managed;
     await request(
       "/rest/v1/elitex_profiles?id=eq." + encodeURIComponent(data.id),
       {
@@ -611,7 +632,15 @@ function createCloud({ env, fetchFn = fetch, secure = false }) {
     } else query += "&select=revision,created_at&order=revision.desc&limit=3";
     return request(query, { token: current.token });
   }
+  const management = require("./management.cjs").createManagement({
+    request,
+    active,
+    admin,
+    fail,
+    owner,
+  });
   return {
+    management,
     enabled,
     session,
     auth,

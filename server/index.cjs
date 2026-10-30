@@ -341,6 +341,33 @@ function createApp(options = {}) {
             json(res, 200, { authenticated: false });
             return;
           }
+          if (
+            url.pathname === "/api/account/coaching" &&
+            ["GET", "PUT"].includes(req.method)
+          ) {
+            rate(
+              requests,
+              current.user.id + ":cloud:" + url.pathname,
+              120,
+              60 * 60e3,
+            );
+            let enabled;
+            if (req.method === "PUT") {
+              const input = await body(req, 1024);
+              if (
+                Object.keys(input).some((k) => k !== "enabled") ||
+                typeof input.enabled !== "boolean"
+              )
+                throw new APIError(
+                  400,
+                  "invalid_consent",
+                  "Escolha uma opção válida.",
+                );
+              enabled = input.enabled;
+            }
+            json(res, 200, await cloud.management.consent(current, enabled));
+            return;
+          }
           cloud.active(current);
           rate(
             requests,
@@ -375,6 +402,34 @@ function createApp(options = {}) {
             });
             return;
           }
+          if (url.pathname === "/api/admin/management") {
+            if (req.method === "GET") {
+              json(
+                res,
+                200,
+                await cloud.management.list(current, url.searchParams),
+              );
+              return;
+            }
+            if (req.method === "PATCH") {
+              json(
+                res,
+                200,
+                await cloud.management.update(current, await body(req, 16384)),
+              );
+              return;
+            }
+          }
+          if (url.pathname === "/api/admin/audit" && req.method === "GET") {
+            json(res, 200, {
+              events: await cloud.management.audit(
+                current,
+                url.searchParams.get("id"),
+              ),
+            });
+            return;
+          }
+
           if (url.pathname === "/api/admin/accounts") {
             if (req.method === "GET") {
               json(res, 200, { accounts: await cloud.listAccounts(current) });

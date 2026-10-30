@@ -361,3 +361,7 @@ A identidade atual usa preto grafite e dourado champanhe em todas as rotas, cada
 A Home reúne briefing, próximas notícias, ativos monitorados e desempenho do mês. Os valores dependem dos registros do usuário; sem dados não são inventados resultados ou condições de mercado. O painel mantém filtros, unidades monetárias/R e privacidade dos valores. No celular, comparações e estatísticas detalhadas ficam em seções expansíveis; a navegação usa gaveta com foco e fechamento por Escape.
 
 Esta atualização visual não exige alterar Render ou Supabase. As variáveis `ELITEX_*`, nomes de tabelas e identificadores internos existentes são preservados para manter contas, sessões e dados. `node tests/smc-design.cjs` verifica marca, tipografia, notícias, separação entre números e gráficos, telas de 320 a 3840 pixels, cadastro, navegação e versão standalone.
+
+## Administração de usuários
+
+A aba **Administração**, exclusiva da conta proprietária, oferece busca/paginação de contas, aprovação/bloqueio, trial, vencimentos, observações e encerramento de sessões, com auditoria. Para ativar no Supabase existente, execute [management.sql](server/cloud/management.sql); [guia de gestão](server/cloud/MANAGEMENT.md). Acompanhamento de desempenho exige autorização revogável do usuário e compartilha somente métricas agregadas, sem diário ou prints. As configurações atuais do Render permanecem válidas.

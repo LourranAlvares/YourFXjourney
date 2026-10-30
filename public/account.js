@@ -14,9 +14,9 @@ const aq = (id) => document.getElementById(id),
           "'": "&#39;",
         })[c],
     );
-async function accountApi(path, data) {
+async function accountApi(path, data, method = data ? "POST" : "GET") {
   const r = await fetch(path, {
-    method: data ? "POST" : "GET",
+    method,
     credentials: "same-origin",
     headers: {
       "content-type": "application/json",
@@ -110,7 +110,26 @@ function accountAccess(user) {
   aq("account-content").hidden = true;
   aq("account-access").hidden = false;
   aq("account-access").innerHTML =
-    `<h2>${user?.status === "blocked" ? "Acesso bloqueado" : "Cadastro recebido"}</h2><p>${safe(user?.firstName || user?.name?.trim().split(/\s+/)[0] || user?.email || "")}, ${user?.status === "blocked" ? "fale com a administração para verificar seu acesso." : "sua conta aguarda aprovação da administração. Seus dados ficam separados dos demais usuários."}</p><button class="cloud-primary" id="account-check">Verificar acesso</button><button class="cloud-link" id="account-out">Sair da conta</button><p id="account-access-message" role="status"></p>`;
+    `<h2>${user?.status === "blocked" ? "Acesso bloqueado" : user?.status === "expired" ? "Prazo de acesso encerrado" : "Cadastro recebido"}</h2><p>${safe(user?.firstName || user?.name?.trim().split(/\s+/)[0] || user?.email || "")}, ${user?.status === "expired" ? "seu prazo terminou. Fale com a administração para renovar. Seu histórico foi preservado." : user?.status === "blocked" ? "fale com a administração para verificar seu acesso." : "sua conta aguarda aprovação da administração. Seus dados ficam separados dos demais usuários."}</p><button class="cloud-primary" id="account-check">Verificar acesso</button><button class="cloud-link" id="account-out">Sair da conta</button><p id="account-access-message" role="status"></p>`;
+  accountApi("/api/account/coaching")
+    .then((c) => {
+      if (!c.enabled) return;
+      const button = document.createElement("button");
+      button.className = "cloud-link";
+      button.textContent = "Revogar resumo de desempenho";
+      button.onclick = async () => {
+        button.disabled = true;
+        try {
+          await accountApi("/api/account/coaching", { enabled: false }, "PUT");
+          button.textContent = "Compartilhamento revogado";
+        } catch (e) {
+          button.disabled = false;
+          aq("account-access-message").textContent = e.message;
+        }
+      };
+      aq("account-access").append(button);
+    })
+    .catch(() => {});
   aq("account-check").onclick = async () => {
     try {
       const d = await accountApi("/api/account");

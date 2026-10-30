@@ -127,7 +127,17 @@ async function taApi(path, options = {}) {
     }
     if (!response.ok) {
       if (response.status === 401) taConnection.authenticated = false;
-      if(typeof CLOUD_BOOT !== 'undefined' && CLOUD_BOOT && ['account_blocked','account_pending','authentication_required'].includes(data.error?.code))eliteCloudLock();
+      if (
+        typeof CLOUD_BOOT !== "undefined" &&
+        CLOUD_BOOT &&
+        [
+          "account_blocked",
+          "account_pending",
+          "account_expired",
+          "authentication_required",
+        ].includes(data.error?.code)
+      )
+        eliteCloudLock();
       const error = new Error(
         data.error?.message ||
           data.error ||
@@ -264,6 +274,8 @@ function taNav() {
     "risk",
     "settings",
   ];
+  if (typeof eliteCloud !== "undefined" && eliteCloud.user?.role === "admin")
+    primary.push("admin");
   const extra = tabs.filter(([id]) => !primary.includes(id));
   const button = (id) => {
     const label = tabs.find((t) => t[0] === id)?.[1] || id;

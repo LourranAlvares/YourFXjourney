@@ -24,7 +24,9 @@ const { chromium } = require("playwright"),
     await p.goto(origin);
     await p.screenshot({ path: "/tmp/elitex-cloud-login.png", fullPage: true });
     assert(
-      await p.getByRole("heading", { name: "Bem-vindo ao SMC Elite" }).isVisible(),
+      await p
+        .getByRole("heading", { name: "Bem-vindo ao SMC Elite" })
+        .isVisible(),
     );
     await p.getByRole("button", { name: "Criar conta", exact: true }).click();
     await p.getByLabel("Primeiro nome", { exact: true }).fill("Lohan");
@@ -248,8 +250,10 @@ const { chromium } = require("playwright"),
     );
     await po.evaluate(() => taGo("admin"));
     await po.waitForSelector("[data-account-search]");
-    assert.equal(await po.locator(".cloud-admin-table tbody tr").count(), 5);
-    const row = po.locator("tr").filter({ hasText: f.pending.email });
+    assert.equal(await po.locator(".smc-admin-user").count(), 5);
+    const row = po
+      .locator(".smc-admin-user")
+      .filter({ hasText: f.pending.email });
     await row
       .getByRole("button", { name: "Liberar acesso", exact: true })
       .click();
@@ -263,7 +267,7 @@ const { chromium } = require("playwright"),
     await pp.waitForSelector(".reference-home");
     // Existing member loses access on the next protected request.
     await po
-      .locator("tr")
+      .locator(".smc-admin-user")
       .filter({ hasText: f.b.email })
       .getByRole("button", { name: "Bloquear", exact: true })
       .click();

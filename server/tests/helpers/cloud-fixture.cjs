@@ -112,6 +112,12 @@ function fixture() {
         id ? [profiles.get(id)].filter(Boolean) : [...profiles.values()],
       );
     }
+    if (
+      /elitex_(account_access|coaching_shares|admin_audit|admin_manage|set_coaching_share|refresh_coaching_summary)/.test(
+        p,
+      )
+    )
+      return response({ code: "PGRST205" }, 404);
     if (!user || profiles.get(user.id)?.status !== "active")
       return response({}, 403);
     if (p === "/rest/v1/elitex_workspaces")
