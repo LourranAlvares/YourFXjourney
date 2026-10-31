@@ -113,12 +113,17 @@ const { chromium } = require("playwright"),
       await p.setViewportSize({ width, height: 1000 });
       await p.evaluate(() => {
         taGo("dash");
+        panelSwitch("performance");
         document
-          .querySelectorAll(".smc-dashboard-disclosure")
+          .querySelectorAll(".panel-block")
           .forEach((d) => (d.open = true));
       });
-      assert(
-        await p.locator(".elite-dash-donut:not(.mini)").evaluateAll((nodes) =>
+      await p.waitForFunction(() => {
+        const nodes = Array.from(
+          document.querySelectorAll(".elite-dash-donut:not(.mini)"),
+        );
+        return (
+          nodes.length === 2 &&
           nodes.every((node) => {
             const graphic = node.querySelector("svg").getBoundingClientRect(),
               caption = node
@@ -126,14 +131,14 @@ const { chromium } = require("playwright"),
                 .getBoundingClientRect(),
               value = node.querySelector("b").getBoundingClientRect();
             return (
+              graphic.width > 0 &&
               caption.top >= graphic.bottom + 5 &&
               Math.hypot(value.width / 2, value.height / 2) <
                 graphic.width * 0.35
             );
-          }),
-        ),
-        "donut number/caption collision " + width,
-      );
+          })
+        );
+      });
       assert(
         await p.locator(".elite-dash-distribution").evaluateAll((nodes) =>
           nodes.every((node) => {
@@ -169,10 +174,10 @@ const { chromium } = require("playwright"),
         "metric visual/value collision " + width,
       );
       if (width === 1920)
-        await p
-          .getByRole("heading", { name: "Tipo de operação", exact: true })
-          .locator("..")
-          .screenshot({ path: "/tmp/smc-operation-type-fixed.png" });
+        await p.screenshot({
+          path: "/tmp/smc-operation-type-fixed.png",
+          fullPage: true,
+        });
       assert(
         await p.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth + 1,

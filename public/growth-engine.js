@@ -419,7 +419,11 @@
       rKnown: known.length,
       rComplete: has && known.length === rows.length,
       rPrice: known.some((r) => r.source === "price"),
-      percent: adapter.percent(range.from, rows),
+      percent: adapter.percent(
+        range.from,
+        rows,
+        range.to < today ? range.to : today,
+      ),
       process,
       evolution,
       emotional: emotionalData,

@@ -74,7 +74,7 @@ const { chromium } = require("playwright"),
       );
       const blocks = [
         ".scene-greeting",
-        ".smc-asset-strip",
+        ".smc-assets-card",
         ".reference-workspace-actions",
       ];
       const rects = await p.evaluate(

@@ -219,6 +219,13 @@ function parseMT5(text) {
             ? mt5Number(get(row, "target"))
             : (riskFields.target ?? null),
         pnl,
+        pnlBasis: "net",
+        costBreakdown: Object.fromEntries(
+          ["commission", "swap", "fee"]
+            .filter((key) => col(key) >= 0)
+            .map((key) => [key, mt5Number(get(row, key))]),
+        ),
+        grossPnl: col("profit") >= 0 ? mt5Number(get(row, "profit")) : null,
         est: false,
         importSource: "mt5",
         mt5StopConfirmed: false,

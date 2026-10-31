@@ -4,20 +4,30 @@ function eliteReferenceHome() {
 }
 function smcAssetStrip() {
   const p = taProfile(),
-    instruments = taDailyRequestState("market").data?.instruments || [];
-  return `<section class="smc-asset-strip reference-assets"><div><span>Seus ativos</span><button class="scene-link" onclick="taAssetOpen()">Editar ${terminalIcon("open")}</button></div><div class="reference-asset-grid">${
+    instruments = taDailyRequestState("market").data?.instruments || [],
+    utcDay = new Date().toISOString().slice(0, 10);
+  return `<section class="scene-card reference-assets smc-assets-card"><div class="reference-card-heading">${terminalIcon("assets")}<h2>Seus ativos</h2><button class="scene-link" onclick="taAssetOpen()">Editar ${terminalIcon("open")}</button></div><div class="reference-asset-grid">${
     p.instruments
-      .slice(0, 3)
       .map((symbol) => {
         const record = instruments.find(
             (i) => i.symbol.replace(/\//g, "") === symbol.replace(/\//g, ""),
           ),
-          v = record?.volatility;
-        return `<article><span class="smc-asset-symbol">${eliteAssetIcon(symbol)}<b>${esc(symbol)}</b></span><span class="ta-volatility-${["low", "moderate", "high"].includes(v) ? v : "unknown"}">${{ low: "Baixa", moderate: "Moderada", high: "Alta" }[v] || "Sem dados"}</span>${record?.atrPercent != null ? `<small>ATR ${Number(record.atrPercent).toFixed(3)}%</small>` : ""}</article>`;
+          v = record?.volatility,
+          change =
+            typeof record?.dayChangePercent === "number" &&
+            Number.isFinite(record.dayChangePercent)
+              ? record.dayChangePercent
+              : null,
+          day = record?.dayChangeDate,
+          label =
+            day && day !== utcDay
+              ? "Último dia · " + day.split("-").reverse().slice(0, 2).join("/")
+              : "Dia UTC";
+        return `<article><span class="smc-asset-symbol">${eliteAssetIcon(symbol)}<b>${esc(symbol)}</b></span><div class="smc-asset-daily"><strong class="${change === null ? "" : cl(change)}" title="${esc(record?.dayChangeMethod || "Variação diária não disponível na consulta. O ATR não representa variação do dia.")}">${change === null ? "Indisponível" : (change > 0 ? "+" : "") + change.toFixed(2).replace(".", ",") + "%"}</strong><small>${esc(label)}${record?.dayChangeAsOf ? " · " + esc(record.dayChangeAsOf.slice(11, 16)) + " UTC" : ""}</small></div><span class="ta-volatility-${["low", "moderate", "high"].includes(v) ? v : "unknown"}">${{ low: "Baixa", moderate: "Moderada", high: "Alta" }[v] || "Sem volatilidade"}</span></article>`;
       })
       .join("") ||
     '<button class="b s" onclick="taAssetOpen()">Escolher ativos</button>'
-  }</div>${p.instruments.length > 3 ? `<button class="scene-link" onclick="taAssetOpen()">Ver ${p.instruments.length} ativos selecionados</button>` : ""}</section>`;
+  }</div><small class="muted-note">Variação entre fechamentos horários, com referência ao dia UTC. ${instruments.length ? "Confira a data e o horário da consulta." : "Conecte os dados de mercado nas Configurações."}</small></section>`;
 }
 function smcHomeView() {
   const p = taProfile(),
@@ -42,12 +52,8 @@ function smcHomeView() {
         : insight.label === "Registro observado"
           ? "Aguarde um setup claro. Não há obrigação de operar; respeite os limites e os horários do seu plano."
           : insight.action,
-    focus = valid
-      ? taBriefing.result.action
-      : insight.label === "Registro observado"
-        ? insight.action
-        : insight.text;
-  return `<section class="smc-home reference-home"><div class="smc-hero-grid"><section class="smc-desk reference-left"><div class="smc-office-scene" aria-hidden="true"><div class="scene-character-motion"></div></div><div class="scene-greeting"><h1><small>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},</small><span>${esc(name)}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p><blockquote><span aria-hidden="true">“</span><p>Disciplina hoje,<br>clareza na próxima decisão.</p></blockquote></div>${smcAssetStrip()}<div class="reference-workspace-actions"><div class="scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
+    focus = valid ? taBriefing.result.action : experienceModel().focus;
+  return `<section class="smc-home reference-home"><div class="smc-hero-grid"><section class="smc-desk reference-left"><div class="smc-office-scene" aria-hidden="true"><div class="scene-character-motion"></div></div><div class="scene-greeting"><h1><small>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},</small><span>${esc(name)}!</span></h1>${experienceSpeech()}</div><div class="reference-workspace-actions"><div class="scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
     ["analyst", "SMC Elite Analyst"],
     ["economic", "Eventos de hoje"],
     ["plan", "Revisar meu plano"],
@@ -59,7 +65,7 @@ function smcHomeView() {
     )
     .join(
       "",
-    )}</div></div></section><div class="reference-right"><section class="scene-card reference-briefing scene-focus"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Briefing do Dia</h2><button class="scene-link" onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando…" : ready ? "Atualizar foco com IA" : "Conectar IA"}</button></div><div class="reference-briefing-body"><div class="reference-brief-row smc-session-row"><span class="reference-brief-icon">${terminalIcon("clock")}</span><div><h3>${esc(sessionTitle)}</h3><p>${esc(sessionText)}</p></div><button class="smc-arrow-action" onclick="taGo('settings')" aria-label="Ajustar minha sessão">${terminalIcon("arrow")}</button></div><div class="reference-brief-row"><span class="reference-brief-icon">${terminalIcon("ins")}</span><div><h3>Foco de hoje</h3><p>${esc(focus)}</p></div><button class="smc-arrow-action" onclick="taGo('ins')" aria-label="Revisar execução">${terminalIcon("arrow")}</button></div><div class="reference-brief-row"><span class="reference-brief-icon focus">${terminalIcon("idea")}</span><div><h3>Dica do dia</h3><p>${esc(tip || "Antes da próxima entrada, confira seus critérios e registre a decisão no diário.")}</p></div><button class="smc-arrow-action" onclick="taGo('plan')" aria-label="Abrir meu plano">${terminalIcon("arrow")}</button></div></div><details class="reference-method"><summary>Base do briefing</summary><p>${valid ? "Orientação da integração de IA, apoiada no plano e nos registros disponíveis." : esc(insight.label) + ". Prepare sua execução com os critérios do seu plano."}</p>${taBriefing.error ? `<p role="status">${esc(taBriefing.error)}</p>` : ""}</details></section><section class="scene-card reference-events"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Próximos eventos</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ${terminalIcon("arrow")}</button></div>${events.length ? events.map((e) => `<button class="reference-event" data-time="${esc(e.time)}" data-currency="${esc(e.currency)}" onclick="taOpenUpcomingEvent(this.dataset.time,this.dataset.currency)"><time>${esc(taDailyFormatTime(e.time))}</time><span class="reference-currency">${eliteNewsFlag(e.currency)} ${esc(e.currency)}</span><span>${SessionEngine.zonedParts(new Date(e.time), p.timezone).date !== taDailyDate() ? esc(taDailyFormatTime(e.time, { day: "2-digit", month: "2-digit" })) + " · " : ""}${esc(e.name)}</span><b class="impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${{ high: "Alto", medium: "Médio", low: "Baixo" }[e.impact] || "—"}</b></button>`).join("") : "<p>Nenhum próximo evento publicado na cobertura disponível.</p><small>Consulte Notícias para verificar a fonte e o período coberto.</small>"}</section></div></div></section>`;
+    )}</div></div></section><div class="reference-right"><section class="scene-card reference-briefing scene-focus"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Briefing do Dia</h2><button class="scene-link" onclick="${ready ? "taGenerateBriefing()" : "taGo('settings')"}" ${taBriefing.pending ? "disabled" : ""}>${taBriefing.pending ? "Preparando…" : ready ? "Atualizar foco com IA" : "Conectar IA"}</button></div><p class="experience-bridge">Agora, vamos preparar sua sessão e conferir os próximos eventos.</p><div class="reference-briefing-body"><div class="reference-brief-row smc-session-row"><span class="reference-brief-icon">${terminalIcon("clock")}</span><div><h3>${esc(sessionTitle)}</h3><p>${esc(sessionText)}</p></div><button class="smc-arrow-action" onclick="taGo('settings')" aria-label="Ajustar minha sessão">${terminalIcon("arrow")}</button></div><div class="reference-brief-row"><span class="reference-brief-icon">${terminalIcon("ins")}</span><div><h3>Foco de hoje</h3><p>${esc(focus)}</p></div><button class="smc-arrow-action" onclick="taGo('ins')" aria-label="Revisar execução">${terminalIcon("arrow")}</button></div></div><details class="reference-method"><summary>Base do briefing</summary><p>${valid ? "Orientação da integração de IA, apoiada no plano e nos registros disponíveis." : esc(insight.label) + ". Prepare sua execução com os critérios do seu plano."}</p>${taBriefing.error ? `<p role="status">${esc(taBriefing.error)}</p>` : ""}</details></section>${smcAssetStrip()}<section class="scene-card reference-events"><div class="reference-card-heading">${terminalIcon("cal")}<h2>Próximos eventos</h2><button class="scene-link" onclick="taGo('economic')">Ver todos ${terminalIcon("arrow")}</button></div>${events.length ? events.map((e) => `<button class="reference-event" data-time="${esc(e.time)}" data-currency="${esc(e.currency)}" onclick="taOpenUpcomingEvent(this.dataset.time,this.dataset.currency)"><time>${esc(taDailyFormatTime(e.time))}</time><span class="reference-currency">${eliteNewsFlag(e.currency)} ${esc(e.currency)}</span><span>${SessionEngine.zonedParts(new Date(e.time), p.timezone).date !== taDailyDate() ? esc(taDailyFormatTime(e.time, { day: "2-digit", month: "2-digit" })) + " · " : ""}${esc(e.name)}</span><b class="impact-${["high", "medium", "low"].includes(e.impact) ? e.impact : "unknown"}">${{ high: "Alto", medium: "Médio", low: "Baixo" }[e.impact] || "—"}</b></button>`).join("") : "<p>Nenhum próximo evento publicado na cobertura disponível.</p><small>Consulte Notícias para verificar a fonte e o período coberto.</small>"}</section></div></div></section>`;
 }
 // Rendering stays local; no extra model calls or changes to stored trading data.
 matchMedia("(max-width:760px)").addEventListener("change", () => {
@@ -74,6 +80,9 @@ function smcRememberFilters(node) {
 function filt() {
   const names = {
       all: "Todo o histórico",
+      today: "Hoje",
+      quarter: "3 meses",
+      half: "6 meses",
       week: "Esta semana",
       month: "Este mês",
       lastmonth: "Mês passado",

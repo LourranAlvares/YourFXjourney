@@ -209,19 +209,16 @@ const { chromium } = require("playwright"),
       path: "/tmp/smc-dashboard-phone.png",
       fullPage: true,
     });
-    assert.equal(await p.locator(".smc-dashboard-disclosure[open]").count(), 0);
-    await p.locator(".smc-dashboard-disclosure > summary").first().click();
+    await p.evaluate(() => panelSwitch("performance"));
+    assert.equal(await p.locator(".panel-block[open]").count(), 1);
+    await p.locator(".panel-block>summary").nth(1).click();
     assert(
       await p
-        .getByRole("heading", { name: "Resultado por ativo", exact: true })
+        .getByRole("heading", { name: "Por ativo", exact: true })
         .isVisible(),
     );
     await p.setViewportSize({ width: 1536, height: 1024 });
-    await p.waitForFunction(
-      () =>
-        document.querySelectorAll(".smc-dashboard-disclosure[open]").length ===
-        2,
-    );
+    assert.equal(await p.locator(".panel-block[open]").count(), 2);
     assert.equal(
       await p.evaluate(() => JSON.stringify(S)),
       snapshot,

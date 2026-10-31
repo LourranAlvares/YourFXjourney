@@ -105,7 +105,7 @@ const { createApp } = require("../server/index.cjs");
     assert.equal(await page.locator(".primary-metrics .k").count(), 6);
     assert.equal(
       await page.locator(".elite-dash-charts .terminal-chart").count(),
-      2,
+      1,
     );
     const count = await page
       .locator(".terminal-performance .chart-point")
@@ -159,7 +159,7 @@ const { createApp } = require("../server/index.cjs");
       !(await page.locator(".terminal-recent").innerText()).includes("£"),
     );
     assert.ok(
-      !(await page.locator(".terminal-context").innerText()).includes("£"),
+      !(await page.locator(".panel-secondary").innerText()).includes("£"),
     );
     await page
       .getByRole("button", { name: "Mostrar valores", exact: true })

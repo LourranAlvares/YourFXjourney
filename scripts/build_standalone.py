@@ -4,13 +4,15 @@ root=Path(__file__).resolve().parents[1]
 files={'library':'tesseract.min.js','worker':'worker.min.js','core':'core/tesseract-core-lstm.wasm.js','eng':'lang/eng.traineddata.gz','por':'lang/por.traineddata.gz'}
 assets={k:base64.b64encode((root/'vendor/ocr'/f).read_bytes()).decode() for k,f in files.items()}
 source=(root/'YourFXjourney.html').read_text()
-for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth']:
+for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience']:
  source=source.replace(f'<script src="public/{name}.js"></script>', '<script>'+ (root/'public'/f'{name}.js').read_text().replace('</script', '<\\/script') +'</script>')
 source=source.replace('<link rel="stylesheet" href="public/assistant.css">', '<style>'+(root/'public/assistant.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/terminal.css">', '<style>'+(root/'public/terminal.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/reference.css">', '<style>'+(root/'public/reference.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/mobile.css">', '<style>'+(root/'public/mobile.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/cloud.css">', '<style>'+(root/'public/cloud.css').read_text()+'</style>')
+source=source.replace('<link rel="stylesheet" href="public/experience.css">', '<style>'+(root/'public/experience.css').read_text()+'</style>')
+source=source.replace('<link rel="stylesheet" href="public/panel.css">', '<style>'+(root/'public/panel.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/growth.css">', '<style>'+(root/'public/growth.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/smc.css">', '<style>'+(root/'public/smc.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/premium.css">', '<style>'+(root/'public/premium.css').read_text()+'</style>')

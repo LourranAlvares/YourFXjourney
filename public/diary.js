@@ -1,8 +1,15 @@
 /* Diary projections reuse existing records; no inferred profits or emotions. */
 let diaryMonth = new Date().toISOString().slice(0, 7),
   diarySelected = "",
-  diaryMode = "gallery";
+  diaryMode = "gallery",
+  diaryPage = 0,
+  diaryPageKey = "";
 function accountHistoryCurve() {
+  if (typeof PanelEngine !== "undefined" && PanelEngine.movements(S).length) {
+    const capital = PanelEngine.capital(S, insUniverse(), "", taDailyDate());
+    if (!capital.available) return [];
+    return capital.curve;
+  }
   if (!S.balanceConfirmed) return [];
   const rows = S.trades
     .filter((t) => t.close && rNumber(t.pnl) !== null)
@@ -56,18 +63,23 @@ function diaryWorkspace(ts) {
       .filter((t) => !diarySelected || day(t) === diarySelected)
       .sort((a, b) => b.close.localeCompare(a.close)),
     totals = st(month),
-    known = month.map(realizedTradeR).filter((x) => x.value !== null),
-    [y, m] = diaryMonth.split("-").map(Number),
-    count = new Date(y, m, 0).getDate(),
-    offset = (new Date(y, m - 1, 1).getDay() + 6) % 7;
-  let cells = "<span></span>".repeat(offset);
-  for (let d = 1; d <= count; d++) {
-    const date = diaryMonth + "-" + pad(d),
-      list = month.filter((t) => day(t) === date),
-      sum = list.reduce((v, t) => v + t.pnl, 0);
-    const description = `${date} · ${list.length} operações${list.length ? " · " + money(sum) : ""}`;
-    cells += `<button class="diary-day ${date === diarySelected ? "selected" : ""} ${list.length ? cl(sum) : ""}" aria-label="${esc(description)}" title="${esc(description)}" aria-pressed="${date === diarySelected}" onclick="diaryChoose('${date}')"><b>${d}</b><small>${list.length ? list.length + (list.length === 1 ? " op" : " ops") : "—"}</small></button>`;
+    known = month.map(realizedTradeR).filter((x) => x.value !== null);
+
+  const pageKey = [
+    diaryMonth,
+    diarySelected,
+    F.from,
+    F.to,
+    F.sym,
+    F.strat,
+  ].join("|");
+  if (pageKey !== diaryPageKey) {
+    diaryPage = 0;
+    diaryPageKey = pageKey;
   }
+  const pageCount = Math.max(1, Math.ceil(rows.length / 6));
+  diaryPage = Math.max(0, Math.min(diaryPage, pageCount - 1));
+  const pageRows = rows.slice(diaryPage * 6, diaryPage * 6 + 6);
   const emotions = rows.filter((t) => t.emotion),
     groups = new Map();
   emotions.forEach((t) => {
@@ -76,7 +88,14 @@ function diaryWorkspace(ts) {
     g.pnl += t.pnl;
     groups.set(t.emotion, g);
   });
-  return `<section class="card diary-heading" aria-label="Resumo e navegação do diário"><div class="row"><button class="b s" onclick="diaryMove(-1)" aria-label="Mês anterior">‹</button><label><span class="sr-only">Mês</span><input type="month" value="${diaryMonth}" onchange="if(/^\\d{4}-\\d{2}$/.test(this.value)){diaryMonth=this.value;diarySelected='';R()}"></label><button class="b s" onclick="diaryMove(1)" aria-label="Próximo mês">›</button><button class="b s" onclick="diaryLatest()">Últimos registros</button><button class="b s" onclick="diarySelected='';R()">Mês completo</button><button class="b" onclick="diaryNew()">+ Registrar no diário</button></div><div class="grid">${kp("Resultado no mês", money(totals.net), cl(totals.net))}${kp("Operações", month.length)}${kp(known.length === month.length ? "R realizado" : "R conhecido · parcial", known.length ? shareR(known.reduce((a, b) => a + b.value, 0)) : "—", "", known.length + "/" + month.length + " com R conhecido")}${kp("Com diário", month.filter((t) => t.notes || t.feelings || t.img?.length).length)}</div></section><div class="diary-workspace-layout"><section class="card diary-calendar-panel"><div class="section-head"><h2>Calendário do diário</h2><span>${diarySelected || "Selecione um dia para filtrar a galeria"}</span></div><div class="diary-calendar">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((d) => `<small>${d}</small>`).join("")}${cells}</div></section><section class="diary-records-panel"><div class="section-head"><h2>${diarySelected ? "Registros de " + diarySelected : "Galeria do mês"}</h2><span>${rows.length} operações${diarySelected ? " · " + money(st(rows).net) : ""}</span></div><div class="diary-gallery">${rows.map((t) => diaryCard(t)).join("") || '<section class="card"><h3>Nenhum registro neste período</h3><p>Use “Últimos registros”, ajuste os filtros ou registre uma operação.</p></section>'}</div></section></div><details class="card diary-patterns"><summary>Padrões nos seus registros</summary>${diaryPatterns(rows)}${groups.size ? Array.from(groups, ([name, g]) => `<p><b>${esc(name)}</b> · ${g.n} operações · ${money(g.pnl)} ${g.n < 10 ? "· amostra pequena" : ""}</p>`).join("") : "<p>Registre como se sentiu para comparar sua execução ao longo do tempo.</p>"}<p class="muted-note">Somente sentimentos informados pelo usuário; associação descritiva, sem concluir causa ou eficiência. Os filtros do diário também se aplicam aqui.</p></details>`;
+  return `<section class="card diary-heading" aria-label="Resumo e navegação do diário"><div class="row"><button class="b s" onclick="diaryMove(-1)" aria-label="Mês anterior">‹</button><label><span class="sr-only">Mês</span><input type="month" value="${diaryMonth}" onchange="if(/^\\d{4}-\\d{2}$/.test(this.value)){diaryMonth=this.value;diarySelected='';R()}"></label><button class="b s" onclick="diaryMove(1)" aria-label="Próximo mês">›</button><button class="b s" onclick="diaryLatest()">Últimos registros</button><button class="b s" onclick="diarySelected='';R()">Mês completo</button><button class="b" onclick="diaryNew()">+ Registrar no diário</button></div><div class="grid">${kp("Resultado no mês", money(totals.net), cl(totals.net))}${kp("Operações", month.length)}${kp(known.length === month.length ? "R realizado" : "R conhecido · parcial", known.length ? shareR(known.reduce((a, b) => a + b.value, 0)) : "—", "", known.length + "/" + month.length + " com R conhecido")}${kp("Com diário", month.filter((t) => t.notes || t.feelings || t.img?.length).length)}</div></section><div class="diary-workspace-layout"><section class="diary-records-panel"><div class="section-head"><h2>${diarySelected ? "Registros de " + diarySelected : "Galeria do mês"}</h2><span>${rows.length} operações${diarySelected ? " · " + money(st(rows).net) : ""}</span></div><div class="diary-pagination"><span>${rows.length ? `${diaryPage * 6 + 1}–${Math.min(rows.length, diaryPage * 6 + 6)} de ${rows.length} registros` : "Nenhum registro"}</span><div><button class="b s" onclick="diaryPageMove(-1)" ${diaryPage === 0 ? "disabled" : ""}>Anteriores</button><span>Página ${diaryPage + 1} de ${pageCount}</span><button class="b s" onclick="diaryPageMove(1)" ${diaryPage >= pageCount - 1 ? "disabled" : ""}>Próximos</button></div></div><div class="diary-gallery">${pageRows.map((t) => diaryCard(t)).join("") || '<section class="card"><h3>Nenhum registro neste período</h3><p>Use “Últimos registros”, ajuste os filtros ou registre uma operação.</p></section>'}</div></section></div><details class="card diary-patterns"><summary>Padrões nos seus registros</summary>${diaryPatterns(rows)}${groups.size ? Array.from(groups, ([name, g]) => `<p><b>${esc(name)}</b> · ${g.n} operações · ${money(g.pnl)} ${g.n < 10 ? "· amostra pequena" : ""}</p>`).join("") : "<p>Registre como se sentiu para comparar sua execução ao longo do tempo.</p>"}<p class="muted-note">Somente sentimentos informados pelo usuário; associação descritiva, sem concluir causa ou eficiência. Os filtros do diário também se aplicam aqui.</p></details>`;
+}
+function diaryPageMove(delta) {
+  diaryPage += delta;
+  R();
+  document
+    .querySelector(".diary-records-panel")
+    ?.scrollIntoView({ block: "start" });
 }
 function diaryCard(t) {
   const r = realizedTradeR(t),
@@ -92,7 +111,7 @@ function diaryCard(t) {
     .map(([label, text]) => `<p><small>${label}</small><br>${esc(text)}</p>`)
     .join(
       "",
-    )}<button class="b s" data-id="${esc(t.id)}" onclick="edit(this.dataset.id)">Abrir / completar diário</button></article>`;
+    )}<div class="diary-entry-actions"><button class="b s" data-id="${esc(t.id)}" onclick="edit(this.dataset.id)">Abrir / completar diário</button></div></article>`;
 }
 function diaryNew() {
   edit(null, diarySelected || undefined);

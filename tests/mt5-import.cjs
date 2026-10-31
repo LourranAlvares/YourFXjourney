@@ -74,7 +74,7 @@ const csv = [header, a, b].map((row) => row.join(";")).join("\n"),
       errors = [];
     p.on("pageerror", (e) => errors.push(e.message));
     await p.goto("http://127.0.0.1:" + app.server.address().port);
-    await p.waitForSelector("#main .card");
+    await p.waitForSelector(".smc-home");
     await p.evaluate(() => {
       S.trades = [];
       taGo("trades");

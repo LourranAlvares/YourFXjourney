@@ -485,7 +485,11 @@ function growthReviewToolbar() {
   toolbar.className = "growth-toolbar";
   toolbar.innerHTML =
     '<button class="b s" onclick="growthOpenReview(\'week\')">Weekly Review</button><button class="b s" onclick="growthOpenReview(\'month\')">Monthly Review</button><button class="b s" onclick="taGo(\'achievements\')">Achievements</button><small>Retrospectiva do período completo, independente dos filtros da página.</small>';
-  document.querySelector(".page-top")?.after(toolbar);
+  if (tab === "dash") {
+    toolbar.classList.add("panel-review-actions");
+    toolbar.querySelector("small")?.remove();
+    document.querySelector(".page-top .page-actions")?.append(toolbar);
+  } else document.querySelector(".page-top")?.after(toolbar);
   document.querySelectorAll(".diary-entry").forEach((card) => {
     const button = card.querySelector("button[data-id]"),
       id = button?.dataset.id,
@@ -498,7 +502,7 @@ function growthReviewToolbar() {
       : "Destacar na revisão";
     star.dataset.id = id;
     star.onclick = () => growthToggleHighlight(id);
-    card.append(star);
+    (card.querySelector(".diary-entry-actions") || card).append(star);
   });
 }
 function growthToggleHighlight(id) {

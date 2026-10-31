@@ -34,7 +34,7 @@ const { chromium } = require("playwright"),
       net = await p.evaluate(() => st(ft()).net);
     assert.equal(await p.locator(".primary-metrics .k").count(), 6);
     assert.equal(await p.locator(".elite-dash-charts > .card").count(), 1);
-    assert.equal(await p.locator(".elite-dash-support > .card").count(), 4);
+    assert.equal(await p.locator(".panel-overview-bottom > .card").count(), 3);
     assert.equal(
       await p.locator('[data-terminal-chart="dashboard-drawdown"]').count(),
       0,
@@ -50,7 +50,7 @@ const { chromium } = require("playwright"),
       24,
     );
     assert.equal(
-      await p.locator(".elite-dash-extra").evaluate((e) => e.open),
+      await p.locator(".panel-calendar").evaluate((e) => e.open),
       false,
     );
     assert.match(await p.locator(".primary-metrics").innerText(), /48/);
@@ -78,14 +78,10 @@ const { chromium } = require("playwright"),
     await p.getByLabel("Unidade do painel", { exact: true }).selectOption("r");
     const rTotal = await p.evaluate(() => eliteDashModel(ft()).stats.net);
     assert(Math.abs(rTotal - net / 50) < 1e-8);
-    assert.match(await p.locator(".primary-metrics").innerText(), /R/);
+    assert.match(await p.locator(".panel-secondary").innerText(), /R/);
     await p
       .getByLabel("Unidade do painel", { exact: true })
       .selectOption("money");
-    await p
-      .getByLabel("Agrupar desempenho", { exact: true })
-      .selectOption("month");
-    assert.match(await p.locator(".elite-dash-footer").innerText(), /2026-10/);
     await p
       .getByRole("button", { name: "Ocultar valores", exact: true })
       .click();
@@ -129,6 +125,7 @@ const { chromium } = require("playwright"),
       (await p.locator(".smc-filters-disclosure").boundingBox()).height < 64,
     );
 
+    await p.locator(".panel-calendar>summary").click();
     await p
       .locator(".elite-dash-calendar .cd")
       .filter({ has: p.locator("b", { hasText: /^10$/ }) })
@@ -151,12 +148,12 @@ const { chromium } = require("playwright"),
       eliteDashUnit = "r";
       R();
     });
-    assert.equal(await p.evaluate(() => eliteDashUnit), "money");
+    assert.equal(await p.evaluate(() => eliteDashUnit), "r");
     assert.equal(
       await p
         .locator('[aria-label="Unidade do painel"] option[value="r"]')
         .evaluate((e) => e.disabled),
-      true,
+      false,
     );
     await p.evaluate(() => {
       F.sym = "NONE";
@@ -164,7 +161,7 @@ const { chromium } = require("playwright"),
     });
     assert.match(
       await p.locator(".elite-dashboard").innerText(),
-      /Aguardando operações/,
+      /Dados insuficientes/,
     );
     await p.goto(
       "http://127.0.0.1:" +

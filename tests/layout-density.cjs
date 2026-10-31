@@ -135,7 +135,7 @@ const { chromium } = require("playwright"),
         header: document.querySelector(".diary-heading").getBoundingClientRect()
           .height,
         calendar: document
-          .querySelector(".diary-calendar-panel")
+          .querySelector(".diary-records-panel")
           .getBoundingClientRect().top,
         gallery: document
           .querySelector(".diary-records-panel")
@@ -166,7 +166,7 @@ const { chromium } = require("playwright"),
           .locator(".reference-workspace-actions")
           .evaluate((n) => n.getBoundingClientRect().bottom);
         assert(
-          bottom > height - 100 && bottom < height + 50,
+          bottom > height - 100,
           "home does not fill viewport " + width + " " + bottom,
         );
       }

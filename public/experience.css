@@ -1,0 +1,293 @@
+/* Shared visual finish; state colours continue to describe results, never decoration. */
+body.smc-shell {
+  --surface-hover-edge: rgba(210, 178, 111, 0.65);
+  --surface-hover-light:
+    0 0 22px rgba(210, 178, 111, 0.07), inset 0 1px 0 rgba(210, 178, 111, 0.08);
+}
+body.smc-shell
+  #main
+  :is(
+    .card,
+    .scene-card,
+    .k,
+    .reference-brief-row,
+    .reference-asset-grid > article,
+    .panel-insight-grid > article
+  ),
+body.smc-shell dialog :is(.card, .growth-log) {
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+@media (hover: hover) {
+  body.smc-shell
+    #main
+    :is(
+      .card,
+      .scene-card,
+      .k,
+      .reference-brief-row,
+      .reference-asset-grid > article,
+      .panel-insight-grid > article
+    ):hover,
+  body.smc-shell dialog :is(.card, .growth-log):hover {
+    border-color: var(--surface-hover-edge) !important;
+    box-shadow: var(--surface-hover-light) !important;
+  }
+}
+body.smc-shell
+  #main
+  :is(
+    .card,
+    .scene-card,
+    .k,
+    .reference-brief-row,
+    .reference-asset-grid > article,
+    .panel-insight-grid > article
+  ):focus-within,
+body.smc-shell dialog :is(.card, .growth-log):focus-within {
+  border-color: var(--surface-hover-edge) !important;
+  box-shadow: var(--surface-hover-light) !important;
+}
+body.smc-shell :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 2px solid #d2b26f;
+  outline-offset: 3px;
+}
+.experience-speech {
+  margin-top: 18px;
+  max-width: 460px;
+}
+.experience-speech > small {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.smc-home .experience-speech > p {
+  font-size: clamp(15px, 1.05vw, 18px);
+  line-height: 1.6;
+  margin: 10px 0 12px;
+}
+.experience-speech > div {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.experience-speech .scene-link {
+  font-size: 12px;
+}
+.experience-bridge {
+  font-size: 13px;
+  color: var(--secondary);
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.smc-home .reference-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.smc-home .reference-right > .scene-card {
+  margin: 0;
+  flex: none;
+}
+.smc-assets-card .reference-asset-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.smc-assets-card .reference-asset-grid > article {
+  display: grid;
+  grid-template-columns: minmax(85px, 1fr) minmax(100px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border, #30363e);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.018);
+  min-width: 0;
+}
+.smc-assets-card .smc-asset-symbol {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.smc-assets-card .smc-asset-symbol b {
+  font-size: 14px;
+}
+.smc-asset-daily {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+.smc-asset-daily strong {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.smc-asset-daily small {
+  font-size: 11px;
+  color: var(--secondary);
+}
+.smc-assets-card article > [class^="ta-volatility"] {
+  font-size: 11px;
+}
+.smc-assets-card > .muted-note {
+  display: block;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.smc-home .smc-desk[data-presence="attention"] .scene-character-motion {
+  filter: brightness(1.06);
+}
+.scene-character-motion {
+  transition: filter 0.3s ease;
+}
+.account-page .account-intro h1 {
+  font-size: clamp(28px, 3.1vw, 48px);
+  line-height: 1.18;
+  max-width: 650px;
+}
+.account-page .account-assistant-message {
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.65;
+  max-width: 570px;
+}
+.experience-preferences {
+  margin-top: 16px;
+}
+.experience-preferences form {
+  display: grid;
+  gap: 12px;
+}
+/* Journal uses the whole workspace; the separate Calendar keeps its own purpose. */
+body.smc-shell .diary-workspace-layout {
+  display: block;
+}
+body.smc-shell .diary-gallery {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+body.smc-shell .diary-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+body.smc-shell .diary-cover {
+  height: clamp(150px, 13vw, 230px);
+  margin: 0;
+}
+body.smc-shell .diary-entry .section-head {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+body.smc-shell .diary-entry .section-head h3 {
+  font-size: 17px;
+}
+body.smc-shell .diary-entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+body.smc-shell .diary-entry-actions .b {
+  position: static !important;
+  white-space: normal;
+  line-height: 1.35;
+  height: auto;
+  min-height: 36px;
+  flex: 1 1 145px;
+  max-width: 100%;
+}
+body.smc-shell .diary-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0 16px;
+  color: var(--secondary);
+  font-size: 12px;
+}
+body.smc-shell .diary-pagination > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+body.smc-shell .diary-records-panel > .section-head {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (max-width: 1200px) {
+  body.smc-shell .diary-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  body.smc-shell .diary-gallery {
+    grid-template-columns: 1fr;
+  }
+  .smc-assets-card .reference-asset-grid > article {
+    grid-template-columns: minmax(75px, 1fr) auto;
+    gap: 8px;
+  }
+  .smc-assets-card article > [class^="ta-volatility"] {
+    grid-column: 1/-1;
+  }
+  .smc-home .experience-speech > p {
+    font-size: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.smc-shell
+    #main
+    :is(
+      .card,
+      .scene-card,
+      .k,
+      .reference-brief-row,
+      .reference-asset-grid > article,
+      .panel-insight-grid > article
+    ),
+  body.smc-shell dialog :is(.card, .growth-log),
+  .scene-character-motion {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+body.smc-shell .diary-entry > p {
+  margin: 2px 0;
+  line-height: 1.5;
+}
+body.smc-shell .diary-entry > .section-head {
+  margin: 4px 0;
+}
+body.smc-shell .diary-entry > .section-head h3 {
+  margin: 0;
+}
+body.smc-shell .diary-entry > .diary-no-print {
+  margin: 0 0 4px;
+}
+.smc-home .experience-speech {
+  padding: 12px 14px;
+  background: linear-gradient(
+    100deg,
+    rgba(8, 11, 15, 0.92),
+    rgba(8, 11, 15, 0.66)
+  );
+  border-radius: 10px;
+}
+
+body.smc-shell .diary-no-print {
+  padding: 9px 10px;
+  font-size: 12px;
+}
+body.smc-shell .diary-entry p:has(> small) {
+  -webkit-line-clamp: 2;
+}

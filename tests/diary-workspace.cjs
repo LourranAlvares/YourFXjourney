@@ -58,8 +58,8 @@ const { chromium } = require("playwright"),
     await p.getByLabel("Mês", { exact: true }).fill("2026-10");
     await p.screenshot({ path: "/tmp/elitex-diary.png", fullPage: true });
     assert.match(await p.locator(".diary-gallery").innerText(), /Seguro/);
-    await p.locator(".diary-day").nth(0).click();
-    assert.equal(await p.locator(".diary-entry").count(), 1);
+    assert.equal(await p.locator(".diary-calendar").count(), 0);
+    assert.equal(await p.locator(".diary-entry").count(), 3);
     await p.getByRole("button", { name: "+ Registrar no diário" }).click();
     assert(await p.locator("#f_symbol").isVisible());
     assert(await p.locator("#f_notes").isVisible());
@@ -133,7 +133,7 @@ const { chromium } = require("playwright"),
     }
     assert.deepEqual(errors, []);
     console.log(
-      "PASS diary calendar/gallery, quick editor persistence, evidence-based reconstructed R, risk suggestion, full balance baseline independent of filters, all chart modes, consistent card effect and 320–1920px",
+      "PASS diary gallery without duplicated calendar, quick editor persistence, evidence-based reconstructed R, risk suggestion, full balance baseline independent of filters, all chart modes, consistent card effect and 320–1920px",
     );
   } finally {
     await browser.close();

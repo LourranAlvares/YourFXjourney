@@ -396,6 +396,23 @@ function createProviders({
               v.high >= v.low,
           )
           .sort((a, b) => a.time.localeCompare(b.time));
+        const latest = bars.at(-1),
+          latestDay = latest?.time.slice(0, 10),
+          previousDayClose = latestDay
+            ? bars.filter((b) => b.time.slice(0, 10) < latestDay).at(-1)
+            : null,
+          change =
+            latest && previousDayClose && Date.parse(latest.time) <= +now()
+              ? (latest.close / previousDayClose.close - 1) * 100
+              : null,
+          daily = {
+            dayChangePercent: Number.isFinite(change) ? change : null,
+            dayChangeDate: latestDay || null,
+            dayChangeAsOf: latest?.time || null,
+            dayChangeReference: previousDayClose?.time || null,
+            dayChangeMethod:
+              "Último fechamento horário disponível versus fechamento anterior ao dia UTC informado. Não é ATR.",
+          };
         if (bars.length < 15) {
           instruments.push({
             symbol,
@@ -405,6 +422,7 @@ function createProviders({
             asOf: bars.at(-1)?.time || null,
             delayed: true,
             reason: "Menos de 15 velas horárias válidas; ATR indisponível.",
+            ...daily,
           });
           continue;
         }
@@ -430,6 +448,7 @@ function createProviders({
           asOf,
           delayed: +now() - new Date(asOf) > 4 * 3600e3,
           reason: null,
+          ...daily,
         });
       }
       return {
