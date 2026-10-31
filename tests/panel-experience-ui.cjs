@@ -26,7 +26,7 @@ const assert = require("node:assert/strict"),
       S.currency = "USD";
       S.balance = 1000;
       S.balanceConfirmed = true;
-      S.trades = Array.from({ length: 12 }, (_, i) =>
+      S.trades = Array.from({ length: 24 }, (_, i) =>
         mk({
           id: "p" + i,
           symbol: i % 2 ? "EURUSD" : "XAUUSD",
@@ -143,8 +143,8 @@ const assert = require("node:assert/strict"),
       .getByRole("button", { name: "Registrar movimento", exact: true })
       .click();
     assert.equal(await p.evaluate(() => S.capitalMovements.length), 1);
-    assert.equal(await p.evaluate(() => panelModel().s.net), 120);
-    assert.equal(await p.evaluate(() => panelModel().cap.balance), 1620);
+    assert.equal(await p.evaluate(() => panelModel().s.net), 240);
+    assert.equal(await p.evaluate(() => panelModel().cap.balance), 1740);
     await p.reload();
     await p.waitForSelector(".smc-home");
     assert.equal(await p.evaluate(() => S.capitalMovements.length), 1);
@@ -160,7 +160,9 @@ const assert = require("node:assert/strict"),
         );
       }
       assert.equal(await p.locator(".diary-calendar").count(), 0);
-      assert.equal(await p.locator(".diary-entry").count(), 6);
+      assert.equal(await p.locator(".diary-entry").count(), 12);
+      const heights=await p.locator(".diary-entry").evaluateAll(ns=>ns.map(n=>n.getBoundingClientRect().height));
+      assert(Math.max(...heights)-Math.min(...heights)<2,"equal journal card heights "+width);
       const rects = await p.locator(".diary-entry-actions").evaluateAll((ns) =>
         ns.map((n) =>
           Array.from(n.querySelectorAll("button")).map((b) => {
@@ -182,8 +184,8 @@ const assert = require("node:assert/strict"),
         await p.screenshot({ path: "/tmp/smc-new-diary.png", fullPage: true });
     }
     await p.getByRole("button", { name: "Próximos", exact: true }).click();
-    assert.equal(await p.locator(".diary-entry").count(), 6);
-    assert.match(await p.locator(".diary-pagination").innerText(), /7–12/);
+    assert.equal(await p.locator(".diary-entry").count(), 12);
+    assert.match(await p.locator(".diary-pagination").innerText(), /13–24/);
     await p
       .locator(".diary-entry-actions button")
       .filter({ hasText: "Destacar na revisão" })

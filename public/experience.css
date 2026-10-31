@@ -291,3 +291,19 @@ body.smc-shell .diary-no-print {
 body.smc-shell .diary-entry p:has(> small) {
   -webkit-line-clamp: 2;
 }
+/* Dense journal at browser 100%; equal row tracks keep every card aligned. */
+body.smc-shell .diary-gallery {grid-auto-rows:1fr;gap:12px;}
+body.smc-shell .diary-entry {height:100%;box-sizing:border-box;padding:12px;gap:6px;font-size:13px;}
+body.smc-shell .diary-entry .section-head h3 {font-size:15px;}
+body.smc-shell .diary-cover {height:140px;flex-shrink:0;}
+body.smc-shell .diary-entry-actions .b {font-size:12px;min-height:32px;padding:6px 9px;}
+body.smc-shell .diary-heading {padding:14px;margin-bottom:14px;}
+body.smc-shell .diary-heading .grid {gap:10px;}
+body.smc-shell .diary-heading .k {padding:10px 12px;min-height:72px;}
+body.smc-shell .diary-heading .k b {font-size:23px;}
+body.smc-shell #main:has(.diary-gallery)>.page-top {margin-bottom:12px;}
+body.smc-shell #main:has(.diary-gallery)>.page-top h2 {font-size:27px;}
+body.smc-shell #main:has(.diary-gallery) .growth-toolbar {margin-bottom:10px;}
+body.smc-shell .diary-records-panel>.section-head h2 {font-size:17px;}
+body.smc-shell .diary-pagination {margin:8px 0 12px;}
+@media(min-width:1800px){body.smc-shell .diary-gallery {grid-template-columns:repeat(4,minmax(0,1fr));}}

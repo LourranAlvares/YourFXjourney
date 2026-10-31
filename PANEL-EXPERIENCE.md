@@ -6,7 +6,7 @@ O projeto existente permanece em HTML/JavaScript e no workspace privado por usu�
 
 Os filtros compartilham período, conta registrada, ativo, estratégia, sessão, direção, setup e status. As comparações usam um período anterior de mesma duração; o histórico completo não inventa um período anterior. As sessões respeitam a convenção original dos horários de entrada, sem presumir fuso de corretora.
 
-A Visão Geral tem seis indicadores, resumo complementar e um único gráfico principal com modos P&L acumulado, saldo, P&L diário, drawdown e R. O gráfico acompanha a largura disponível, com proporção aproximada de 1,8:1, e resumos ao lado no desktop. Performance expande os detalhes; capital e insights ficam nas respectivas seções. O calendário principal mantém o detalhamento das operações. O diário passa a priorizar uma galeria de seis registros por página, sem calendário duplicado, com prints, anotações, edição e destaque para revisão.
+A Visão Geral tem seis indicadores, resumo complementar e um único gráfico principal com modos P&L acumulado, saldo, P&L diário, drawdown e R. O gráfico acompanha a largura disponível, com proporção aproximada de 1,8:1, e resumos ao lado no desktop. Performance expande os detalhes; capital e insights ficam nas respectivas seções. O calendário principal mantém o detalhamento das operações. O diário passa a priorizar uma galeria de doze registros por página, sem calendário duplicado, com prints, anotações, edição e destaque para revisão.
 
 ## Métricas e capital
 
