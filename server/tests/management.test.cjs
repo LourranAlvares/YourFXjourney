@@ -5,6 +5,12 @@ const { test } = require("node:test"),
 test("access terms use calendar months, leap years and reject expired custom dates", () => {
   const now = new Date("2028-01-31T10:00:00Z");
   assert.equal(expiryFor("monthly", null, now), "2028-02-29T10:00:00.000Z");
+  assert.equal(expiryFor("bimonthly", null, now), "2028-03-31T10:00:00.000Z");
+  assert.equal(expiryFor("semiannual", null, now), "2028-07-31T10:00:00.000Z");
+  assert.equal(
+    expiryFor("biennial", null, new Date("2028-02-29T10:00:00Z")),
+    "2030-02-28T10:00:00.000Z",
+  );
   assert.equal(expiryFor("quarterly", null, now), "2028-04-30T10:00:00.000Z");
   assert.equal(
     expiryFor("annual", null, new Date("2028-02-29T10:00:00Z")),
@@ -79,9 +85,32 @@ test("management enforces admin boundaries, protected owner, allowlists and expi
       }),
     { code: "invalid_settings" },
   );
+  await assert.rejects(
+    () =>
+      m.update(owner, {
+        id,
+        status: "active",
+        term: "keep",
+        notes: "",
+        revokeSessions: false,
+      }),
+    { code: "expired_access" },
+  );
+  await assert.rejects(
+    () =>
+      m.update(owner, {
+        id,
+        status: "active",
+        term: "annual",
+        plan: "admin",
+        notes: "",
+        revokeSessions: false,
+      }),
+    { code: "invalid_settings" },
+  );
   await m.update(owner, {
     id,
-    status: "active",
+    status: "blocked",
     term: "keep",
     notes: "trial agreed",
     revokeSessions: true,
@@ -90,6 +119,18 @@ test("management enforces admin boundaries, protected owner, allowlists and expi
   assert.equal(rpc.data.access_expiry, "2020-01-01T00:00:00Z");
   assert.equal(rpc.data.actor, ownerId);
   assert.equal(rpc.data.revoke_sessions, true);
+  const updated = await m.update(owner, {
+    id,
+    status: "active",
+    term: "bimonthly",
+    plan: "annual",
+    notes: "agreed",
+    revokeSessions: false,
+  });
+  assert.equal(updated.ok, true);
+  assert.equal(updated.account.plan, "annual");
+  assert.equal(updated.account.status, "active");
+  assert(Date.parse(updated.account.expires_at) > Date.now());
 });
 test("administration reads only profile/access records and has no reporting methods", async () => {
   const calls = [],

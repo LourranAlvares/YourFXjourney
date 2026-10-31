@@ -141,12 +141,18 @@ function eliteCloudAfterRender() {
     return;
   const label = document.querySelector(".terminal-connection-label");
   if (label) {
-    label.textContent = eliteCloud.message;
+    label.textContent =
+      typeof eliteConnectionLabel === "function"
+        ? eliteConnectionLabel()
+        : eliteCloud.message;
     label.closest("button").dataset.cloudState = eliteCloud.state;
     label.classList.add("cloud-status");
     label.dataset.state = eliteCloud.state;
     label.setAttribute("role", "status");
-    label.title = eliteCloud.user.email + " · " + eliteCloud.message;
+    label.title =
+      typeof eliteConnectionLabel === "function"
+        ? eliteConnectionLabel()
+        : eliteCloud.message;
   }
   const small = document.querySelector(".elite-profile small");
   if (small) small.textContent = eliteCloud.user.email;

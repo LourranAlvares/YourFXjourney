@@ -38,11 +38,88 @@ function eliteClockText() {
     hour12: false,
   }).format(new Date());
 }
+function eliteConnectionLabel() {
+  if (typeof navigator !== "undefined" && !navigator.onLine)
+    return "Sem conexão";
+  if (
+    typeof CLOUD_BOOT !== "undefined" &&
+    CLOUD_BOOT &&
+    typeof eliteCloud !== "undefined" &&
+    eliteCloud.ready
+  )
+    return ["error", "conflict"].includes(eliteCloud.state)
+      ? "Atenção"
+      : "Conectado";
+  if (taConnection.connecting) return "Conectando…";
+  return taConnection.authenticated ? "Conectado" : "Desconectado";
+}
+function eliteAttentionModel() {
+  const rows = insUniverse()
+      .filter((t) => day(t) <= taDailyDate())
+      .sort((a, b) => b.close.localeCompare(a.close))
+      .slice(0, 25),
+    alerts = [];
+  const errors = rows.filter((t) => Array.isArray(t.behavior?.errors)),
+    counts = insErrorCounts(errors);
+  if (errors.length >= 5 && errors.length / Math.max(1, rows.length) >= 0.6) {
+    for (const [id, title, action] of INS_ERRORS) {
+      const count = counts[id] || 0;
+      if (count >= 2)
+        alerts.push({
+          id: "error:" + id,
+          title,
+          text: `${title} foi registrado em ${count} de ${errors.length} operações com erros avaliados, entre os últimos ${rows.length} trades.`,
+          action,
+          key: JSON.stringify(
+            errors.map((t) => [t.id, t.close, t.behavior.errors]),
+          ),
+          target: "ins",
+        });
+    }
+  }
+  const checked = insProcess(rows).checked,
+    risk = checked.filter((x) => x.c.risk !== null || x.c.limits !== null),
+    breaches = risk.filter((x) => x.c.risk === false || x.c.limits === false);
+  if (
+    risk.length >= 5 &&
+    risk.length / Math.max(1, rows.length) >= 0.6 &&
+    breaches.length >= 2
+  )
+    alerts.push({
+      id: "risk",
+      title: "Rever os limites do plano",
+      text: `${breaches.length} de ${risk.length} operações avaliadas registram desvio de risco ou de limite operacional.`,
+      action: "Confira seu risco e os limites antes da próxima entrada.",
+      key: JSON.stringify(risk.map((x) => [x.t.id, x.c.risk, x.c.limits])),
+      target: "risk",
+    });
+  const plan = checked.filter((x) => x.c.plan !== null),
+    off = plan.filter((x) => x.c.plan === false);
+  if (
+    plan.length >= 5 &&
+    plan.length / Math.max(1, rows.length) >= 0.6 &&
+    off.length >= 2 &&
+    !alerts.some((a) => a.id === "error:offplan")
+  )
+    alerts.push({
+      id: "plan",
+      title: "Atenção aos critérios de entrada",
+      text: `${off.length} de ${plan.length} operações avaliadas foram registradas fora do plano.`,
+      action: "Aguarde contexto claro e confira o checklist do seu sistema.",
+      key: JSON.stringify(plan.map((x) => [x.t.id, x.c.plan])),
+      target: "plan",
+    });
+  return alerts.map((a) => ({
+    ...a,
+    unread: S.attentionSeen?.[a.id] !== a.key,
+  }));
+}
 function terminalTopbar() {
   const navExpanded =
     innerWidth <= 760
       ? document.body.classList.contains("elite-mobile-nav-open")
       : !terminalCollapsed;
+  const unread = eliteAttentionModel().filter((a) => a.unread).length;
   const date = new Intl.DateTimeFormat("pt-PT", {
     timeZone: taProfile().timezone,
     weekday: "short",
@@ -50,7 +127,7 @@ function terminalTopbar() {
     month: "short",
     year: "numeric",
   }).format(new Date());
-  return `<div class="terminal-topbar reference-topbar"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${navExpanded ? "Recolher" : "Expandir"} navegação" aria-expanded="${navExpanded}">${terminalIcon("menu")}</button><button class="reference-search" onclick="eliteOpenTradeSearch()" aria-label="Buscar trades realizados">${terminalIcon("search")}<span>Busque trades por data ou ativo…</span><kbd>Ctrl + K</kbd></button><div class="reference-top-actions"><button class="reference-icon reference-alert" onclick="eliteOpenAlerts()" aria-label="Ver pontos de atenção">${terminalIcon("alert")}</button><div class="reference-clock"><span id="elite-live-date">${esc(date)}</span><b id="elite-live-clock" title="${esc(taProfile().timezone)}">${eliteClockText()}</b></div>${accountCurrencyControl()}<button class="reference-icon" onclick="eliteToggleContrast()" aria-label="Alternar contraste" aria-pressed="${eliteContrast}">${terminalIcon("contrast")}</button><button class="reference-connection" onclick="taGo('settings')" aria-label="Ver conexão"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
+  return `<div class="terminal-topbar reference-topbar"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${navExpanded ? "Recolher" : "Expandir"} navegação" aria-expanded="${navExpanded}">${terminalIcon("menu")}</button><button class="reference-search" onclick="eliteOpenTradeSearch()" aria-label="Buscar trades realizados">${terminalIcon("search")}<span>Busque trades por data ou ativo…</span><kbd>Ctrl + K</kbd></button><div class="reference-top-actions"><button class="reference-icon reference-alert ${unread ? "has-alerts" : ""}" onclick="eliteOpenAlerts()" aria-label="Ver pontos de atenção" title="${unread ? unread + " novo(s) alerta(s)" : "Nenhum novo alerta"}">${terminalIcon("alert")}${unread ? `<span class="elite-alert-count" aria-hidden="true">${unread}</span><span class="sr-only" role="status">${unread} novos pontos de atenção nos registros.</span>` : ""}</button><div class="reference-clock"><span id="elite-live-date">${esc(date)}</span><b id="elite-live-clock" title="${esc(taProfile().timezone)}">${eliteClockText()}</b></div>${accountCurrencyControl()}<button class="reference-icon" onclick="eliteToggleContrast()" aria-label="Alternar contraste" aria-pressed="${eliteContrast}">${terminalIcon(eliteContrast ? "sun" : "moon")}</button><button class="reference-connection" onclick="taGo('settings')" aria-label="Ver conexão"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(eliteConnectionLabel())}</span></button></div></div>`;
 }
 setInterval(() => {
   const node = document.getElementById("elite-live-clock");
@@ -120,12 +197,27 @@ function eliteOpenAlerts() {
   if (!d) {
     d = document.createElement("dialog");
     d.id = "elite-alerts-dialog";
+    d.setAttribute("aria-label", "Pontos de atenção");
     document.body.append(d);
   }
-  const m = eliteMomentumModel(),
-    insight = taDailyInsight(taDailyWeekStats());
-  d.innerHTML = `<div class="section-head"><h2>Pontos de atenção</h2><button class="b s" onclick="document.getElementById('elite-alerts-dialog').close()">Fechar</button></div><p>${esc(m.tip)}</p><p>${esc(insight.text)}</p><button class="b" onclick="document.getElementById('elite-alerts-dialog').close();taGo('ins')">Revisar execução</button>`;
-  d.showModal();
+  const alerts = eliteAttentionModel();
+  d.innerHTML = `<div class="section-head"><h2>Pontos de atenção</h2><button class="b s" onclick="document.getElementById('elite-alerts-dialog').close()">Fechar</button></div>${alerts.length ? alerts.map((a) => `<article class="elite-attention-item"><span class="badge">${a.unread ? "Novo" : "Visto"}</span><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p><p>${esc(a.action)}</p><button class="b s" data-target="${a.target}" onclick="document.getElementById('elite-alerts-dialog').close();taGo(this.dataset.target)">Revisar ${terminalIcon("arrow")}</button></article>`).join("") : '<p>Nenhum padrão de atenção identificado com os dados avaliados disponíveis.</p><p class="muted-note">Dados insuficientes não comprovam ausência de dificuldades. Registre a execução e confira seu plano.</p>'}<p class="muted-note">Leitura por regras dos últimos registros avaliados. Uma sequência de perdas, por si só, não indica indisciplina ou um problema emocional.</p>${alerts.some((a) => a.unread) ? '<button class="b s" onclick="eliteMarkAttentionSeen()">Marcar como lido</button>' : ""}<p id="elite-attention-message" role="status"></p>`;
+  if (!d.open) d.showModal();
+}
+function eliteMarkAttentionSeen() {
+  const old = S.attentionSeen;
+  try {
+    S.attentionSeen = {
+      ...(old && typeof old === "object" ? old : {}),
+      ...Object.fromEntries(eliteAttentionModel().map((a) => [a.id, a.key])),
+    };
+    persistState(S);
+    R();
+    eliteOpenAlerts();
+  } catch (e) {
+    S.attentionSeen = old;
+    document.getElementById("elite-attention-message").textContent = e.message;
+  }
 }
 function eliteReferenceHome() {
   const p = taProfile(),

@@ -88,7 +88,7 @@ const { chromium } = require("playwright"),
     );
     assert.match(
       await p.locator(".reference-briefing").innerText(),
-      /Semana positiva/,
+      /Prepare sua sessão/,
     );
     assert.equal(await p.locator(".reference-event").count(), 2);
     assert.equal(
@@ -212,7 +212,7 @@ const { chromium } = require("playwright"),
     await p.getByRole("button", { name: "Ver pontos de atenção" }).click();
     assert.match(
       await p.locator("#elite-alerts-dialog").innerText(),
-      /semana está positiva/,
+      /Nenhum padrão de atenção identificado/,
     );
     await p.getByRole("button", { name: "Fechar", exact: true }).click();
     await p.getByRole("button", { name: "Alternar contraste" }).click();
@@ -255,7 +255,7 @@ const { chromium } = require("playwright"),
     await p.waitForSelector(".reference-home");
     assert(
       await p
-        .locator(".reference-home")
+        .locator(".smc-office-scene")
         .evaluate((e) =>
           getComputedStyle(e).backgroundImage.includes(
             "data:image/png;base64,",

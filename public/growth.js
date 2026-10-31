@@ -462,10 +462,8 @@ function growthAfterRender() {
     host.ontoggle = () => {
       if (host.isConnected) growthUI.insightsOpen = host.open;
     };
-    host.innerHTML =
-      "<summary>Emotional Insights · check-ins e decisões</summary>" +
-      growthInsights();
-    document.querySelector(".diary-heading")?.after(host);
+    host.innerHTML = "<summary>Emotional Insights</summary>" + growthInsights();
+    document.querySelector(".diary-heading > .row")?.append(host);
   }
   if (typeof growthReviewToolbar === "function") growthReviewToolbar();
   if (typeof growthReconcile === "function") growthReconcile();

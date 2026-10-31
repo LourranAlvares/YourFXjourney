@@ -163,7 +163,7 @@ async function taCheckConnection(force = false) {
   taStatusChecked = true;
   taConnection.connecting = true;
   const connectionLabel = document.querySelector(".terminal-connection-label");
-  if (connectionLabel) connectionLabel.textContent = "Conectando ao servidor…";
+  if (connectionLabel) connectionLabel.textContent = "Conectando…";
   taConnectionFlight = (async () => {
     try {
       const s = await taApi("/api/status");

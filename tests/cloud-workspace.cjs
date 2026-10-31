@@ -280,6 +280,9 @@ const { chromium } = require("playwright"),
     await row
       .getByRole("button", { name: "Liberar acesso", exact: true })
       .click();
+    await po
+      .getByRole("button", { name: "Liberar sem vencimento", exact: true })
+      .click();
     await po.waitForFunction(
       (id) => eliteCloud.adminRows.find((u) => u.id === id).status === "active",
       f.pending.id,

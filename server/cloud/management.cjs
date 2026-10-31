@@ -8,7 +8,14 @@ function expiryFor(term, custom, now = new Date()) {
     return new Date(
       +now + (term === "trial7" ? 7 : 14) * 86400000,
     ).toISOString();
-  const months = { monthly: 1, quarterly: 3, annual: 12 }[term];
+  const months = {
+    monthly: 1,
+    bimonthly: 2,
+    quarterly: 3,
+    semiannual: 6,
+    annual: 12,
+    biennial: 24,
+  }[term];
   if (months) {
     const d = new Date(now),
       day = d.getUTCDate();
@@ -114,12 +121,22 @@ function createManagement({ request, active, admin, fail, owner }) {
             "id",
             "status",
             "term",
+            "plan",
             "expiresAt",
             "notes",
             "revokeSessions",
           ].includes(k),
       ) ||
       !["active", "pending", "blocked"].includes(data.status) ||
+      (data.plan !== undefined &&
+        ![
+          "standard",
+          "trial",
+          "monthly",
+          "quarterly",
+          "annual",
+          "custom",
+        ].includes(data.plan)) ||
       typeof data.notes !== "string" ||
       data.notes.length > 2000 ||
       typeof data.revokeSessions !== "boolean"
@@ -148,9 +165,14 @@ function createManagement({ request, active, admin, fail, owner }) {
       } else {
         expiry = expiryFor(data.term, data.expiresAt);
         plan =
-          { trial7: "trial", trial14: "trial", unlimited: "standard" }[
-            data.term
-          ] || data.term;
+          {
+            trial7: "trial",
+            trial14: "trial",
+            unlimited: "standard",
+            bimonthly: "custom",
+            semiannual: "custom",
+            biennial: "custom",
+          }[data.term] || data.term;
       }
     } catch (e) {
       if (e.code) throw e;
@@ -160,7 +182,14 @@ function createManagement({ request, active, admin, fail, owner }) {
         "Escolha um prazo válido ou uma data futura.",
       );
     }
-    return request("/rest/v1/rpc/elitex_admin_manage", {
+    if (data.plan !== undefined) plan = data.plan;
+    if (data.status === "active" && expiry && Date.parse(expiry) <= Date.now())
+      fail(
+        400,
+        "expired_access",
+        "O prazo atual já encerrou. Escolha um novo prazo para liberar o acesso.",
+      );
+    const result = await request("/rest/v1/rpc/elitex_admin_manage", {
       admin: true,
       method: "POST",
       data: {
@@ -173,6 +202,16 @@ function createManagement({ request, active, admin, fail, owner }) {
         revoke_sessions: data.revokeSessions,
       },
     });
+    if (result?.ok !== true)
+      fail(
+        502,
+        "unconfirmed_access",
+        "O banco não confirmou a alteração. Atualize a lista antes de tentar novamente.",
+      );
+    return {
+      ok: true,
+      account: { id: data.id, status: data.status, plan, expires_at: expiry },
+    };
   }
   async function audit(current, id) {
     admin(current);

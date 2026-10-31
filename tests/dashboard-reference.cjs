@@ -33,8 +33,12 @@ const { chromium } = require("playwright"),
     const snapshot = await p.evaluate(() => JSON.stringify(S)),
       net = await p.evaluate(() => st(ft()).net);
     assert.equal(await p.locator(".primary-metrics .k").count(), 6);
-    assert.equal(await p.locator(".elite-dash-charts > .card").count(), 2);
+    assert.equal(await p.locator(".elite-dash-charts > .card").count(), 1);
     assert.equal(await p.locator(".elite-dash-support > .card").count(), 4);
+    assert.equal(
+      await p.locator('[data-terminal-chart="dashboard-drawdown"]').count(),
+      0,
+    );
     assert.equal(
       await p.locator(".elite-dash-calendar .cd:not(.e)").count(),
       31,
@@ -50,6 +54,17 @@ const { chromium } = require("playwright"),
       false,
     );
     assert.match(await p.locator(".primary-metrics").innerText(), /48/);
+    for (const mode of ["dd", "daily", "balance", "pnl"]) {
+      await p
+        .getByLabel("Visualização do gráfico", { exact: true })
+        .selectOption(mode);
+      assert.equal(await p.evaluate(() => chartMode), mode);
+      assert.equal(await p.locator(".elite-dash-charts > .card").count(), 1);
+      assert.equal(
+        await p.locator('[data-terminal-chart="performance"]').count(),
+        1,
+      );
+    }
     await p.screenshot({
       path: "/tmp/elitex-dashboard-reference.png",
       fullPage: true,

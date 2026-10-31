@@ -39,7 +39,9 @@ function smcHomeView() {
     tip =
       insight.label === "Preparação inicial"
         ? "Antes de executar, confira o contexto, os critérios de entrada e o risco previsto no seu plano."
-        : insight.action,
+        : insight.label === "Registro observado"
+          ? "Aguarde um setup claro. Não há obrigação de operar; respeite os limites e os horários do seu plano."
+          : insight.action,
     focus = valid
       ? taBriefing.result.action
       : insight.label === "Registro observado"

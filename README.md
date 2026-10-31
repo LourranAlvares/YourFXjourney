@@ -378,3 +378,13 @@ Veja [arquitetura, critérios e limitações](docs/SMART-GROWTH.md), incluindo
 privacidade de prints, exportação de vídeo conforme suporte do navegador,
 reflexão por regras/IA opcional e validade dos certificados após correções.
 Não é necessário executar nova migração Supabase para estes módulos.
+
+### Administração e organização das telas
+
+A administração permite escolher plano e prazo, incluindo dois meses e dois anos,
+com confirmação explícita de salvamento. Veja [ativação e uso](docs/ADMIN-ACCESS.md)
+se a tela informar que a gestão de vencimentos ainda não foi ativada no Supabase.
+O Diário reúne controles num resumo compacto e mostra calendário/galeria lado
+a lado no desktop. O Painel usa um único gráfico principal com seletor de P&L,
+saldo e drawdown. O topo simplifica a conexão e reúne alertas por regras sobre
+registros explícitos de execução, com estado de leitura salvo na conta.

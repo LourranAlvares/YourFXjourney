@@ -11646,6 +11646,262 @@ body.smc-shell .elite-dash-distribution li b {
 body.smc-shell .elite-dash-distribution li small {
   color: var(--secondary);
 }
+
+/* Desktop preparation fills the usable viewport; shortcuts finish at its lower edge. */
+@media (min-width: 761px) {
+  .smc-home .smc-hero-grid {
+    min-height: max(650px, calc(100svh - 114px));
+  }
+  .smc-home .reference-right .reference-briefing {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .smc-home .reference-briefing-body,
+  .smc-home .reference-briefing-body .reference-brief-row {
+    flex: 1;
+  }
+  .smc-home .reference-method {
+    margin-top: 14px;
+  }
+}
+body.smc-shell .smc-admin-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  border: 1px solid #8e7447;
+  border-radius: 10px;
+  background: #d7b9820c;
+  color: #f0d5a3;
+}
+body.smc-shell .smc-admin-notice > span {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+body.smc-shell .smc-admin-notice p {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Compact content hierarchy: usable controls and readable text, without oversized intros. */
+body.smc-shell .page-top {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+body.smc-shell .section-head {
+  margin-bottom: 12px;
+}
+body.smc-shell #main > .card {
+  padding: 18px;
+  margin-bottom: 14px;
+}
+body.smc-shell #main > details.card:not([open]) {
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+body.smc-shell .growth-toolbar {
+  margin: 6px 0 10px;
+}
+body.smc-shell .diary-heading .section-head h2 {
+  font-size: 18px;
+}
+body.smc-shell .diary-heading .section-head p {
+  margin-top: 3px;
+  font-size: 13px;
+}
+body.smc-shell .diary-heading > .row {
+  margin: 0 0 12px;
+  gap: 8px;
+}
+body.smc-shell .diary-heading > .row label {
+  font-size: 12px;
+}
+body.smc-shell .diary-heading .grid {
+  gap: 10px;
+  margin: 0;
+}
+body.smc-shell .diary-heading .grid .k {
+  padding: 12px 14px;
+  min-height: 76px;
+}
+body.smc-shell .diary-heading .grid .k b {
+  font-size: 23px;
+  line-height: 1.3;
+  margin: 6px 0 0;
+}
+body.smc-shell .diary-heading .grid .k > small:first-child {
+  font-size: 12px;
+}
+.diary-workspace-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+body.smc-shell .diary-calendar-panel,
+body.smc-shell .diary-records-panel {
+  min-width: 0;
+}
+body.smc-shell .diary-calendar-panel {
+  padding: 16px;
+  margin: 0;
+}
+body.smc-shell .diary-calendar-panel .section-head {
+  gap: 6px;
+  margin-bottom: 12px;
+}
+body.smc-shell .diary-calendar-panel .section-head span {
+  font-size: 12px;
+  color: var(--secondary);
+}
+body.smc-shell .diary-day {
+  min-height: 64px;
+  padding: 7px 3px;
+  gap: 3px;
+}
+body.smc-shell .diary-gallery {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 12px;
+  align-items: start;
+}
+body.smc-shell .diary-entry {
+  padding: 16px;
+  margin: 0;
+}
+body.smc-shell .diary-cover {
+  height: 140px;
+  margin-bottom: 12px;
+}
+body.smc-shell .diary-no-print {
+  padding: 16px 10px;
+  margin-bottom: 12px;
+}
+body.smc-shell .diary-entry p:has(> small) {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+body.smc-shell .diary-patterns {
+  margin-top: 16px;
+}
+body.smc-shell .diary-patterns > summary {
+  cursor: pointer;
+  color: var(--gold);
+}
+@media (min-width: 1100px) {
+  .diary-workspace-layout {
+    grid-template-columns: minmax(320px, 0.85fr) minmax(0, 1.45fr);
+  }
+}
+
+/* One aligned row of topbar controls; technical connection details live in Settings. */
+@media (min-width: 761px) {
+  body.smc-shell .reference-topbar .reference-search,
+  body.smc-shell .reference-topbar .reference-icon,
+  body.smc-shell .reference-topbar .reference-connection,
+  body.smc-shell .reference-topbar .reference-clock,
+  body.smc-shell .reference-topbar .account-currency-control select {
+    height: 42px;
+    min-height: 42px;
+    box-sizing: border-box;
+  }
+  body.smc-shell .reference-topbar .reference-icon {
+    width: 42px;
+    min-width: 42px;
+    display: grid;
+    place-items: center;
+  }
+  body.smc-shell .reference-top-actions {
+    align-items: center;
+    gap: 10px;
+  }
+  body.smc-shell .reference-connection {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+body.smc-shell .reference-icon[aria-label="Alternar contraste"] {
+  border-color: #494238;
+  color: var(--gold);
+  background: #d7b98208;
+}
+body.smc-shell .reference-alert {
+  position: relative;
+}
+body.smc-shell .reference-alert.has-alerts {
+  color: #f08d9d;
+  border-color: #894453;
+}
+.elite-alert-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 17px;
+  padding: 1px 4px;
+  border-radius: 10px;
+  background: #a72f47;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
+.elite-attention-item {
+  padding: 14px 0;
+  border-top: 1px solid #39333a;
+}
+.elite-attention-item h3 {
+  font-size: 16px;
+  margin: 8px 0;
+}
+@media (min-width: 761px) and (max-width: 1250px) {
+  body.smc-shell .reference-clock > span {
+    display: none;
+  }
+}
+@media (min-width: 1100px) {
+  body.smc-shell .diary-heading .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+body.smc-shell #main:has(.diary-heading) .page-top p {
+  display: none;
+}
+body.smc-shell .diary-heading .grid .k {
+  padding: 10px 12px;
+}
+body.smc-shell .diary-heading .grid .k > small:last-child:not(:first-child) {
+  font-size: 11px;
+  line-height: 1.4;
+}
+body.smc-shell .diary-heading > .row .growth-insights-host {
+  padding: 9px 12px;
+  margin: 0;
+  flex: 0 1 auto;
+}
+body.smc-shell .diary-heading > .row .growth-insights-host[open] {
+  flex: 1 0 100%;
+}
+@media (max-width: 760px) {
+  body.smc-shell .diary-heading > .row > button:nth-of-type(5),
+  body.smc-shell .diary-heading > .row .growth-insights-host {
+    grid-column: 1/-1;
+  }
+}
+body.smc-shell .diary-day {
+  min-height: 56px;
+}
+body.smc-shell .diary-day small {
+  white-space: nowrap;
+  font-size: 11px;
+}
+body.smc-shell .elite-dash-charts {
+  grid-template-columns: minmax(0, 1fr);
+}
 </style><style>/* SMC Elite personal growth: quiet surfaces, native controls, no extra dashboard grid. */
 body.smc-shell .growth-toolbar,
 body.smc-shell .growth-session-controls {
@@ -12153,7 +12409,7 @@ function moveMonth(delta){cm=new Date(cm.getFullYear(),cm.getMonth()+delta,1);se
 function vCal(ts){const y=cm.getFullYear(),m=cm.getMonth(),off=(new Date(y,m,1).getDay()+6)%7,count=new Date(y,m+1,0).getDate(),bd=grp(ts,day),today=ymd(new Date());let cells='',total=0,n=0;for(let i=0;i<Math.ceil((off+count)/7)*7;i++){const d=i-off+1;if(d<1||d>count){cells+='<div class="cd e" aria-hidden="true"></div>';continue}const date=y+'-'+pad(m+1)+'-'+pad(d),s=bd[date],excluded=(F.from&&date<F.from)||(F.to&&date>F.to);if(s){total+=s.net;n+=s.n}const info=`${date}: ${s?signed(s.net)+', '+s.n+' trades':excluded?'fora do período selecionado':'sem trades'}`;cells+=`<button class="cd ${s?cl(s.net)==='g'?'gb2':cl(s.net)==='r'?'rb2':'':''} ${date===today?'today':''} ${date===selDay?'sel':''}" aria-label="${esc(info)}" ${date===today?'aria-current="date"':''} onclick="openDay('${date}')"><b>${d}${date===today?' ·':''}</b>${s?`<span class="day-pnl ${cl(s.net)}">${signed(s.net)}</span><small>${s.n} ${s.n===1?'trade':'trades'}</small>${s.rn?`<small class="day-r">${s.totR.toFixed(2)}R · ${s.rn}/${s.n}</small>`:''}`:`<small>${excluded?'Fora do filtro':'—'}</small>`}</button>`}
 return `<section class="card"><div class="section-head"><div><div class="eyebrow">Disciplina, dia após dia</div><h2>Calendário de trading</h2><p>Selecione um dia para consultar operações, diário e prints.</p></div><div class="month-actions"><button class="b s" aria-label="Mês anterior" onclick="moveMonth(-1)">‹</button><span class="month-title">${new Intl.DateTimeFormat('pt-PT',{month:'long',year:'numeric'}).format(cm)}</span><button class="b s" aria-label="Próximo mês" onclick="moveMonth(1)">›</button><button class="b s" onclick="cm=new Date();selDay=null;R()">Hoje</button></div></div><p class="calendar-hint">Deslize o calendário para ver todos os dias da semana.</p><div class="calendar-scroll" tabindex="0" role="region" aria-label="Calendário mensal, deslize horizontalmente em telas pequenas"><div class="cal">${['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].map(d=>`<div class="ch">${d}</div>`).join('')}${cells}</div></div><div class="calendar-summary"><span>Resultado do mês <b class="${cl(total)}">${n?signed(total):'—'}</b></span><span><b>${n}</b> trades</span><span>Respeita os filtros ativos · data de fechamento</span></div></section>`}
 function openDay(date){selDay=date;const ts=ft().filter(t=>day(t)===date),s=st(ts),d=$('#daydlg');d.innerHTML=`<div class="section-head"><div><div class="eyebrow">Atividade de trading</div><h2>${esc(new Intl.DateTimeFormat('pt-PT',{dateStyle:'full'}).format(new Date(date+'T12:00')))}</h2></div><button class="b s" aria-label="Fechar detalhes do dia" onclick="$('#daydlg').close()">Fechar ×</button></div><div class="day-summary"><b class="${cl(s.net)}">${s.n?signed(s.net):'—'}</b><span>${s.n} trades</span><span class="g">${s.w} ganhos</span><span class="r">${s.l} perdas</span><span>${s.n-s.w-s.l} breakeven</span><span>${s.rn?s.totR.toFixed(2)+'R ('+s.rn+'/'+s.n+' trades)':'R indisponível'}</span></div><p class="muted-note">Operações fechadas neste dia, respeitando os filtros ativos. Abra uma operação para editar todos os campos e gerenciar prints.</p>${ts.length?ts.map(t=>`<article class="day-trade"><div class="trade-head"><strong>${esc(t.symbol)}</strong><span class="badge">${t.side==='long'?'Compra':'Venda'}</span><span class="${cl(t.pnl)}">${signed(t.pnl)}${t.est?' * estimado':''}</span><button class="b s" data-trade="${esc(t.id)}" onclick="$('#daydlg').close();edit(this.dataset.trade)">Abrir trade</button></div><p class="muted-note">${esc(t.open||'Abertura não informada')} → ${esc(t.close)} · ${esc(t.strategy||'Sem estratégia')} · ${t.risk>0?(t.pnl/t.risk).toFixed(2)+'R':'R indisponível'}</p>${t.notes?`<small>Diário</small><p>${esc(t.notes)}</p>`:''}${t.lesson?`<small>Aprendizados</small><p>${esc(t.lesson)}</p>`:''}<div class="th">${(t.img||[]).filter(src=>/^data:image\/(png|jpeg|webp|gif);base64,/.test(src)).map(src=>`<img alt="Print da operação ${esc(t.symbol)}" src="${esc(src)}">`).join('')}</div></article>`).join(''):'<p class="mu">Nenhum trade corresponde aos filtros neste dia.</p>'}<button class="b" onclick="$('#daydlg').close();edit(null,'${date}')">+ Trade neste dia</button>`;d.showModal()}
-function R(){if(CLOUD_BOOT&&(typeof eliteCloud==='undefined'||!eliteCloud.ready))return;if(typeof taNav!=='function')return;terminalBeginRender();$('#nav').innerHTML=taNav();const ts=ft(),views={home:vHome,analyst:vAnalyst,plan:vPlan,economic:vEconomicCalendar,settings:vSettings,admin:vCloudAdmin,achievements:vGrowthAchievements,dash:vDash,cal:vCal,trades:vTrades,ana:vAna,pat:vPat,risk:vRisk,rev:vRev,str:vStr,ins:vInsights,share:vShareCalendar},v=(views[tab]||vHome)(ts);$('#main').innerHTML=terminalTopbar()+(tab==='home'?'':`<div class="page-top"><div><div class="eyebrow">SMC Elite / ${esc(tabs.find(t=>t[0]===tab)?.[1]||'Início')}</div><h2>${tab==='dash'?'Painel':esc(tabs.find(t=>t[0]===tab)?.[1]||'Início')}</h2><p>${tab==='dash'?'Clareza sobre os seus resultados. Controle sobre a próxima decisão.':tab==='admin'?'Gerencie contas, permissões e prazos de acesso.':'Prepare, analise e revise o seu processo.'}</p></div><div class="page-actions">${tab==='dash'?`<button class="b s" aria-pressed="${hideDashboardMoney}" onclick="toggleDashboardMoney()">${hideDashboardMoney?'Mostrar valores':'Ocultar valores'}</button>`:''}${['admin','achievements'].includes(tab)?'':'<button class="b" onclick="edit(null)">+ Novo trade</button>'}</div></div>`)+(['home','analyst','plan','economic','settings','rev','share','admin','achievements'].includes(tab)?'':filt())+v;terminalAfterRender();if(tab==='share')drawSharePreview();const nav=$('#nav'),active=nav.querySelector('.on');if(active&&nav.scrollWidth>nav.clientWidth)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);if(typeof premiumAfterRender==='function')premiumAfterRender();if(typeof taEnsureDailyData==='function')taEnsureDailyData()}
+function R(){if(CLOUD_BOOT&&(typeof eliteCloud==='undefined'||!eliteCloud.ready))return;if(typeof taNav!=='function')return;terminalBeginRender();$('#nav').innerHTML=taNav();const ts=ft(),views={home:vHome,analyst:vAnalyst,plan:vPlan,economic:vEconomicCalendar,settings:vSettings,admin:vCloudAdmin,achievements:vGrowthAchievements,dash:vDash,cal:vCal,trades:vTrades,ana:vAna,pat:vPat,risk:vRisk,rev:vRev,str:vStr,ins:vInsights,share:vShareCalendar},v=(views[tab]||vHome)(ts);$('#main').innerHTML=terminalTopbar()+(tab==='home'?'':`<div class="page-top"><div><div class="eyebrow">SMC Elite / ${esc(tabs.find(t=>t[0]===tab)?.[1]||'Início')}</div><h2>${tab==='dash'?'Painel':esc(tabs.find(t=>t[0]===tab)?.[1]||'Início')}</h2><p>${tab==='dash'?'Clareza sobre os seus resultados. Controle sobre a próxima decisão.':tab==='admin'?'Gerencie contas, permissões e prazos de acesso.':'Prepare, analise e revise o seu processo.'}</p></div><div class="page-actions">${tab==='dash'?`<button class="b s" aria-pressed="${hideDashboardMoney}" onclick="toggleDashboardMoney()">${hideDashboardMoney?'Mostrar valores':'Ocultar valores'}</button>`:''}${['admin','achievements','trades'].includes(tab)?'':'<button class="b" onclick="edit(null)">+ Novo trade</button>'}</div></div>`)+(['home','analyst','plan','economic','settings','rev','share','admin','achievements'].includes(tab)?'':filt())+v;terminalAfterRender();if(tab==='share')drawSharePreview();const nav=$('#nav'),active=nav.querySelector('.on');if(active&&nav.scrollWidth>nav.clientWidth)nav.scrollLeft=Math.max(0,active.offsetLeft-nav.offsetLeft-(nav.clientWidth-active.offsetWidth)/2);if(typeof premiumAfterRender==='function')premiumAfterRender();if(typeof taEnsureDailyData==='function')taEnsureDailyData()}
 // ---------- Trading Insights: deterministic analysis, no external AI ----------
 const INS_CRITERIA=[['entry','Regras de entrada','Respeitou as regras de entrada?'],['risk','Risco planejado','Respeitou o risco planejado?'],['exit','Gerenciamento e saída','Respeitou o gerenciamento e a saída?'],['limits','Limites operacionais','Respeitou os limites operacionais?'],['plan','Operação dentro do plano','Entrada dentro do plano?']];
 const INS_ERRORS=[['early','Entrada antecipada','Aguardar todos os critérios de confirmação nas próximas operações.'],['hesitation','Hesitação','Usar um checklist de entrada e registrar a decisão nos próximos 5 setups válidos.'],['offplan','Fora do plano','Operar apenas setups previstos no plano nas próximas 5 operações.'],['management','Mudança de gerenciamento','Definir a saída antes da entrada e revisar o cumprimento nos próximos 5 trades.'],['overtrade','Excesso de operações','Definir um limite diário de operações e respeitá-lo nas próximas 5 sessões.'],['impulse','Operação impulsiva','Fazer uma pausa de 15 minutos após uma perda e preencher o checklist antes de reentrar.'],['risk','Desvio de risco','Validar o risco monetário antes de cada uma das próximas 5 entradas.']];
@@ -13877,7 +14133,7 @@ async function taCheckConnection(force = false) {
   taStatusChecked = true;
   taConnection.connecting = true;
   const connectionLabel = document.querySelector(".terminal-connection-label");
-  if (connectionLabel) connectionLabel.textContent = "Conectando ao servidor…";
+  if (connectionLabel) connectionLabel.textContent = "Conectando…";
   taConnectionFlight = (async () => {
     try {
       const s = await taApi("/api/status");
@@ -15171,6 +15427,8 @@ function terminalIcon(name) {
     admin:
       "M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M12 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4 M8 17c0-4 8-4 8 0",
     menu: "M4 6h16 M4 12h16 M4 18h16",
+    sun: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v2 M12 20v2 M2 12h2 M20 12h2 M5 5l1.5 1.5 M17.5 17.5 19 19 M5 19l1.5-1.5 M17.5 6.5 19 5",
+    moon: "M20.9 13A9 9 0 0 1 11 3a7 7 0 1 0 9.9 10z",
     contrast:
       "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 3v18 M12 3a9 9 0 0 1 0 18z",
     arrow: "M5 12h14 m-5-5 5 5-5 5",
@@ -16176,7 +16434,8 @@ function diaryWorkspace(ts) {
     const date = diaryMonth + "-" + pad(d),
       list = month.filter((t) => day(t) === date),
       sum = list.reduce((v, t) => v + t.pnl, 0);
-    cells += `<button class="diary-day ${date === diarySelected ? "selected" : ""} ${list.length ? cl(sum) : ""}" aria-pressed="${date === diarySelected}" onclick="diaryChoose('${date}')"><b>${d}</b><small>${list.length ? list.length + (list.length === 1 ? " trade" : " trades") : "—"}</small>${list.length ? `<span>${money(sum)}</span>` : ""}</button>`;
+    const description = `${date} · ${list.length} operações${list.length ? " · " + money(sum) : ""}`;
+    cells += `<button class="diary-day ${date === diarySelected ? "selected" : ""} ${list.length ? cl(sum) : ""}" aria-label="${esc(description)}" title="${esc(description)}" aria-pressed="${date === diarySelected}" onclick="diaryChoose('${date}')"><b>${d}</b><small>${list.length ? list.length + (list.length === 1 ? " op" : " ops") : "—"}</small></button>`;
   }
   const emotions = rows.filter((t) => t.emotion),
     groups = new Map();
@@ -16186,7 +16445,7 @@ function diaryWorkspace(ts) {
     g.pnl += t.pnl;
     groups.set(t.emotion, g);
   });
-  return `<section class="card diary-heading"><div class="section-head"><div><div class="eyebrow">Seu diário de trading</div><h2>Registre. Reveja. Evolua.</h2><p>Print, motivo e sentimento no mesmo registro. Os dados técnicos ficam disponíveis para revisar.</p></div><button class="b" onclick="diaryNew()">+ Registrar no diário</button></div><div class="row"><button class="b s" onclick="diaryMove(-1)" aria-label="Mês anterior">‹</button><label>Mês<input type="month" value="${diaryMonth}" onchange="if(/^\\d{4}-\\d{2}$/.test(this.value)){diaryMonth=this.value;diarySelected='';R()}"></label><button class="b s" onclick="diaryMove(1)" aria-label="Próximo mês">›</button><button class="b s" onclick="diaryLatest()">Últimos registros</button><button class="b s" onclick="diarySelected='';R()">Mês completo</button></div><div class="grid">${kp("Resultado no mês", money(totals.net), cl(totals.net))}${kp("Operações", month.length)}${kp(known.length === month.length ? "R realizado" : "R conhecido · parcial", known.length ? shareR(known.reduce((a, b) => a + b.value, 0)) : "—", "", known.length + "/" + month.length + " com R conhecido")}${kp("Com diário", month.filter((t) => t.notes || t.feelings || t.img?.length).length)}</div></section><section class="card"><div class="section-head"><h2>Calendário do diário</h2><span>${diarySelected || "Selecione um dia para filtrar a galeria"}</span></div><div class="diary-calendar">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((d) => `<small>${d}</small>`).join("")}${cells}</div></section><div class="section-head"><h2>${diarySelected ? "Registros de " + diarySelected : "Galeria do mês"}</h2><span>${rows.length} operações</span></div><div class="diary-gallery">${rows.map((t) => diaryCard(t)).join("") || '<section class="card"><h3>Nenhum registro neste período</h3><p>Use “Últimos registros”, ajuste os filtros ou registre uma operação.</p></section>'}</div><section class="card"><h2>Padrões nos seus registros</h2>${diaryPatterns(rows)}${groups.size ? Array.from(groups, ([name, g]) => `<p><b>${esc(name)}</b> · ${g.n} operações · ${money(g.pnl)} ${g.n < 10 ? "· amostra pequena" : ""}</p>`).join("") : "<p>Registre como se sentiu para comparar sua execução ao longo do tempo.</p>"}<p class="muted-note">Somente sentimentos informados pelo usuário; associação descritiva, sem concluir causa ou eficiência. Os filtros do diário também se aplicam aqui.</p></section>`;
+  return `<section class="card diary-heading" aria-label="Resumo e navegação do diário"><div class="row"><button class="b s" onclick="diaryMove(-1)" aria-label="Mês anterior">‹</button><label><span class="sr-only">Mês</span><input type="month" value="${diaryMonth}" onchange="if(/^\\d{4}-\\d{2}$/.test(this.value)){diaryMonth=this.value;diarySelected='';R()}"></label><button class="b s" onclick="diaryMove(1)" aria-label="Próximo mês">›</button><button class="b s" onclick="diaryLatest()">Últimos registros</button><button class="b s" onclick="diarySelected='';R()">Mês completo</button><button class="b" onclick="diaryNew()">+ Registrar no diário</button></div><div class="grid">${kp("Resultado no mês", money(totals.net), cl(totals.net))}${kp("Operações", month.length)}${kp(known.length === month.length ? "R realizado" : "R conhecido · parcial", known.length ? shareR(known.reduce((a, b) => a + b.value, 0)) : "—", "", known.length + "/" + month.length + " com R conhecido")}${kp("Com diário", month.filter((t) => t.notes || t.feelings || t.img?.length).length)}</div></section><div class="diary-workspace-layout"><section class="card diary-calendar-panel"><div class="section-head"><h2>Calendário do diário</h2><span>${diarySelected || "Selecione um dia para filtrar a galeria"}</span></div><div class="diary-calendar">${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"].map((d) => `<small>${d}</small>`).join("")}${cells}</div></section><section class="diary-records-panel"><div class="section-head"><h2>${diarySelected ? "Registros de " + diarySelected : "Galeria do mês"}</h2><span>${rows.length} operações${diarySelected ? " · " + money(st(rows).net) : ""}</span></div><div class="diary-gallery">${rows.map((t) => diaryCard(t)).join("") || '<section class="card"><h3>Nenhum registro neste período</h3><p>Use “Últimos registros”, ajuste os filtros ou registre uma operação.</p></section>'}</div></section></div><details class="card diary-patterns"><summary>Padrões nos seus registros</summary>${diaryPatterns(rows)}${groups.size ? Array.from(groups, ([name, g]) => `<p><b>${esc(name)}</b> · ${g.n} operações · ${money(g.pnl)} ${g.n < 10 ? "· amostra pequena" : ""}</p>`).join("") : "<p>Registre como se sentiu para comparar sua execução ao longo do tempo.</p>"}<p class="muted-note">Somente sentimentos informados pelo usuário; associação descritiva, sem concluir causa ou eficiência. Os filtros do diário também se aplicam aqui.</p></details>`;
 }
 function diaryCard(t) {
   const r = realizedTradeR(t),
@@ -16882,11 +17141,88 @@ function eliteClockText() {
     hour12: false,
   }).format(new Date());
 }
+function eliteConnectionLabel() {
+  if (typeof navigator !== "undefined" && !navigator.onLine)
+    return "Sem conexão";
+  if (
+    typeof CLOUD_BOOT !== "undefined" &&
+    CLOUD_BOOT &&
+    typeof eliteCloud !== "undefined" &&
+    eliteCloud.ready
+  )
+    return ["error", "conflict"].includes(eliteCloud.state)
+      ? "Atenção"
+      : "Conectado";
+  if (taConnection.connecting) return "Conectando…";
+  return taConnection.authenticated ? "Conectado" : "Desconectado";
+}
+function eliteAttentionModel() {
+  const rows = insUniverse()
+      .filter((t) => day(t) <= taDailyDate())
+      .sort((a, b) => b.close.localeCompare(a.close))
+      .slice(0, 25),
+    alerts = [];
+  const errors = rows.filter((t) => Array.isArray(t.behavior?.errors)),
+    counts = insErrorCounts(errors);
+  if (errors.length >= 5 && errors.length / Math.max(1, rows.length) >= 0.6) {
+    for (const [id, title, action] of INS_ERRORS) {
+      const count = counts[id] || 0;
+      if (count >= 2)
+        alerts.push({
+          id: "error:" + id,
+          title,
+          text: `${title} foi registrado em ${count} de ${errors.length} operações com erros avaliados, entre os últimos ${rows.length} trades.`,
+          action,
+          key: JSON.stringify(
+            errors.map((t) => [t.id, t.close, t.behavior.errors]),
+          ),
+          target: "ins",
+        });
+    }
+  }
+  const checked = insProcess(rows).checked,
+    risk = checked.filter((x) => x.c.risk !== null || x.c.limits !== null),
+    breaches = risk.filter((x) => x.c.risk === false || x.c.limits === false);
+  if (
+    risk.length >= 5 &&
+    risk.length / Math.max(1, rows.length) >= 0.6 &&
+    breaches.length >= 2
+  )
+    alerts.push({
+      id: "risk",
+      title: "Rever os limites do plano",
+      text: `${breaches.length} de ${risk.length} operações avaliadas registram desvio de risco ou de limite operacional.`,
+      action: "Confira seu risco e os limites antes da próxima entrada.",
+      key: JSON.stringify(risk.map((x) => [x.t.id, x.c.risk, x.c.limits])),
+      target: "risk",
+    });
+  const plan = checked.filter((x) => x.c.plan !== null),
+    off = plan.filter((x) => x.c.plan === false);
+  if (
+    plan.length >= 5 &&
+    plan.length / Math.max(1, rows.length) >= 0.6 &&
+    off.length >= 2 &&
+    !alerts.some((a) => a.id === "error:offplan")
+  )
+    alerts.push({
+      id: "plan",
+      title: "Atenção aos critérios de entrada",
+      text: `${off.length} de ${plan.length} operações avaliadas foram registradas fora do plano.`,
+      action: "Aguarde contexto claro e confira o checklist do seu sistema.",
+      key: JSON.stringify(plan.map((x) => [x.t.id, x.c.plan])),
+      target: "plan",
+    });
+  return alerts.map((a) => ({
+    ...a,
+    unread: S.attentionSeen?.[a.id] !== a.key,
+  }));
+}
 function terminalTopbar() {
   const navExpanded =
     innerWidth <= 760
       ? document.body.classList.contains("elite-mobile-nav-open")
       : !terminalCollapsed;
+  const unread = eliteAttentionModel().filter((a) => a.unread).length;
   const date = new Intl.DateTimeFormat("pt-PT", {
     timeZone: taProfile().timezone,
     weekday: "short",
@@ -16894,7 +17230,7 @@ function terminalTopbar() {
     month: "short",
     year: "numeric",
   }).format(new Date());
-  return `<div class="terminal-topbar reference-topbar"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${navExpanded ? "Recolher" : "Expandir"} navegação" aria-expanded="${navExpanded}">${terminalIcon("menu")}</button><button class="reference-search" onclick="eliteOpenTradeSearch()" aria-label="Buscar trades realizados">${terminalIcon("search")}<span>Busque trades por data ou ativo…</span><kbd>Ctrl + K</kbd></button><div class="reference-top-actions"><button class="reference-icon reference-alert" onclick="eliteOpenAlerts()" aria-label="Ver pontos de atenção">${terminalIcon("alert")}</button><div class="reference-clock"><span id="elite-live-date">${esc(date)}</span><b id="elite-live-clock" title="${esc(taProfile().timezone)}">${eliteClockText()}</b></div>${accountCurrencyControl()}<button class="reference-icon" onclick="eliteToggleContrast()" aria-label="Alternar contraste" aria-pressed="${eliteContrast}">${terminalIcon("contrast")}</button><button class="reference-connection" onclick="taGo('settings')" aria-label="Ver conexão"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(taApiState())}</span></button></div></div>`;
+  return `<div class="terminal-topbar reference-topbar"><button class="terminal-icon-button" onclick="terminalToggleNav()" aria-label="${navExpanded ? "Recolher" : "Expandir"} navegação" aria-expanded="${navExpanded}">${terminalIcon("menu")}</button><button class="reference-search" onclick="eliteOpenTradeSearch()" aria-label="Buscar trades realizados">${terminalIcon("search")}<span>Busque trades por data ou ativo…</span><kbd>Ctrl + K</kbd></button><div class="reference-top-actions"><button class="reference-icon reference-alert ${unread ? "has-alerts" : ""}" onclick="eliteOpenAlerts()" aria-label="Ver pontos de atenção" title="${unread ? unread + " novo(s) alerta(s)" : "Nenhum novo alerta"}">${terminalIcon("alert")}${unread ? `<span class="elite-alert-count" aria-hidden="true">${unread}</span><span class="sr-only" role="status">${unread} novos pontos de atenção nos registros.</span>` : ""}</button><div class="reference-clock"><span id="elite-live-date">${esc(date)}</span><b id="elite-live-clock" title="${esc(taProfile().timezone)}">${eliteClockText()}</b></div>${accountCurrencyControl()}<button class="reference-icon" onclick="eliteToggleContrast()" aria-label="Alternar contraste" aria-pressed="${eliteContrast}">${terminalIcon(eliteContrast ? "sun" : "moon")}</button><button class="reference-connection" onclick="taGo('settings')" aria-label="Ver conexão"><i class="${taConnection.authenticated ? "connected" : ""}"></i><span class="terminal-connection-label">${esc(eliteConnectionLabel())}</span></button></div></div>`;
 }
 setInterval(() => {
   const node = document.getElementById("elite-live-clock");
@@ -16964,12 +17300,27 @@ function eliteOpenAlerts() {
   if (!d) {
     d = document.createElement("dialog");
     d.id = "elite-alerts-dialog";
+    d.setAttribute("aria-label", "Pontos de atenção");
     document.body.append(d);
   }
-  const m = eliteMomentumModel(),
-    insight = taDailyInsight(taDailyWeekStats());
-  d.innerHTML = `<div class="section-head"><h2>Pontos de atenção</h2><button class="b s" onclick="document.getElementById('elite-alerts-dialog').close()">Fechar</button></div><p>${esc(m.tip)}</p><p>${esc(insight.text)}</p><button class="b" onclick="document.getElementById('elite-alerts-dialog').close();taGo('ins')">Revisar execução</button>`;
-  d.showModal();
+  const alerts = eliteAttentionModel();
+  d.innerHTML = `<div class="section-head"><h2>Pontos de atenção</h2><button class="b s" onclick="document.getElementById('elite-alerts-dialog').close()">Fechar</button></div>${alerts.length ? alerts.map((a) => `<article class="elite-attention-item"><span class="badge">${a.unread ? "Novo" : "Visto"}</span><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p><p>${esc(a.action)}</p><button class="b s" data-target="${a.target}" onclick="document.getElementById('elite-alerts-dialog').close();taGo(this.dataset.target)">Revisar ${terminalIcon("arrow")}</button></article>`).join("") : '<p>Nenhum padrão de atenção identificado com os dados avaliados disponíveis.</p><p class="muted-note">Dados insuficientes não comprovam ausência de dificuldades. Registre a execução e confira seu plano.</p>'}<p class="muted-note">Leitura por regras dos últimos registros avaliados. Uma sequência de perdas, por si só, não indica indisciplina ou um problema emocional.</p>${alerts.some((a) => a.unread) ? '<button class="b s" onclick="eliteMarkAttentionSeen()">Marcar como lido</button>' : ""}<p id="elite-attention-message" role="status"></p>`;
+  if (!d.open) d.showModal();
+}
+function eliteMarkAttentionSeen() {
+  const old = S.attentionSeen;
+  try {
+    S.attentionSeen = {
+      ...(old && typeof old === "object" ? old : {}),
+      ...Object.fromEntries(eliteAttentionModel().map((a) => [a.id, a.key])),
+    };
+    persistState(S);
+    R();
+    eliteOpenAlerts();
+  } catch (e) {
+    S.attentionSeen = old;
+    document.getElementById("elite-attention-message").textContent = e.message;
+  }
 }
 function eliteReferenceHome() {
   const p = taProfile(),
@@ -17803,7 +18154,7 @@ function eliteDashboardView(ts) {
       )
       .join(
         "",
-      )}</select></label></div>${terminalChart(chart, { id: "performance", height: 200, label: chartNames[chartMode], format: formatMode, netFormat: formatMode, daily: chartMode === "daily", readout: true, includeZero: chartMode !== "balance" })}<div class="elite-dash-chart-note">${chartMode === "balance" ? "Saldo inicial + P&L do histórico completo; sem depósitos, saques ou posições abertas." : chartMode === "r" && !m.complete ? `R parcial: somente ${m.known}/${m.rows.length} operações. Sem R informado não equivale a zero.` : "Resultados fechados · período selecionado."}</div><button class="scene-link" onclick="chartMode='balance';R()" ${S.balanceConfirmed ? "" : "disabled"}>Saldo desde o início</button>${!S.balanceConfirmed ? '<button class="scene-link" onclick="diaryConfigureBalance()">Configurar saldo inicial</button>' : ""}</section><section class="card terminal-context"><div class="section-head"><h2>Drawdown</h2><span class="badge">${eliteDashUnit === "r" ? "R realizado" : esc(S.currency || "Moeda da conta")}</span></div>${terminalChart(dd, { id: "dashboard-drawdown", height: 200, label: "Drawdown", color: "var(--r)", format: eliteDashFormat, netFormat: eliteDashFormat })}<div class="elite-dash-context"><span>Queda máxima <b class="r">${has ? eliteDashFormat(-s.dd) : "—"}</b></span><span>R conhecido <b>${m.known}/${m.rows.length}</b></span></div></section></div>
+      )}</select></label></div>${terminalChart(chart, { id: "performance", height: 200, label: chartNames[chartMode], format: formatMode, netFormat: formatMode, daily: chartMode === "daily", readout: true, includeZero: chartMode !== "balance" })}<div class="elite-dash-chart-note">${chartMode === "balance" ? "Saldo inicial + P&L do histórico completo; sem depósitos, saques ou posições abertas." : chartMode === "r" && !m.complete ? `R parcial: somente ${m.known}/${m.rows.length} operações. Sem R informado não equivale a zero.` : "Resultados fechados · período selecionado."}</div><button class="scene-link" onclick="chartMode='balance';R()" ${S.balanceConfirmed ? "" : "disabled"}>Saldo desde o início</button>${!S.balanceConfirmed ? '<button class="scene-link" onclick="diaryConfigureBalance()">Configurar saldo inicial</button>' : ""}</section></div>
     <details class="smc-dashboard-disclosure" ${innerWidth > 760 ? "open" : ""}><summary>Comparar resultados <span>Ativos, sessões e operações</span></summary><div class="elite-dash-support"><section class="card"><h2>Distribuição de resultados</h2>${eliteDashDistribution(wins, s.n, "operações")}</section><section class="card"><h2>Resultado por ativo</h2>${eliteDashBars(
       grp(m.values, (t) => t.symbol || "Não informado"),
       true,
@@ -18117,12 +18468,18 @@ function eliteCloudAfterRender() {
     return;
   const label = document.querySelector(".terminal-connection-label");
   if (label) {
-    label.textContent = eliteCloud.message;
+    label.textContent =
+      typeof eliteConnectionLabel === "function"
+        ? eliteConnectionLabel()
+        : eliteCloud.message;
     label.closest("button").dataset.cloudState = eliteCloud.state;
     label.classList.add("cloud-status");
     label.dataset.state = eliteCloud.state;
     label.setAttribute("role", "status");
-    label.title = eliteCloud.user.email + " · " + eliteCloud.message;
+    label.title =
+      typeof eliteConnectionLabel === "function"
+        ? eliteConnectionLabel()
+        : eliteCloud.message;
   }
   const small = document.querySelector(".elite-profile small");
   if (small) small.textContent = eliteCloud.user.email;
@@ -18479,7 +18836,9 @@ function smcHomeView() {
     tip =
       insight.label === "Preparação inicial"
         ? "Antes de executar, confira o contexto, os critérios de entrada e o risco previsto no seu plano."
-        : insight.action,
+        : insight.label === "Registro observado"
+          ? "Aguarde um setup claro. Não há obrigação de operar; respeite os limites e os horários do seu plano."
+          : insight.action,
     focus = valid
       ? taBriefing.result.action
       : insight.label === "Registro observado"
@@ -18550,6 +18909,7 @@ const smcAdmin = {
   query: "",
   saving: false,
   registration: null,
+  notice: null,
 };
 const smcDate = (v) =>
   v ? new Date(v).toLocaleString("pt-BR") : "Sem vencimento";
@@ -18599,7 +18959,7 @@ function vCloudAdmin() {
   if (!CLOUD_BOOT || eliteCloud.user?.role !== "admin")
     return '<section class="card"><h2>Acesso restrito</h2></section>';
   const rows = eliteCloud.adminRows || [];
-  return `<section class="card smc-admin-heading"><div class="section-head"><div><h2>Gestão da plataforma</h2><p>Contas, permissões e prazos de acesso.</p></div><button class="b s" onclick="eliteCloudLoadAccounts()" ${eliteCloud.adminPending ? "disabled" : ""}>Atualizar</button></div><form class="smc-admin-search" onsubmit="smcAdminSearch(event)"><label>Buscar por nome ou e-mail<input id="smc-admin-query" value="${esc(smcAdmin.query)}" placeholder="Nome ou e-mail" maxlength="100"></label><button class="b s" type="submit">Buscar</button></form>${smcRegistrationHealthView()}<p role="status">${eliteCloud.adminPending ? "Carregando…" : eliteCloud.adminError ? esc(eliteCloud.adminError) : `${rows.length} conta(s) nesta página`}</p>${!smcAdmin.ready && !eliteCloud.adminPending && !eliteCloud.adminError ? '<div class="cloud-banner"><h3>Ativar prazos e auditoria</h3><p>Execute a atualização de gestão no SQL Editor do Supabase. Aprovação e bloqueio atuais continuam disponíveis.</p><a class="b s" href="https://github.com/LourranAlvares/YourFXjourney/blob/main/server/cloud/management.sql" target="_blank" rel="noopener">Abrir atualização SQL</a></div>' : ""}</section><div class="smc-admin-users">${rows
+  return `<section class="card smc-admin-heading"><div class="section-head"><div><h2>Gestão da plataforma</h2><p>Contas, permissões e prazos de acesso.</p></div><button class="b s" onclick="eliteCloudLoadAccounts()" ${eliteCloud.adminPending ? "disabled" : ""}>Atualizar</button></div><form class="smc-admin-search" onsubmit="smcAdminSearch(event)"><label>Buscar por nome ou e-mail<input id="smc-admin-query" value="${esc(smcAdmin.query)}" placeholder="Nome ou e-mail" maxlength="100"></label><button class="b s" type="submit">Buscar</button></form>${smcAdmin.notice ? `<div id="smc-admin-notice" class="smc-admin-notice" role="status"><span aria-hidden="true">✓</span><p>${esc(smcAdmin.notice)}</p><button class="b s" onclick="smcAdmin.notice=null;R()" aria-label="Dispensar confirmação">×</button></div>` : ""}${smcRegistrationHealthView()}<p role="status">${eliteCloud.adminPending ? "Carregando…" : eliteCloud.adminError ? esc(eliteCloud.adminError) : `${rows.length} conta(s) nesta página`}</p>${!smcAdmin.ready && !eliteCloud.adminPending && !eliteCloud.adminError ? '<div class="cloud-banner"><h3>Ativar prazos e auditoria</h3><p>Execute a atualização de gestão no SQL Editor do Supabase. Aprovação e bloqueio atuais continuam disponíveis.</p><a class="b s" href="https://github.com/LourranAlvares/YourFXjourney/blob/main/server/cloud/management.sql" target="_blank" rel="noopener">Abrir atualização SQL</a></div>' : ""}</section><div class="smc-admin-users">${rows
     .map((u) => {
       const expired =
           u.status === "active" &&
@@ -18613,7 +18973,7 @@ function vCloudAdmin() {
               blocked: "Bloqueado",
             }[u.status],
         self = u.role === "admin";
-      return `<article class="card smc-admin-user" data-account-search="${esc((u.name + " " + u.email).toLowerCase())}"><div class="section-head"><div><h3>${esc(u.name || "Sem nome")}</h3><p>${esc(u.email)}</p></div><span class="badge">${self ? "Administradora" : state}</span></div><dl><div><dt>Cadastro</dt><dd>${esc(smcDate(u.created_at))}</dd></div><div><dt>Plano</dt><dd>${self ? "Administração" : smcPlan(u.access?.plan)}</dd></div><div><dt>Vencimento</dt><dd>${self ? "Não se aplica" : esc(smcDate(u.access?.expires_at))}</dd></div></dl><div class="cloud-account-actions">${self ? '<span class="badge">Conta protegida</span>' : smcAdmin.ready ? `<button class="b s" data-id="${esc(u.id)}" onclick="smcAdminEdit(this.dataset.id)">Configurar acesso</button><button class="b s" data-id="${esc(u.id)}" onclick="smcAdminAudit(this.dataset.id)">Auditoria</button>` : `<button class="b s" data-id="${esc(u.id)}" onclick="eliteCloudAccess(this.dataset.id,'active')">Liberar acesso</button><button class="b s" data-id="${esc(u.id)}" onclick="eliteCloudAccess(this.dataset.id,'blocked')">Bloquear</button>`}</div></article>`;
+      return `<article class="card smc-admin-user" data-account-search="${esc((u.name + " " + u.email).toLowerCase())}"><div class="section-head"><div><h3>${esc(u.name || "Sem nome")}</h3><p>${esc(u.email)}</p></div><span class="badge">${self ? "Administradora" : (u.status === "active" && !expired ? "✓ " : "") + state}</span></div><dl><div><dt>Cadastro</dt><dd>${esc(smcDate(u.created_at))}</dd></div><div><dt>Plano</dt><dd>${self ? "Administração" : smcPlan(u.access?.plan)}</dd></div><div><dt>Vencimento</dt><dd>${self ? "Não se aplica" : esc(smcDate(u.access?.expires_at))}</dd></div></dl><div class="cloud-account-actions">${self ? '<span class="badge">Conta protegida</span>' : `<button class="b s" data-id="${esc(u.id)}" onclick="smcAdminEdit(this.dataset.id${u.status !== "active" || expired ? ",'active'" : ""})">${u.status === "active" && !expired ? "Configurar acesso" : expired ? "Renovar acesso" : "Liberar acesso"}</button>${smcAdmin.ready ? `<button class="b s" data-id="${esc(u.id)}" onclick="smcAdminAudit(this.dataset.id)">Auditoria</button>` : `<button class="b s" data-id="${esc(u.id)}" onclick="smcAdminLegacy(this.dataset.id,'blocked')" ${smcAdmin.saving ? "disabled" : ""}>Bloquear</button>`}`}</div></article>`;
     })
     .join(
       "",
@@ -18626,51 +18986,67 @@ function smcManagementDialog(title, content) {
     d.id = "smc-management-dialog";
     document.body.append(d);
   }
+  d.setAttribute("aria-label", title);
   d.dataset.request = crypto.randomUUID();
   d.innerHTML = `<div class="section-head"><h2>${esc(title)}</h2><button class="b s" onclick="document.getElementById('smc-management-dialog').close()">Fechar</button></div>${content}`;
   if (!d.open) d.showModal();
   return d;
 }
-function smcAdminEdit(id) {
+function smcAdminEdit(id, requestedStatus = null) {
   const u = eliteCloud.adminRows.find((u) => u.id === id);
   if (!u || u.role === "admin") return;
+  smcAdmin.notice = null;
+  if (!smcAdmin.ready) {
+    smcManagementDialog(
+      "Ativar plano e vencimento",
+      `<p>${esc(u.name)} · ${esc(u.email)}</p><div class="cloud-banner"><h3>Gestão de prazos ainda não ativada no banco</h3><p>Para salvar planos e aplicar vencimentos automaticamente, execute a atualização de gestão no SQL Editor do Supabase. Os dados existentes são preservados.</p><a class="b s" href="https://github.com/LourranAlvares/YourFXjourney/blob/main/server/cloud/management.sql" target="_blank" rel="noopener">Abrir atualização SQL</a></div><p class="muted-note">A aprovação simples abaixo libera sem data de vencimento. Ela não configura um prazo.</p><button class="b" data-id="${esc(id)}" onclick="smcAdminLegacy(this.dataset.id,'active')" ${smcAdmin.saving ? "disabled" : ""}>Liberar sem vencimento</button><button class="b s" data-id="${esc(id)}" onclick="smcAdminRefreshAccess(this.dataset.id)">Verificar configuração</button><p id="smc-access-message" role="status"></p>`,
+    );
+    return;
+  }
+  const needsTerm =
+    !u.access ||
+    (u.access.expires_at && Date.parse(u.access.expires_at) <= Date.now());
   const d = smcManagementDialog(
-    "Configurar acesso",
-    `<p>${esc(u.name)} · ${esc(u.email)}</p><form id="smc-access-form"><div class="smc-admin-fields"><label>Status<select name="status">${[
+    requestedStatus === "active" ? "Liberar acesso" : "Configurar acesso",
+    `<p>${esc(u.name)} · ${esc(u.email)}</p><form id="smc-access-form"><div class="smc-admin-fields"><label>Status<select name="status" onchange="this.form.elements.term.required=this.value==='active'">${[
       ["active", "Ativo"],
       ["pending", "Aguardando aprovação"],
       ["blocked", "Bloqueado"],
     ]
       .map(
         ([k, v]) =>
-          `<option value="${k}" ${u.status === k ? "selected" : ""}>${v}</option>`,
+          `<option value="${k}" ${(requestedStatus || u.status) === k ? "selected" : ""}>${v}</option>`,
       )
       .join(
         "",
-      )}</select></label><label>Prazo<select name="term" onchange="document.getElementById('smc-custom-expiry').hidden=this.value!=='custom'">${[
-      ["keep", "Manter prazo atual"],
+      )}</select></label><label>Plano de acesso<select name="plan">${["standard", "trial", "monthly", "quarterly", "annual", "custom"].map((k) => `<option value="${k}" ${u.access?.plan === k ? "selected" : ""}>${smcPlan(k)}</option>`).join("")}</select></label><label>Prazo<select name="term" required onchange="smcAdminTermChanged(this)">${needsTerm ? '<option value="" selected disabled>Escolha o prazo de acesso</option>' : ""}${[
+      ...(!needsTerm ? [["keep", "Manter prazo atual"]] : []),
       ["trial7", "Trial · 7 dias"],
       ["trial14", "Trial · 14 dias"],
       ["monthly", "1 mês"],
+      ["bimonthly", "2 meses"],
       ["quarterly", "3 meses"],
+      ["semiannual", "6 meses"],
       ["annual", "1 ano"],
+      ["biennial", "2 anos"],
       ["custom", "Data personalizada"],
       ["unlimited", "Sem vencimento"],
     ]
       .map(([k, v]) => `<option value="${k}">${v}</option>`)
       .join(
         "",
-      )}</select></label><label id="smc-custom-expiry" hidden>Válido até (fim do dia UTC)<input name="expiry" type="date"></label><label class="smc-admin-wide">Observações administrativas<textarea name="notes" maxlength="2000" rows="3" placeholder="Ex.: condição de acesso combinada">${esc(u.access?.notes || "")}</textarea></label></div><label class="smc-admin-checkbox"><input type="checkbox" name="revoke"> Encerrar as sessões atuais deste usuário</label><p class="muted-note">Um novo prazo começa agora e substitui o anterior. “Manter” preserva o vencimento. Bloqueio e vencimento restringem o sistema sem excluir o histórico.</p><p id="smc-access-message" role="status"></p><button class="b" type="submit">Salvar acesso</button></form>`,
+      )}</select></label><label id="smc-custom-expiry" hidden>Válido até (fim do dia UTC)<input name="expiry" type="date" min="${new Date().toISOString().slice(0, 10)}"></label><label class="smc-admin-wide">Observações administrativas<textarea name="notes" maxlength="2000" rows="3" placeholder="Ex.: condição de acesso combinada">${esc(u.access?.notes || "")}</textarea></label></div><label class="smc-admin-checkbox"><input type="checkbox" name="revoke"> Encerrar as sessões atuais deste usuário</label><p class="muted-note">Um novo prazo começa agora e substitui o anterior. “Manter” preserva o vencimento. Bloqueio e vencimento restringem o sistema sem excluir o histórico.</p><p id="smc-access-message" role="status"></p><button class="b" type="submit">Salvar acesso</button></form>`,
   );
   d.querySelector("form").onsubmit = async (event) => {
     event.preventDefault();
     if (smcAdmin.saving) return;
     const f = new FormData(event.target),
-      term = f.get("term");
+      term = f.get("term") || (f.get("status") !== "active" ? "keep" : "");
     let data = {
       id,
       status: f.get("status"),
       term,
+      plan: f.get("plan"),
       notes: f.get("notes"),
       revokeSessions: f.get("revoke") === "on",
     };
@@ -18684,21 +19060,95 @@ function smcAdminEdit(id) {
     smcAdmin.saving = true;
     const button = event.target.querySelector("[type=submit]");
     button.disabled = true;
+    d.querySelector("#smc-access-message").textContent = "Salvando acesso…";
     try {
-      await taApi("/api/admin/management", {
+      const result = await taApi("/api/admin/management", {
         method: "PATCH",
         body: JSON.stringify(data),
       });
+      if (result?.ok !== true || result.account?.id !== id)
+        throw Error(
+          "O servidor não confirmou a alteração. Atualize a lista antes de tentar novamente.",
+        );
+      const account = result.account;
+      smcAdmin.notice = `${account.status === "active" ? "Acesso liberado" : account.status === "blocked" ? "Acesso bloqueado" : "Acesso definido como pendente"} para ${u.name || u.email}. Plano: ${smcPlan(account.plan)}. ${account.expires_at ? "Válido até " + smcDate(account.expires_at) + "." : "Sem vencimento."}`;
       if (d.dataset.request === request) d.close();
+      R();
+      document
+        .getElementById("smc-admin-notice")
+        ?.scrollIntoView({ block: "nearest" });
       await eliteCloudLoadAccounts();
     } catch (e) {
       const message = d.querySelector("#smc-access-message");
-      if (message) message.textContent = e.message;
+      if (message && d.dataset.request === request)
+        message.textContent = e.message;
     } finally {
       smcAdmin.saving = false;
       button.disabled = false;
+      if (tab === "admin") R();
     }
   };
+}
+function smcAdminTermChanged(select) {
+  const form = select.form,
+    custom = select.value === "custom";
+  document.getElementById("smc-custom-expiry").hidden = !custom;
+  form.elements.expiry.required = custom;
+  const plans = {
+    trial7: "trial",
+    trial14: "trial",
+    monthly: "monthly",
+    quarterly: "quarterly",
+    annual: "annual",
+    bimonthly: "custom",
+    semiannual: "custom",
+    biennial: "custom",
+    custom: "custom",
+    unlimited: "standard",
+  };
+  if (plans[select.value]) form.elements.plan.value = plans[select.value];
+}
+async function smcAdminRefreshAccess(id) {
+  await eliteCloudLoadAccounts();
+  if (!eliteCloud.adminError) smcAdminEdit(id, "active");
+}
+async function smcAdminLegacy(id, status) {
+  if (smcAdmin.saving) return;
+  const u = eliteCloud.adminRows.find((u) => u.id === id);
+  if (!u || u.role === "admin") return;
+  smcAdmin.saving = true;
+  smcAdmin.notice = null;
+  const d = document.getElementById("smc-management-dialog"),
+    message = d?.querySelector("#smc-access-message");
+  if (message) message.textContent = "Salvando acesso…";
+  const request = d?.dataset.request;
+  const buttons = d ? [...d.querySelectorAll("button")] : [];
+  buttons.forEach((b) => (b.disabled = true));
+  try {
+    const result = await taApi("/api/admin/accounts", {
+      method: "PATCH",
+      body: JSON.stringify({ id, status }),
+    });
+    if (result?.ok !== true)
+      throw Error(
+        "O servidor não confirmou a alteração. Atualize a lista antes de tentar novamente.",
+      );
+    smcAdmin.notice = `${status === "active" ? (result.account?.expires_at ? "Acesso liberado até " + smcDate(result.account.expires_at) : "Acesso liberado sem vencimento") : "Acesso bloqueado"} para ${u.name || u.email}.`;
+    if (d?.dataset.request === request) d?.close();
+    R();
+    await eliteCloudLoadAccounts();
+  } catch (e) {
+    if (message && d?.dataset.request === request)
+      message.textContent = e.message;
+    else {
+      eliteCloud.adminError = e.message;
+      R();
+    }
+  } finally {
+    smcAdmin.saving = false;
+    buttons.forEach((b) => (b.disabled = false));
+    if (tab === "admin") R();
+  }
 }
 async function smcAdminAudit(id) {
   const d = smcManagementDialog(
@@ -20609,10 +21059,8 @@ function growthAfterRender() {
     host.ontoggle = () => {
       if (host.isConnected) growthUI.insightsOpen = host.open;
     };
-    host.innerHTML =
-      "<summary>Emotional Insights · check-ins e decisões</summary>" +
-      growthInsights();
-    document.querySelector(".diary-heading")?.after(host);
+    host.innerHTML = "<summary>Emotional Insights</summary>" + growthInsights();
+    document.querySelector(".diary-heading > .row")?.append(host);
   }
   if (typeof growthReviewToolbar === "function") growthReviewToolbar();
   if (typeof growthReconcile === "function") growthReconcile();

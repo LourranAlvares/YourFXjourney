@@ -84,6 +84,91 @@ const { chromium } = require("playwright"),
       () => !document.getElementById("smc-management-dialog").open,
     );
     assert.equal(f.permissions.get(f.a.id).plan, "trial");
+    assert.match(
+      await po.locator("#smc-admin-notice").innerText(),
+      /Acesso liberado.*Trial.*Válido até/,
+    );
+    const pending = po
+      .locator(".smc-admin-user")
+      .filter({ hasText: f.pending.email });
+    await pending
+      .getByRole("button", { name: "Liberar acesso", exact: true })
+      .click();
+    assert.equal(f.profiles.get(f.pending.id).status, "pending");
+    assert.equal(
+      await po.locator("#smc-access-form [name=status]").inputValue(),
+      "active",
+    );
+    assert.equal(
+      await po.locator("#smc-access-form [name=term]").inputValue(),
+      "",
+    );
+    await po.locator("#smc-access-form [name=term]").selectOption("bimonthly");
+    await po.locator("#smc-access-form [name=plan]").selectOption("monthly");
+    await po.locator("#smc-access-form [type=submit]").click();
+    await po.waitForFunction(
+      () => !document.getElementById("smc-management-dialog").open,
+    );
+    assert.equal(f.profiles.get(f.pending.id).status, "active");
+    assert.equal(f.permissions.get(f.pending.id).plan, "monthly");
+    assert.match(
+      await po.locator("#smc-admin-notice").innerText(),
+      /Acesso liberado.*Mensal.*Válido até/,
+    );
+    let expires = f.permissions.get(f.pending.id).expires_at;
+    assert(
+      Date.parse(expires) > Date.now() + 55 * 86400000 &&
+        Date.parse(expires) < Date.now() + 63 * 86400000,
+    );
+    await pending
+      .getByRole("button", { name: "Configurar acesso", exact: true })
+      .click();
+    await po.locator("#smc-access-form [name=term]").selectOption("biennial");
+    await po.locator("#smc-access-form [name=plan]").selectOption("annual");
+    await po.locator("#smc-access-form [type=submit]").click();
+    await po.waitForFunction(
+      () => !document.getElementById("smc-management-dialog").open,
+    );
+    expires = f.permissions.get(f.pending.id).expires_at;
+    assert(Date.parse(expires) > Date.now() + 729 * 86400000);
+    await pending
+      .getByRole("button", { name: "Configurar acesso", exact: true })
+      .click();
+    await po.locator("#smc-access-form [name=plan]").selectOption("quarterly");
+    await po.locator("#smc-access-form [type=submit]").click();
+    await po.waitForFunction(
+      () => !document.getElementById("smc-management-dialog").open,
+    );
+    assert.equal(f.permissions.get(f.pending.id).expires_at, expires);
+    assert.equal(f.permissions.get(f.pending.id).plan, "quarterly");
+    await pending
+      .getByRole("button", { name: "Configurar acesso", exact: true })
+      .click();
+    await po.route("**/api/admin/management", (route) =>
+      route.request().method() === "PATCH"
+        ? route.fulfill({
+            status: 503,
+            json: {
+              error: {
+                code: "test_failure",
+                message: "Não foi possível salvar o acesso.",
+              },
+            },
+          })
+        : route.continue(),
+    );
+    await po.locator("#smc-access-form [name=status]").selectOption("blocked");
+    await po.locator("#smc-access-form [type=submit]").click();
+    await po.waitForFunction(() =>
+      document
+        .getElementById("smc-access-message")
+        .textContent.includes("Não foi possível"),
+    );
+    assert.equal(await po.locator("#smc-admin-notice").count(), 0);
+    assert.equal(f.profiles.get(f.pending.id).status, "active");
+    assert(await po.locator("#smc-access-form [type=submit]").isEnabled());
+    await po.unroute("**/api/admin/management");
+    await po.getByRole("button", { name: "Fechar", exact: true }).click();
     await pm.evaluate(() => taGo("settings"));
     assert.equal(
       await pm
