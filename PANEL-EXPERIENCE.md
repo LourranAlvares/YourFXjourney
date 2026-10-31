@@ -36,3 +36,5 @@ Verificação automatizada: `npm test`, `npm run test:panel`, testes de diário,
 ## Composição da Home por referência visual
 
 A Home usa duas colunas no desktop: cena decorativa com assistente robô, saudação e ações à esquerda; briefing, ativos selecionados e agenda à direita. Resumo operacional e ferramentas ficam sob a cena. O resumo não repete métricas financeiras. A arte `public/smc-assistant-hero.png` é uma ilustração gerada, sem função de cotação ou gráfico de mercado; toda informação utilizável continua vindo dos registros e provedores reais. Não há indicação fictícia de assistente conectado nem conversa simulada. Os atalhos abrem as funções existentes. No celular a composição vira uma coluna. A versão standalone inclui a arte.
+
+A Home não repete o seletor do menu lateral nem a prateleira “Minhas ferramentas”. Revisão semanal e análise de setup ficam na cena; plano, diário e risco no resumo; Insights no foco; calendário no bloco de eventos. A sessão do resumo é informativa. Os testes verificam um único atalho da Home para cada destino principal.

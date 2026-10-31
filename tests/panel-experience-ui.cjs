@@ -79,8 +79,10 @@ const assert = require("node:assert/strict"),
     assert.equal(await p.locator('.reference-events .reference-event').count(),3);
     assert(!((await p.locator('.reference-events').innerText()).includes('JPY fixture')));
 
-    assert.equal(await p.locator(".home-summary-grid button").count(), 4);
-    assert.equal(await p.locator(".home-tool-grid button").count(), 4);
+    assert.equal(await p.locator(".home-summary-grid button").count(), 3);
+    assert.equal(await p.locator(".home-tool-grid button").count(), 0);
+    assert.equal(await p.locator(".smc-home .reference-command").count(),0);
+    for(const route of ["analyst","plan","trades","risk","ins","economic"]) assert.equal(await p.locator(`.smc-home button[onclick="taGo('${route}')"]`).count(),1,"one Home shortcut for "+route);
     assert.deepEqual(await p.locator(".home-asset-columns>span").allTextContents(),["Ativo","Variação do dia (%)","Volatilidade"]);
     assert.match(await p.locator(".smc-assets-card>.muted-note").innerText(),/não indica direção/);
     await p.evaluate(() => {
