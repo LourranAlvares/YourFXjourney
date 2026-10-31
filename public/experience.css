@@ -292,18 +292,296 @@ body.smc-shell .diary-entry p:has(> small) {
   -webkit-line-clamp: 2;
 }
 /* Dense journal at browser 100%; equal row tracks keep every card aligned. */
-body.smc-shell .diary-gallery {grid-auto-rows:1fr;gap:12px;}
-body.smc-shell .diary-entry {height:100%;box-sizing:border-box;padding:12px;gap:6px;font-size:13px;}
-body.smc-shell .diary-entry .section-head h3 {font-size:15px;}
-body.smc-shell .diary-cover {height:140px;flex-shrink:0;}
-body.smc-shell .diary-entry-actions .b {font-size:12px;min-height:32px;padding:6px 9px;}
-body.smc-shell .diary-heading {padding:14px;margin-bottom:14px;}
-body.smc-shell .diary-heading .grid {gap:10px;}
-body.smc-shell .diary-heading .k {padding:10px 12px;min-height:72px;}
-body.smc-shell .diary-heading .k b {font-size:23px;}
-body.smc-shell #main:has(.diary-gallery)>.page-top {margin-bottom:12px;}
-body.smc-shell #main:has(.diary-gallery)>.page-top h2 {font-size:27px;}
-body.smc-shell #main:has(.diary-gallery) .growth-toolbar {margin-bottom:10px;}
-body.smc-shell .diary-records-panel>.section-head h2 {font-size:17px;}
-body.smc-shell .diary-pagination {margin:8px 0 12px;}
-@media(min-width:1800px){body.smc-shell .diary-gallery {grid-template-columns:repeat(4,minmax(0,1fr));}}
+body.smc-shell .diary-gallery {
+  grid-auto-rows: 1fr;
+  gap: 12px;
+}
+body.smc-shell .diary-entry {
+  height: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  gap: 6px;
+  font-size: 13px;
+}
+body.smc-shell .diary-entry .section-head h3 {
+  font-size: 15px;
+}
+body.smc-shell .diary-cover {
+  height: 140px;
+  flex-shrink: 0;
+}
+body.smc-shell .diary-entry-actions .b {
+  font-size: 12px;
+  min-height: 32px;
+  padding: 6px 9px;
+}
+body.smc-shell .diary-heading {
+  padding: 14px;
+  margin-bottom: 14px;
+}
+body.smc-shell .diary-heading .grid {
+  gap: 10px;
+}
+body.smc-shell .diary-heading .k {
+  padding: 10px 12px;
+  min-height: 72px;
+}
+body.smc-shell .diary-heading .k b {
+  font-size: 23px;
+}
+body.smc-shell #main:has(.diary-gallery) > .page-top {
+  margin-bottom: 12px;
+}
+body.smc-shell #main:has(.diary-gallery) > .page-top h2 {
+  font-size: 27px;
+}
+body.smc-shell #main:has(.diary-gallery) .growth-toolbar {
+  margin-bottom: 10px;
+}
+body.smc-shell .diary-records-panel > .section-head h2 {
+  font-size: 17px;
+}
+body.smc-shell .diary-pagination {
+  margin: 8px 0 12px;
+}
+@media (min-width: 1800px) {
+  body.smc-shell .diary-gallery {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* Reference-led Home: compact workstation and two operational columns. */
+.smc-home .smc-hero-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(340px, 1fr);
+  gap: 14px !important;
+  min-height: 0 !important;
+  align-items: start;
+}
+.smc-home-left {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.smc-home .smc-desk.reference-left {
+  min-height: 440px !important;
+  padding: 24px 20px 14px !important;
+  gap: 14px !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.smc-home .smc-office-scene {
+  background:
+    linear-gradient(90deg, rgba(5, 9, 13, 0.88), rgba(5, 9, 13, 0.15) 65%),
+    url("smc-assistant-hero.png") center/cover no-repeat;
+}
+.smc-home .scene-character-motion {
+  display: none;
+}
+.smc-home .scene-greeting {
+  width: 48% !important;
+  margin: 0 !important;
+  position: relative !important;
+  inset: auto !important;
+}
+.home-assistant-label {
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  color: var(--gold);
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+.smc-home .scene-greeting h1 {
+  font-size: clamp(27px, 2.4vw, 40px) !important;
+}
+.smc-home .scene-greeting h1 small {
+  font-size: 20px !important;
+}
+.smc-home .experience-speech {
+  margin-top: 10px;
+  padding: 0;
+  background: none;
+}
+.smc-home .experience-speech > small {
+  display: none;
+}
+.smc-home .experience-speech > p {
+  font-size: 13px !important;
+  line-height: 1.55;
+  margin: 8px 0;
+}
+.smc-home .experience-speech .scene-link {
+  font-size: 10px;
+}
+.smc-home .reference-workspace-actions {
+  margin-top: auto !important;
+  width: 100%;
+  position: relative !important;
+  inset: auto !important;
+}
+.smc-home .scene-composer {
+  padding: 8px !important;
+  margin: 0 0 8px !important;
+}
+.smc-home .reference-command {
+  min-height: 38px !important;
+  padding: 6px 10px !important;
+  font-size: 12px;
+}
+.smc-home .scene-bottom-actions {
+  gap: 8px !important;
+}
+.smc-home .scene-bottom-actions button {
+  font-size: 10px !important;
+  min-height: 34px !important;
+  padding: 7px !important;
+}
+.smc-home .reference-right {
+  gap: 12px;
+}
+.smc-home .reference-right > .scene-card,
+.home-quick-summary,
+.home-tools {
+  padding: 14px !important;
+  border-radius: 10px;
+  min-width: 0;
+}
+.smc-home .reference-card-heading {
+  margin-bottom: 10px !important;
+  gap: 8px;
+}
+.smc-home .reference-card-heading h2 {
+  font-size: 16px !important;
+}
+.smc-home .reference-card-heading .scene-link {
+  font-size: 10px !important;
+}
+.smc-home .experience-bridge {
+  display: none;
+}
+.smc-home .reference-brief-row {
+  min-height: 66px !important;
+  padding: 10px !important;
+  gap: 10px !important;
+}
+.smc-home .reference-brief-row h3 {
+  font-size: 12px !important;
+  margin: 0 0 5px !important;
+}
+.smc-home .reference-brief-row p {
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+.smc-home .reference-brief-icon {
+  width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px !important;
+}
+.smc-home .reference-method {
+  margin-top: 10px !important;
+  font-size: 10px;
+}
+.smc-home .reference-asset-grid > article {
+  padding: 8px 10px;
+  gap: 8px;
+  grid-template-columns: minmax(75px, 1fr) minmax(95px, 1fr) auto;
+}
+.smc-home .smc-asset-symbol b {
+  font-size: 13px;
+}
+.smc-home .smc-asset-daily strong {
+  font-size: 13px;
+}
+.smc-home .smc-asset-daily small {
+  font-size: 9px;
+}
+.smc-home .reference-assets > .muted-note {
+  font-size: 9px;
+}
+.smc-home .reference-event {
+  padding: 10px 4px !important;
+  min-height: 40px !important;
+  font-size: 11px !important;
+}
+.home-summary-grid,
+.home-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.home-summary-grid button,
+.home-tool-grid button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0c1319;
+  color: var(--tx);
+}
+.home-summary-grid button span {
+  min-width: 0;
+}
+.home-summary-grid small {
+  display: block;
+  font-size: 10px;
+  color: var(--secondary);
+  margin-bottom: 4px;
+}
+.home-summary-grid b {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.home-tool-grid button {
+  font-size: 11px;
+}
+.home-summary-grid svg,
+.home-tool-grid svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--gold);
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .smc-home .smc-hero-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr);
+  }
+  .home-summary-grid,
+  .home-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .smc-home .scene-greeting {
+    width: 60% !important;
+  }
+  .smc-home .scene-bottom-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 760px) {
+  .smc-home .smc-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .smc-home .smc-desk.reference-left {
+    min-height: 420px !important;
+  }
+  .smc-home .scene-greeting {
+    width: 65% !important;
+  }
+  .home-summary-grid,
+  .home-tool-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .smc-home .reference-asset-grid > article {
+    grid-template-columns: minmax(75px, 1fr) auto;
+  }
+  .smc-home .reference-event {
+    font-size: 11px !important;
+  }
+}

@@ -166,7 +166,7 @@ const { chromium } = require("playwright"),
           .locator(".reference-workspace-actions")
           .evaluate((n) => n.getBoundingClientRect().bottom);
         assert(
-          bottom > height - 100,
+          bottom > 350 && bottom < height + 150,
           "home does not fill viewport " + width + " " + bottom,
         );
       }

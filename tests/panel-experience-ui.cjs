@@ -73,6 +73,8 @@ const assert = require("node:assert/strict"),
       /Indisponível/,
     );
     assert.equal(await p.locator(".experience-speech").count(), 1);
+    assert.equal(await p.locator(".home-summary-grid button").count(), 4);
+    assert.equal(await p.locator(".home-tool-grid button").count(), 4);
     await p.evaluate(() => {
       const request = taDailyRequestState("market");
       request.data = {
@@ -161,8 +163,13 @@ const assert = require("node:assert/strict"),
       }
       assert.equal(await p.locator(".diary-calendar").count(), 0);
       assert.equal(await p.locator(".diary-entry").count(), 12);
-      const heights=await p.locator(".diary-entry").evaluateAll(ns=>ns.map(n=>n.getBoundingClientRect().height));
-      assert(Math.max(...heights)-Math.min(...heights)<2,"equal journal card heights "+width);
+      const heights = await p
+        .locator(".diary-entry")
+        .evaluateAll((ns) => ns.map((n) => n.getBoundingClientRect().height));
+      assert(
+        Math.max(...heights) - Math.min(...heights) < 2,
+        "equal journal card heights " + width,
+      );
       const rects = await p.locator(".diary-entry-actions").evaluateAll((ns) =>
         ns.map((n) =>
           Array.from(n.querySelectorAll("button")).map((b) => {

@@ -25,7 +25,7 @@ font_data=base64.b64encode((root/'public/fonts/inter-latin-wght-normal.woff2').r
 source=source.replace('url("fonts/inter-latin-wght-normal.woff2")','url("data:font/woff2;base64,'+font_data+'")')
 source=source.replace('src="public/smc-logo.png"','src="data:image/png;base64,'+base64.b64encode((root/'public/smc-logo.png').read_bytes()).decode()+'"')
 # Embed image URLs directly: Chromium limits the size of CSS custom-property values.
-for filename in ['smc-workstation.png']:
+for filename in ['smc-workstation.png','smc-assistant-hero.png']:
  data_url="url('data:image/png;base64,"+base64.b64encode((root/'public'/filename).read_bytes()).decode()+"')"
  source=re.sub(r'url\([\'"]'+re.escape(filename)+r'[\'"]\)', lambda match: data_url, source)
 out=root/'YourFXjourney-standalone.html';out.write_text(source)
