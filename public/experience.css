@@ -752,3 +752,4 @@ body.smc-shell .plan-design-section{padding:14px 16px;margin-bottom:10px;}
 .smc-home .scene-bottom-actions button{min-height:40px!important;font-size:12px!important;}
 .home-session-summary{display:flex;align-items:center;gap:8px;min-width:0;padding:10px;border:1px solid var(--border);border-radius:8px;background:#0c1319;color:var(--tx);}
 @media(min-width:761px){.smc-home .smc-desk.reference-left{flex-basis:480px;}}
+.plan-writing-guide{padding:12px 16px!important;margin-bottom:12px!important;}.plan-writing-guide>summary{cursor:pointer;color:var(--gold);font-size:13px;}.plan-writing-guide p,.plan-writing-guide li{font-size:12px;line-height:1.65;}.plan-writing-guide ol{padding-left:20px;}
