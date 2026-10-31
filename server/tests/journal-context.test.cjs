@@ -1,0 +1,3 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),{validateContext}=require('../providers.cjs');
+test('explicit journal evidence is bounded, projected and optional for legacy requests',()=>{assert.equal(validateContext({}).journalEvidence,undefined);const r={id:'trade1',date:'2026-10-31',asset:'EURUSD',note:'Aderência declarada: não; motivo: confirmação ausente'};assert.deepEqual(validateContext({journalEvidence:[{...r,extra:'not forwarded'}]}).journalEvidence,[r]);for(const value of ['invalid',Array(6).fill(r),[null],[{...r,note:'x'.repeat(601)}],[{...r,id:123}],[{...r,date:'2026-02-30'}]])assert.throws(()=>validateContext({journalEvidence:value}));});
