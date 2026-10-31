@@ -709,3 +709,7 @@ body.smc-shell .diary-pagination {
 @media(min-width:761px) and (max-width:1250px){.smc-home .smc-assets-card{--asset-tracks:minmax(65px,1fr) 105px 85px;--asset-gap:7px;--asset-padding:8px;}}
 @media(max-width:760px){.smc-home .smc-assets-card{--asset-tracks:minmax(65px,1fr) 110px 92px;--asset-gap:8px;--asset-padding:8px;}}
 @media(max-width:400px){.smc-home .smc-assets-card{--asset-tracks:minmax(65px,1fr) 110px;}.home-asset-columns{display:none;}.home-asset-mobile-label{display:block;font-size:9px;font-weight:400;color:var(--secondary);line-height:1.4;}.smc-home .smc-assets-card article>span:last-child{flex-direction:column;gap:3px;}}
+/* Reserve the remaining operational column for three upcoming releases. */
+@media(min-width:761px){.smc-home .reference-right{grid-template-rows:auto auto minmax(230px,1fr);}.smc-home .smc-assets-card .reference-asset-grid{flex:none;grid-auto-rows:auto;}.smc-home .reference-events{display:flex;flex-direction:column;}.smc-home .reference-events .reference-event{flex:1;min-height:46px!important;}}
+.home-event-priority{font-size:10px;color:var(--secondary);line-height:1.4;margin:0 0 8px;}
+.home-more-assets{font-size:10px;align-self:flex-start;margin:0 0 8px;}

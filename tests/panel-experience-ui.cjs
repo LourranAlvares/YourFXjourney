@@ -73,6 +73,12 @@ const assert = require("node:assert/strict"),
       /Indisponível/,
     );
     assert.equal(await p.locator(".experience-speech").count(), 1);
+    assert.equal(await p.locator('.smc-assets-card article').count(),3);
+    assert.equal(await p.evaluate(()=>taProfile().instruments.length),4);
+    await p.evaluate(()=>{taDailyState.requests.set(taDailyKey('events',taDailyDate()),{data:{events:[{id:'outside',name:'JPY fixture',currency:'JPY',time:'2026-10-31T12:30Z',impact:'high'},...['13','14','15'].map(h=>({id:h,name:'USD fixture '+h,currency:'USD',time:'2026-10-31T'+h+':00Z',impact:'high'}))]}});R()});
+    assert.equal(await p.locator('.reference-events .reference-event').count(),3);
+    assert(!((await p.locator('.reference-events').innerText()).includes('JPY fixture')));
+
     assert.equal(await p.locator(".home-summary-grid button").count(), 4);
     assert.equal(await p.locator(".home-tool-grid button").count(), 4);
     assert.deepEqual(await p.locator(".home-asset-columns>span").allTextContents(),["Ativo","Variação do dia (%)","Volatilidade"]);
