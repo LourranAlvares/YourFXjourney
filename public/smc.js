@@ -6,7 +6,7 @@ function smcAssetStrip() {
   const p = taProfile(),
     instruments = taDailyRequestState("market").data?.instruments || [],
     utcDay = new Date().toISOString().slice(0, 10);
-  return `<section class="scene-card reference-assets smc-assets-card"><div class="reference-card-heading">${terminalIcon("assets")}<h2>Seus ativos</h2><button class="scene-link" onclick="taAssetOpen()">Editar ${terminalIcon("open")}</button></div><div class="reference-asset-grid">${
+  return `<section class="scene-card reference-assets smc-assets-card"><div class="reference-card-heading">${terminalIcon("assets")}<h2>Seus ativos</h2><button class="scene-link" onclick="taAssetOpen()">Editar ${terminalIcon("open")}</button></div><div class="home-asset-columns" aria-hidden="true"><span>Ativo</span><span>Variação do dia (%)</span><span>Volatilidade</span></div><div class="reference-asset-grid">${
     p.instruments
       .map((symbol) => {
         const record = instruments.find(
@@ -23,11 +23,11 @@ function smcAssetStrip() {
             day && day !== utcDay
               ? "Último dia · " + day.split("-").reverse().slice(0, 2).join("/")
               : "Dia UTC";
-        return `<article><span class="smc-asset-symbol">${eliteAssetIcon(symbol)}<b>${esc(symbol)}</b></span><div class="smc-asset-daily"><strong class="${change === null ? "" : cl(change)}" title="${esc(record?.dayChangeMethod || "Variação diária não disponível na consulta. O ATR não representa variação do dia.")}">${change === null ? "Indisponível" : (change > 0 ? "+" : "") + change.toFixed(2).replace(".", ",") + "%"}</strong><small>${esc(label)}${record?.dayChangeAsOf ? "<span class='home-quote-time'>" + esc(record.dayChangeAsOf.slice(11, 16)) + " UTC</span>" : ""}</small></div><span class="ta-volatility-${["low", "moderate", "high"].includes(v) ? v : "unknown"}">${{ low: "Baixa", moderate: "Moderada", high: "Alta" }[v] || "Sem volatilidade"}</span></article>`;
+        return `<article><span class="smc-asset-symbol">${eliteAssetIcon(symbol)}<b>${esc(symbol)}</b></span><div class="smc-asset-daily" aria-label="Variação do dia em percentual"><span class="home-asset-mobile-label">Variação do dia (%)</span><strong class="${change === null ? "" : cl(change)}" title="${esc(record?.dayChangeMethod || "Variação diária não disponível na consulta. O ATR não representa variação do dia.")}">${change === null ? "Indisponível" : (change > 0 ? "+" : "") + change.toFixed(2).replace(".", ",") + "%"}</strong><small>${esc(label)}${record?.dayChangeAsOf ? "<span class='home-quote-time'>" + esc(record.dayChangeAsOf.slice(11, 16)) + " UTC</span>" : ""}</small></div><span aria-label="Volatilidade: ${{ low: 'baixa', moderate: 'moderada', high: 'alta' }[v] || 'indisponível'}" class="ta-volatility-${["low", "moderate", "high"].includes(v) ? v : "unknown"}"><span class="home-asset-mobile-label">Volatilidade</span>${{ low: "Baixa", moderate: "Moderada", high: "Alta" }[v] || "Indisponível"}</span></article>`;
       })
       .join("") ||
     '<button class="b s" onclick="taAssetOpen()">Escolher ativos</button>'
-  }</div><small class="muted-note">Variação entre fechamentos horários, com referência ao dia UTC. ${instruments.length ? "Confira a data e o horário da consulta." : "Conecte os dados de mercado nas Configurações."}</small></section>`;
+  }</div><small class="muted-note">Variação: último fechamento horário versus fechamento anterior ao dia UTC. Volatilidade: amplitude relativa medida pelo ATR de 14 velas horárias; não indica direção. ${instruments.length ? "Confira a data e o horário da consulta." : "Conecte os dados de mercado nas Configurações."}</small></section>`;
 }
 function smcHomeView() {
   const p = taProfile(),

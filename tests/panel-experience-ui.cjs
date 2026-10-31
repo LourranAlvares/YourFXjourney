@@ -75,6 +75,8 @@ const assert = require("node:assert/strict"),
     assert.equal(await p.locator(".experience-speech").count(), 1);
     assert.equal(await p.locator(".home-summary-grid button").count(), 4);
     assert.equal(await p.locator(".home-tool-grid button").count(), 4);
+    assert.deepEqual(await p.locator(".home-asset-columns>span").allTextContents(),["Ativo","Variação do dia (%)","Volatilidade"]);
+    assert.match(await p.locator(".smc-assets-card>.muted-note").innerText(),/não indica direção/);
     await p.evaluate(() => {
       const request = taDailyRequestState("market");
       request.data = {
