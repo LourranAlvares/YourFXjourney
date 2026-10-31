@@ -44,7 +44,7 @@ const assert = require("node:assert/strict"),
       S.assistantProfile = {
         ...taProfile(),
         name: "Trader",
-        instruments: ["EURUSD", "XAUUSD", "BTCUSD"],
+        instruments: ["EURUSD", "XAUUSD", "BTCUSD", "USOUSD"],
       };
       persistState(S);
       R();
@@ -99,6 +99,11 @@ const assert = require("node:assert/strict"),
     );
     assert.match(await p.locator(".smc-assets-card").innerText(), /20:00 UTC/);
 
+    const aligned=await p.locator('.smc-assets-card article').evaluateAll(ns=>ns.map(n=>({symbol:n.querySelector('.smc-asset-symbol').getBoundingClientRect().left,quote:n.querySelector('.smc-asset-daily').getBoundingClientRect().right,badge:n.lastElementChild.getBoundingClientRect().left})));
+    for(const key of ['symbol','quote','badge'])assert(Math.max(...aligned.map(r=>r[key]))-Math.min(...aligned.map(r=>r[key]))<1,'asset column '+key);
+    const columns=await p.evaluate(()=>{const a=document.querySelector('.smc-home-left').getBoundingClientRect(),b=document.querySelector('.smc-home .reference-right').getBoundingClientRect();return {a:a.bottom,b:b.bottom,height:innerHeight}});
+    assert(Math.abs(columns.a-columns.b)<2,'equal home column bottoms');
+    assert(columns.a>=columns.height-40,'use desktop viewport height');
     await p.screenshot({ path: "/tmp/smc-new-home.png", fullPage: true });
     const before = await p.evaluate(() => JSON.stringify(S));
     await p.evaluate(() => taGo("dash"));
@@ -218,15 +223,15 @@ const assert = require("node:assert/strict"),
     ]) {
       const loc = p.locator(selector).first();
       await loc.hover();
-      await p.waitForFunction((selector) => {
+      const border = await p.waitForFunction((selector) => {
         const n = document.querySelector(selector);
         return (
           n &&
           n.matches(":hover") &&
-          getComputedStyle(n).borderColor.includes("210")
+          getComputedStyle(n).borderColor.includes("210") && getComputedStyle(n).borderColor
         );
       }, selector);
-      borders.push(await loc.evaluate((n) => getComputedStyle(n).borderColor));
+      borders.push(await border.jsonValue());
     }
     assert.equal(
       new Set(borders).size,
