@@ -470,45 +470,18 @@ function taCriterionRow(c = {}) {
     )}</select></label><label>Função<select data-cfield="role"><option value="confirmation">Confirmação</option><option value="invalidation" ${c.role === "invalidation" ? "selected" : ""}>Invalidação quando presente</option></select></label>${taInput("Limiar (opcional)", "", c.threshold ?? "", "number", 'data-cfield="threshold" min="0" step="any"')}</div><div class="ta-inline-checks"><label><input type="checkbox" data-cfield="required" ${c.required !== false ? "checked" : ""}> Obrigatório</label><label><input type="checkbox" data-cfield="critical" ${c.critical !== false ? "checked" : ""}> Crítico</label></div></fieldset>`;
 }
 function vPlan() {
-  const p = taCurrentPlan() || {
-    name: "",
-    instruments: [],
-    timeframes: [],
-    risk: {},
-    news: { beforeMinutes: 15, afterMinutes: 15, avoidHighImpact: true },
-    criteria: [],
-  };
-  return `<section class="card"><div class="section-head"><div><div class="eyebrow">Sua estratégia, suas definições</div><h2>Meu Trading Plan</h2><p>Regras explícitas sustentam a avaliação; mudanças geram uma nova versão.</p></div><span class="badge">${p.version ? "Versão " + esc(p.version) : "Ainda não configurado"}</span></div><form id="ta-plan-form" onsubmit="event.preventDefault();taSavePlan()"><div class="fg">${taInput("Nome do plano", "tp-name", p.name, "text", 'maxlength="100" required')}${taInput("Mercados / instrumentos", "tp-instruments", p.instruments.join(", "))}${taInput("Timeframes", "tp-timeframes", p.timeframes.join(", "))}</div><div class="ta-two-columns">${[
-    ["biasRequirements", "Viés macro necessário"],
-    ["structure", "Estrutura e confirmações"],
-    ["entryConditions", "Condições de entrada"],
-    ["liquidityRules", "Liquidez e indução"],
-    ["orderBlockRules", "Definição de Order Block"],
-    ["invalidations", "Condições de invalidação"],
-    ["management", "Gerenciamento e saída"],
-    ["notes", "Explicações adicionais"],
-  ]
-    .map(([key, label]) => taText(label, "tp-" + key, p[key] || ""))
-    .join(
-      "",
-    )}</div><h3>Gerenciamento de risco</h3><p class="muted-note">Valores monetários na moeda do histórico; nenhuma porcentagem é presumida.</p><div class="fg">${[
-    ["perTrade", "Risco máximo por trade"],
-    ["maxDaily", "Limite de risco diário"],
-    ["maxWeekly", "Limite de risco semanal"],
-    ["minRR", "R:R mínimo"],
-  ]
-    .map(([key, label]) =>
-      taInput(
-        label + (key !== "minRR" && S.currency ? " · " + S.currency : ""),
-        "tp-risk-" + key,
-        p.risk[key] ?? "",
-        "number",
-        'min="0" step="any"',
-      ),
-    )
-    .join(
-      "",
-    )}</div><h3>Notícias</h3><div class="fg">${taInput("Cautela antes (min)", "tp-before", p.news.beforeMinutes, "number", 'min="0" max="240"')}${taInput("Cautela após (min)", "tp-after", p.news.afterMinutes, "number", 'min="0" max="240"')}</div><label class="ta-check"><input type="checkbox" id="tp-avoid-news" ${p.news.avoidHighImpact ? "checked" : ""}> Exigir cautela em notícias de alto impacto</label><p class="muted-note">Sua sessão e os dias de trading são configurados em <button type="button" class="ta-link" onclick="taGo('settings')">Configurações</button>.</p><div class="section-head"><div><h3>Critérios verificáveis</h3><p class="muted-note">Pesos definem a nota. Invalidação “atendida” bloqueia a conformidade. Critério obrigatório desconhecido exige revisão.</p></div><button class="b s" type="button" onclick="$('#ta-plan-criteria').insertAdjacentHTML('beforeend',taCriterionRow())">+ Critério</button></div><div id="ta-plan-criteria">${(p.criteria.length ? p.criteria : [{}]).map(taCriterionRow).join("")}</div><p id="ta-plan-error" role="status" class="muted-note"></p><button class="b" type="submit">Salvar nova versão do plano</button></form></section><details class="card"><summary>Histórico de versões (${taPlans().length})</summary><div class="ta-plan-history">${
+ const p=taCurrentPlan()||{name:'',instruments:[],timeframes:[],risk:{},news:{beforeMinutes:15,afterMinutes:15,avoidHighImpact:true},criteria:[]};
+ const text=(key,label)=>taText(label,'tp-'+key,p[key]||'');
+ const section=(title,description,icon,body,kind='')=>`<section class="card plan-design-section"><div class="plan-section-heading"><span class="plan-section-icon">${terminalIcon(icon)}</span><div><h2>${title}</h2><p>${description}</p></div></div><div class="plan-section-fields ${kind}">${body}</div></section>`;
+ return `<div class="plan-design"><form id="ta-plan-form" onsubmit="event.preventDefault();taSavePlan()"><div class="plan-design-top"><div><div class="eyebrow">SMC ELITE / TRADING PLAN</div><div class="plan-title-line"><h1>Trading Plan</h1><span class="badge">${p.version?'Versão '+esc(p.version)+' ativa':'Ainda não configurado'}</span></div><p>Prepare, analise e revise o seu processo.</p></div><div class="plan-top-actions"><button class="b s" type="button" onclick="taPlanStartVersion()">+ Nova versão</button><button class="b" type="submit">${terminalIcon('save')} Salvar plano</button></div></div>
+ ${section('Identidade do Plano','Defina as bases do seu plano operacional.','trades',taInput('Nome do plano','tp-name',p.name,'text','maxlength="100" required')+taInput('Mercados / Instrumentos','tp-instruments',p.instruments.join(', '))+taInput('Timeframes','tp-timeframes',p.timeframes.join(', ')),'plan-identity-fields')}
+ ${section('Contexto e Viés','Estabeleça o contexto de mercado e o seu viés operacional.','ana',text('biasRequirements','Viés macro necessário')+text('structure','Estrutura e confirmações'))}
+ ${section('Setup e Execução','Defina suas condições de entrada, execução e invalidação.','analyst',text('entryConditions','Condições de entrada')+text('liquidityRules','Liquidez e indução')+text('orderBlockRules','Definição de Order Block')+text('invalidations','Condições de invalidação'))}
+ ${section('Gestão','Planeje sua saída e outras observações relevantes.','ins',text('management','Gerenciamento e saída')+text('notes','Explicações adicionais'))}
+ ${section('Gestão de Risco','Defina seus limites e parâmetros de risco.','risk',[['perTrade','Risco máximo por trade'],['maxDaily','Limite de risco diário'],['maxWeekly','Limite de risco semanal'],['minRR','R:R mínimo']].map(([key,label])=>taInput(label+(key!=='minRR'&&S.currency?' · '+S.currency:''),'tp-risk-'+key,p.risk[key]??'','number','min="0" step="any"')).join(''),'plan-risk-fields')}
+ ${section('Regras verificáveis','Critérios explícitos para avaliar disciplina e consistência.','plan',`<div class="plan-rules-toolbar"><p>Expanda uma regra para editar sua definição, peso e verificação.</p><button class="b s" type="button" onclick="$('#ta-plan-criteria').insertAdjacentHTML('beforeend',taPlanVisualCriterion())">+ Critério</button></div><div id="ta-plan-criteria">${(p.criteria.length?p.criteria:[{}]).map(taPlanVisualCriterion).join('')}</div>`,'plan-rules-fields')}
+ <details class="card plan-news-settings"><summary>Notícias e horário de operação</summary><div class="plan-section-fields">${taInput('Cautela antes (min)','tp-before',p.news.beforeMinutes,'number','min="0" max="240"')}${taInput('Cautela após (min)','tp-after',p.news.afterMinutes,'number','min="0" max="240"')}<label class="ta-check"><input type="checkbox" id="tp-avoid-news" ${p.news.avoidHighImpact?'checked':''}> Exigir cautela em notícias de alto impacto</label><p>Sessão e dias de trading em <button type="button" class="ta-link" onclick="taGo('settings')">Configurações</button>.</p></div></details>
+ <p id="ta-plan-error" role="status" aria-live="polite"></p><p class="muted-note">Salvar preserva o histórico e cria uma nova versão. Valores monetários na moeda do histórico; não há conversão automática.</p></form><details class="card"><summary>Histórico de versões (${taPlans().length})</summary><div class="ta-plan-history">${
     taPlans()
       .slice()
       .reverse()
@@ -517,8 +490,10 @@ function vPlan() {
           `<button class="b s" onclick="taShowPlanVersion(${Number(v.version)})">Versão ${Number(v.version)} · ${esc(v.name)} · ${esc((v.createdAt || "").slice(0, 10))}</button>`,
       )
       .join("") || '<p class="mu">Nenhum plano salvo.</p>'
-  }</div></details>`;
+  }</div></details></div>`;
 }
+function taPlanStartVersion(){const p=taCurrentPlan();document.querySelector('.plan-title-line .badge').textContent='Rascunho · versão '+((p?.version||0)+1);document.getElementById('ta-plan-error').textContent='Edite os campos e clique em Salvar plano para registrar a nova versão. A versão atual permanece preservada.';document.getElementById('tp-name').focus()}
+function taPlanVisualCriterion(c={}){return `<details class="plan-rule-disclosure" ${c.label?'':'open'}><summary>${esc(c.label||'Configurar critério')}<span>${c.required===false?'Opcional':'Obrigatório'}</span></summary>${taCriterionRow(c)}</details>`}
 function taReadCriterion(row) {
   const value = (key) => row.querySelector(`[data-cfield="${key}"]`),
     n = rNumber(value("threshold").value);
