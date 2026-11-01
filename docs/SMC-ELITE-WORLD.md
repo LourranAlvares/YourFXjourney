@@ -75,7 +75,7 @@ Medição no Chromium deste ambiente: trajeto de ~176 unidades em 1,3 s, 57–59
 
 ## Flag, deploy e rollback
 
-O servidor lê `SMC_WORLD_ENABLED=true` para oferecer o botão. Ausente ou qualquer outro valor: **desativado**, sem migração, sem cena carregada e sem alteração visual no clássico. A flag não concede permissões de conta ou de API.
+Após autorização do proprietário para teste público, o servidor oferece o botão por padrão quando a variável está ausente. `SMC_WORLD_ENABLED=false` **desativa** o botão, sem migração, sem cena carregada e sem alteração visual no clássico. `true` mantém o botão habilitado. A flag não concede permissões de conta ou de API.
 
 Para testar localmente:
 
@@ -84,7 +84,7 @@ SMC_WORLD_ENABLED=true npm start
 # Abra http://localhost:8080 (ou a porta configurada).
 ```
 
-Para o Render: publique a branch/revisão aprovada no mesmo serviço existente e adicione `SMC_WORLD_ENABLED=true` nas variáveis do serviço. Não altere segredos de IA/Supabase nem banco. Login continua abrindo o clássico; o World só aparece após o clique. Para desligar, remova a variável ou use `false` e redeploy. Para rollback de código, volte ao commit-base `850e222` ou a uma revisão aprovada anterior da branch, sem restaurar/remover dados de usuários.
+Para o Render: publique a branch/revisão aprovada no mesmo serviço existente e adicione `SMC_WORLD_ENABLED=true` nas variáveis do serviço. Não altere segredos de IA/Supabase nem banco. Login continua abrindo o clássico; o World só aparece após o clique. Para desligar, use explicitamente `SMC_WORLD_ENABLED=false` e redeploy. Para rollback de código, volte ao commit-base `850e222` ou a uma revisão aprovada anterior da branch, sem restaurar/remover dados de usuários.
 
 O arquivo standalone incorpora módulos e estilos; aberto diretamente em um navegador que permita `file:`, oferece o modo local sem IA/serviços externos. Neste ambiente o Chromium gerenciado bloqueia URLs `file:` (`ERR_BLOCKED_BY_ADMINISTRATOR`). Por isso a validação do artefato embutido foi feita via HTTP local, com APIs externas abortadas e sem scripts World externos. A abertura física por arquivo não é declarada validada.
 

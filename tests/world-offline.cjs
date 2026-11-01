@@ -4,7 +4,7 @@ const assert = require("node:assert/strict"),
   { chromium } = require("playwright"),
   { createApp } = require("../server/index.cjs");
 (async () => {
-  const app = createApp({ env: {} });
+  const app = createApp({ env: {SMC_WORLD_ENABLED:"false"} });
   await new Promise((r) => app.server.listen(0, "127.0.0.1", r));
   const b = await chromium.launch({ executablePath: "/usr/bin/chromium" });
   try {
@@ -61,7 +61,7 @@ const assert = require("node:assert/strict"),
     assert.equal(await p.evaluate(() => JSON.stringify(S)), before);
     assert(await p.locator(".smc-home").isVisible());
     console.log(
-      "PASS World flag default off, no scene download in classic, static MIME/whitelist and embedded standalone without external services, room/classic roundtrip (file URL blocked by managed browser policy)",
+      "PASS World explicit kill switch, no scene download in classic, static MIME/whitelist and embedded standalone without external services, room/classic roundtrip (file URL blocked by managed browser policy)",
     );
   } finally {
     await b.close();
