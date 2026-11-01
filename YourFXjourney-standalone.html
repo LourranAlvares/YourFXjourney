@@ -26469,6 +26469,141 @@ body.smc-world-active.smc-world-cinematic .smc-world {
     background: #0c1115;
   }
 }
+/* Second reference batch: operational panes retain the recognizable room landmarks. */
+@media (min-width: 761px) {
+  .smc-cinema-room[data-world-room-id="analyst"] .smc-world-workspace {
+    left: 18%;
+    right: 3%;
+    top: 15%;
+    bottom: 25%;
+  }
+  .smc-cinema-room[data-world-room-id="risk"] .smc-world-workspace {
+    left: 15%;
+    right: 12%;
+    top: 16%;
+    bottom: 27%;
+  }
+  .smc-cinema-room[data-world-room-id="economic"] .smc-world-workspace {
+    left: 3%;
+    right: 58%;
+    top: 12%;
+    bottom: 11%;
+  }
+  .smc-cinema-room[data-world-room-id="tools"] .smc-world-workspace {
+    left: 56%;
+    right: 3%;
+    top: 15%;
+    bottom: 10%;
+  }
+  .smc-cinema-room[data-world-room-id="achievements"] .smc-world-workspace {
+    left: 59%;
+    right: 3%;
+    top: 16%;
+    bottom: 22%;
+  }
+  .smc-cinema-room.is-expanded[data-world-room-id] .smc-world-workspace {
+    inset: 12px;
+  }
+}
+@container (max-width:700px) {
+  .smc-cinema-room .growth-achievement-grid,
+  .smc-cinema-room .risk-workspace {
+    grid-template-columns: 1fr;
+  }
+  .smc-cinema-room .growth-achievement {
+    min-width: 0;
+  }
+}
+.smc-cinema-future-note {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  width: 430px;
+  padding: 18px 22px;
+  border: 1px solid #bd954d;
+  border-radius: 10px;
+  background: #080e13f5;
+  box-shadow: 0 10px 30px #0008;
+  text-align: center;
+  font-size: 14px;
+}
+.smc-cinema-future-note strong {
+  color: #f0d28a;
+}
+.smc-cinema-future-note p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #c0c7cf;
+}
+.smc-world .smc-cinema-future-note button {
+  border: 1px solid #c09c55;
+  background: #b99856;
+  color: #16130d;
+  border-radius: 7px;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  min-height: 40px;
+}
+.smc-world .smc-cinema-preview-link {
+  margin-top: 14px;
+  background: #12191b;
+  color: #ddc183;
+  border-color: #76613d;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .smc-cinema-future .smc-cinema-stage {
+    padding-top: 0;
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .smc-cinema-future .smc-cinema-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+  }
+  .smc-cinema-future-note {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+@media (min-width: 761px) {
+  .smc-cinema-future-note {
+    left: auto;
+    right: 3%;
+    width: 340px;
+    transform: none;
+  }
+  .smc-cinema-room[data-world-room-id="analyst"]:not(.is-expanded)
+    .elite-analysis-guide {
+    padding: 10px 14px;
+  }
+  .smc-cinema-room[data-world-room-id="analyst"]:not(.is-expanded)
+    .elite-analysis-guide
+    ol {
+    display: none;
+  }
+  .smc-cinema-room[data-world-room-id="risk"]:not(.is-expanded) .risk-intro {
+    padding: 12px 14px !important;
+    margin-bottom: 10px !important;
+  }
+  .smc-cinema-room[data-world-room-id="risk"]:not(.is-expanded) .risk-intro p {
+    font-size: 12px;
+    margin: 6px 0;
+  }
+}
 </style><script>window.SMC_WORLD_EMBEDDED=true;
 /* Navigation only. No financial store, score, importer or API is created here. */
 (function (root) {
@@ -27027,6 +27162,7 @@ body.smc-world-active.smc-world-cinematic .smc-world {
         if (action === "lobby") this.lobby();
         if (action === "destinations") this.showDestinations();
         if (action === "help") this.showHelp();
+        if (action === "community-preview") this.previewCommunity();
         if (action === "camera") this.map?.changeView?.();
         if (action === "reset") {
           this.position = { x: 384, y: 336 };
@@ -27248,6 +27384,25 @@ body.smc-world-active.smc-world-cinematic .smc-world {
         room.id,
       );
     }
+    previewCommunity() {
+      if (
+        !this.active ||
+        !this.canUse() ||
+        this.blocked() ||
+        !window.SMCWorldScenes?.enabled
+      )
+        return;
+      const room = SMCWorldRooms.find("community");
+      if (!room?.future) return;
+      this.remember();
+      this.map?.destroy();
+      this.map = null;
+      this.room = room.id;
+      this.render(SMCWorldScenes.futureRoom(room));
+      this.root.querySelector("h1")?.setAttribute("tabindex", "-1");
+      this.root.querySelector("h1")?.focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    }
     navigate(route, roomId = null) {
       if (
         !this.active ||
@@ -27324,6 +27479,7 @@ body.smc-world-active.smc-world-cinematic .smc-world {
         !this.active ||
         !this.canUse() ||
         !this.room ||
+        SMCWorldRooms.find(this.room)?.future ||
         document.querySelector("dialog[open]")
       )
         return;
@@ -27570,7 +27726,11 @@ body.smc-world-active.smc-world-cinematic .smc-world {
       world.dispose();
       world = null;
     }
-    if (world?.active && !world.room) return;
+    if (
+      world?.active &&
+      (!world.room || SMCWorldRooms.find(world.room)?.future)
+    )
+      return;
     try {
       const result = baseR();
       world?.afterRender();

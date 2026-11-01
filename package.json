@@ -21,7 +21,7 @@
     "test:panel": "node tests/panel-experience-ui.cjs",
     "test:world": "node tests/world-map.cjs && node tests/world-ui.cjs && node tests/world-integration.cjs && node tests/world-cloud.cjs && node tests/world-offline.cjs",
     "test:world:3d": "node tests/world-3d.cjs",
-    "test:world:scenes": "node tests/world-scenes.cjs"
+    "test:world:scenes": "node tests/world-scenes.cjs && node tests/world-scenes-rooms.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"

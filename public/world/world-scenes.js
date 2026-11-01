@@ -6,6 +6,11 @@
     dash: "panel.webp",
     trades: "journal.webp",
     plan: "plan.webp",
+    analyst: "analyst.webp",
+    risk: "risk.webp",
+    economic: "news.webp",
+    tools: "tools.webp",
+    achievements: "achievements.webp",
   };
   // Percent coordinates belong to the architectural viewport, never the browser.
   const doors = {
@@ -101,7 +106,7 @@
       <span class="smc-cinema-arrival" aria-hidden="true"></span>
       ${help ? '<aside class="smc-cinema-welcome"><strong>Bem-vindo ao SMC Elite World</strong><p>Clique em uma sala. Seu plano, diário e ferramentas continuam os mesmos.</p><button data-world-action="dismiss-help">Entendi →</button></aside>' : ""}
       <div class="smc-cinema-hint" id="smc-world-near">Clique em uma sala para entrar · Tab / setas e Enter</div>
-      </div><div class="smc-world-access"><h2>Acesso direto às salas</h2><div class="smc-world-room-list">${rooms.map((r) => `<button data-world-room="${r.id}" ${r.future ? "disabled" : ""}>${'<span aria-hidden="true">' + e(r.icon) + "</span><span>" + e(r.name) + (r.future ? "<small>Em desenvolvimento</small>" : "") + "</span>"}${r.future ? "" : "<b>↗</b>"}</button>`).join("")}</div></div></div>`;
+      </div><div class="smc-world-access"><h2>Acesso direto às salas</h2><div class="smc-world-room-list">${rooms.map((r) => `<button data-world-room="${r.id}" ${r.future ? "disabled" : ""}>${'<span aria-hidden="true">' + e(r.icon) + "</span><span>" + e(r.name) + (r.future ? "<small>Em desenvolvimento</small>" : "") + "</span>"}${r.future ? "" : "<b>↗</b>"}</button>`).join("")}</div><button class="smc-cinema-preview-link" data-world-action="community-preview">Ver ambiente da Comunidade · Em desenvolvimento</button></div></div>`;
   };
   SMCWorldUI.room = (room, route, admin) => {
     if (!api.enabled || !images[room.id])
@@ -120,6 +125,13 @@
           "",
         )}</nav><div><button data-cinema-expand aria-controls="smc-world-workspace" aria-pressed="false">Ampliar área de trabalho</button><button data-cinema-environment aria-controls="smc-world-workspace" aria-expanded="true">Ver só o ambiente</button></div></div></div>`;
   };
+  api.futureRoom = (
+    room,
+  ) => `<div class="smc-world-room-shell smc-cinema-room smc-cinema-future" data-world-room-id="${room.id}">
+    <div class="smc-world-room-heading"><div><p>PRÉVIA DO AMBIENTE / EM DESENVOLVIMENTO</p><h1>Comunidade</h1><small>Esta área ainda não oferece rede social, chat ou transmissões.</small></div></div>
+    <div class="smc-cinema-stage">${image("community.webp", "Ambiente conceitual da futura Comunidade SMC Elite")}
+      <aside class="smc-cinema-future-note"><strong>Comunidade · Em desenvolvimento</strong><p>Prévia visual do espaço. Perfis, publicações e transmissões ainda não estão disponíveis.</p><button data-world-action="lobby">Voltar às salas</button></aside>
+    </div></div>`;
   class SceneMap {
     constructor(host, rooms, options) {
       this.host = host;

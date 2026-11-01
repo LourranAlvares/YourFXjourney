@@ -40,6 +40,7 @@
         if (action === "lobby") this.lobby();
         if (action === "destinations") this.showDestinations();
         if (action === "help") this.showHelp();
+        if (action === "community-preview") this.previewCommunity();
         if (action === "camera") this.map?.changeView?.();
         if (action === "reset") {
           this.position = { x: 384, y: 336 };
@@ -261,6 +262,25 @@
         room.id,
       );
     }
+    previewCommunity() {
+      if (
+        !this.active ||
+        !this.canUse() ||
+        this.blocked() ||
+        !window.SMCWorldScenes?.enabled
+      )
+        return;
+      const room = SMCWorldRooms.find("community");
+      if (!room?.future) return;
+      this.remember();
+      this.map?.destroy();
+      this.map = null;
+      this.room = room.id;
+      this.render(SMCWorldScenes.futureRoom(room));
+      this.root.querySelector("h1")?.setAttribute("tabindex", "-1");
+      this.root.querySelector("h1")?.focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    }
     navigate(route, roomId = null) {
       if (
         !this.active ||
@@ -337,6 +357,7 @@
         !this.active ||
         !this.canUse() ||
         !this.room ||
+        SMCWorldRooms.find(this.room)?.future ||
         document.querySelector("dialog[open]")
       )
         return;

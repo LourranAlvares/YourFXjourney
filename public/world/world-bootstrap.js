@@ -141,7 +141,11 @@
       world.dispose();
       world = null;
     }
-    if (world?.active && !world.room) return;
+    if (
+      world?.active &&
+      (!world.room || SMCWorldRooms.find(world.room)?.future)
+    )
+      return;
     try {
       const result = baseR();
       world?.afterRender();
