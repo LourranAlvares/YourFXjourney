@@ -1,3 +1,5 @@
+> Atualização visual: a apresentação preferencial agora usa cenários por clique. Veja [cenários e teste visual](SMC-ELITE-WORLD-SCENES.md). O WebGL e SVG descritos abaixo permanecem como alternativas de recuperação.
+
 # SMC Elite World — navegação alternativa
 
 > Evolução: o lobby servido agora oferece WebGL real, com o mapa vetorial preservado como fallback e no standalone. Veja [arquitetura e limites da cena 3D](SMC-ELITE-WORLD-3D.md).

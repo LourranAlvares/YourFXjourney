@@ -24,6 +24,7 @@ const assert = require("node:assert/strict"),
         json: { authenticated: false, authConfigured: false, services: {} },
       }),
     );
+    await p.route("**/public/world/world-scenes.js", (r) => r.abort());
     await p.goto(base);
     await p.waitForSelector(".smc-home");
     await p.evaluate(() => {

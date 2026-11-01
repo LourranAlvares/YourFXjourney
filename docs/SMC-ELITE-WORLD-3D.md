@@ -1,3 +1,5 @@
+> Após a revisão visual, este renderer é uma alternativa de recuperação. A experiência preferencial é descrita em [cenários por clique](SMC-ELITE-WORLD-SCENES.md).
+
 # SMC Elite World — cena WebGL
 
 A cena principal passou de SVG isométrico para geometria 3D real. O SVG anterior é mantido como fallback, não apresentado como WebGL.

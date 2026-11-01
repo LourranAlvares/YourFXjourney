@@ -293,7 +293,7 @@ function shotDraftList(){const drafts=S.tradeDrafts||[];return `<section class="
 function deleteShotDraft(id){if(confirm('Excluir este planejamento?')){S.tradeDrafts=(S.tradeDrafts||[]).filter(t=>t.id!==id);save();R()}}
 document.addEventListener('paste',event=>{if(!$('#dlg').open)return;const f=[...(event.clipboardData?.items||[])].find(i=>i.type.startsWith('image/'))?.getAsFile();if(f){event.preventDefault();readTradingShot(f)}});
 
-let resizeTimer,lastRenderWidth=window.innerWidth;window.addEventListener('resize',()=>{if(window.innerWidth===lastRenderWidth)return;lastRenderWidth=window.innerWidth;clearTimeout(resizeTimer);resizeTimer=setTimeout(R,120)});
+let resizeTimer,lastRenderWidth=window.innerWidth;window.addEventListener('resize',()=>{if(window.innerWidth===lastRenderWidth)return;lastRenderWidth=window.innerWidth;clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(window.SMCWorld?.controller?.active)window.SMCWorld.controller.refreshLayout();else R()},120)});
 const sidebarNote=document.createElement('div');sidebarNote.className='sidebar-note';sidebarNote.innerHTML='SEU PLANO. SEU PROCESSO.<br>Histórico salvo neste navegador.<br>Exporte backups regularmente.';document.querySelector('header').append(sidebarNote);
 
 </script>

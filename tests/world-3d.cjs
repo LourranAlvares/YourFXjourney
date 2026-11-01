@@ -16,6 +16,7 @@ const assert = require("node:assert/strict"),
       }),
       errors = [];
     p.on("pageerror", (e) => errors.push(e.message));
+    await p.route("**/public/world/world-scenes.js", (r) => r.abort());
     await p.goto("http://127.0.0.1:" + app.server.address().port);
     await p.waitForSelector("#smc-world-enter");
     assert.equal(await p.locator('script[src*="three.min"]').count(), 0);

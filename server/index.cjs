@@ -527,7 +527,7 @@ function createApp(options = {}) {
           "/public/apresentacao/SMC-Elite-Apresentacao.pdf",
           "/public/apresentacao/SMC-Elite-Apresentacao.pptx",
         ].includes(publicPath) ||
-        /^\/public\/[A-Za-z0-9_./-]+\.(?:js|css|svg|png|ico|woff2)$/.test(
+        /^\/public\/[A-Za-z0-9_./-]+\.(?:js|css|svg|png|webp|ico|woff2)$/.test(
           publicPath,
         ) ||
         /^\/vendor\/ocr\/[A-Za-z0-9_./-]+\.(?:js|gz|wasm)$/.test(publicPath);
@@ -555,6 +555,7 @@ function createApp(options = {}) {
         ".gz": "application/octet-stream",
         ".svg": "image/svg+xml",
         ".png": "image/png",
+        ".webp": "image/webp",
         ".ico": "image/x-icon",
         ".woff2": "font/woff2",
       };

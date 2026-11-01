@@ -70,7 +70,21 @@
             };
             document.body.append(s);
           });
-        // Optional WebGL enhancement. Core navigation remains available if it fails.
+        // Image-led scene is the preferred presentation. No engine download is needed.
+        try {
+          await new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "public/world/world-scenes.js";
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.append(script);
+          });
+          await SMCWorldScenes.prepare();
+          if (SMCWorldScenes.enabled) return;
+        } catch {
+          /* Keep the independently usable scene fallbacks below. */
+        }
+        // Optional WebGL fallback. Core navigation remains available if it fails.
         try {
           for (const file of [
             "vendor/three.min.js",

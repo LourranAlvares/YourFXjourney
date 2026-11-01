@@ -192,6 +192,7 @@
       this.root.querySelector("#smc-world-location").textContent = this.room
         ? SMCWorldRooms.find(this.room).name
         : "Átrio · Recepção";
+      window.SMCWorldScenes?.decorate(this.root, this.room);
     }
     lobby() {
       if (!this.active || this.blocked()) return;
@@ -228,9 +229,11 @@
           );
         try {
           this.map = createMap(
-            window.SMCWorld3D && !this.graphicsFallback
-              ? SMCWorld3D
-              : SMCWorldMap.MapController,
+            window.SMCWorldScenes?.enabled
+              ? SMCWorldScenes.MapController
+              : window.SMCWorld3D && !this.graphicsFallback
+                ? SMCWorld3D
+                : SMCWorldMap.MapController,
           );
         } catch {
           this.map = createMap(SMCWorldMap.MapController);
@@ -239,7 +242,7 @@
           );
         }
         this.sceneLayout = this.map.rooms;
-        if (!this.map.renderer)
+        if (!this.map.renderer && !this.map.imageScene)
           this.status(
             "Modo compatível 2.5D: a cena WebGL não está disponível neste ambiente. Todas as salas continuam acessíveis.",
           );
@@ -329,6 +332,19 @@
       }
       this.attach();
     }
+    refreshLayout() {
+      if (
+        !this.active ||
+        !this.canUse() ||
+        !this.room ||
+        document.querySelector("dialog[open]")
+      )
+        return;
+      // A delayed viewport resize must not erase a form opened since that event.
+      this.remember();
+      this.pendingRestore = tab;
+      R();
+    }
     showDestinations() {
       if (this.blocked()) return;
       const dialog = growthDialog(
@@ -345,9 +361,14 @@
     }
     showHelp() {
       if (this.blocked()) return;
+      const controls = window.SMCWorldScenes?.enabled
+        ? "Clique ou toque numa placa para entrar. Use Tab ou setas para escolher uma sala e Enter ou E para abrir. O personagem permanece no cenário; não é necessário caminhar. Dentro das salas, amplie a área de trabalho para editar com mais espaço."
+        : "WASD ou setas movem o avatar. Perto de uma porta, use E ou Enter. Toque na placa da sala para caminhar e entrar. Use a lista de salas para acesso imediato.";
       const dialog = growthDialog(
         "Como navegar no World",
-        "<p>WASD ou setas movem o avatar. Perto de uma porta, use E ou Enter. Toque na placa da sala para caminhar e entrar. Use a lista de salas para acesso imediato.</p><p>Escape retorna ao átrio quando não há formulário em foco ou diálogo aberto. Os botões de retorno estão sempre no topo. A preferência de movimento reduzido do dispositivo é respeitada.</p><p>As ferramentas são as mesmas do clássico. Não existem pontos, XP ou resultados de exemplo.</p>",
+        "<p>" +
+          controls +
+          "</p><p>Escape retorna ao átrio quando não há formulário em foco ou diálogo aberto. Os botões de retorno estão sempre no topo. A preferência de movimento reduzido do dispositivo é respeitada.</p><p>As ferramentas são as mesmas do clássico. Não existem pontos, XP ou resultados de exemplo.</p>",
       );
       const label = document.createElement("label");
       label.className = "growth-checkbox";
@@ -379,6 +400,7 @@
       this.room = null;
       this.root.hidden = true;
       document.body.classList.remove("smc-world-active");
+      document.body.classList.remove("smc-world-cinematic");
       if (!force && this.canUse()) {
         const route = this.classicRoute || "home";
         if (tab !== route) {
@@ -399,6 +421,7 @@
       this.map = null;
       this.park();
       this.room = null;
+      document.body.classList.remove("smc-world-cinematic");
       this.root.innerHTML =
         SMCWorldUI.header() +
         '<div class="smc-world-error"><h1>Não foi possível abrir este ambiente</h1><p>Seus dados continuam no workspace original. Volte ao modo clássico para continuar.</p></div>';
