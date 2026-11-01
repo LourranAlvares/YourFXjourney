@@ -17,6 +17,8 @@ const assert = require("node:assert/strict"),
       errors = [],
       base = "http://127.0.0.1:" + app.server.address().port;
     p.on("pageerror", (e) => errors.push(e.message));
+    // Keep original map/collision regression deterministic; WebGL has a dedicated suite.
+    await p.route("**/public/world/world-3d.js", (r) => r.abort());
     await p.route("**/api/status", (r) =>
       r.fulfill({
         json: { authenticated: false, authConfigured: false, services: {} },

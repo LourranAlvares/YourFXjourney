@@ -70,6 +70,23 @@
             };
             document.body.append(s);
           });
+        // Optional WebGL enhancement. Core navigation remains available if it fails.
+        try {
+          for (const file of [
+            "vendor/three.min.js",
+            "vendor/Reflector.js",
+            "world-3d.js",
+          ])
+            await new Promise((resolve, reject) => {
+              const script = document.createElement("script");
+              script.src = "public/world/" + file;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.body.append(script);
+            });
+        } catch {
+          /* SVG fallback deliberately preserves every functional room. */
+        }
       }
     })().catch((e) => {
       loading = null;

@@ -1,5 +1,7 @@
 # SMC Elite World — navegação alternativa
 
+> Evolução: o lobby servido agora oferece WebGL real, com o mapa vetorial preservado como fallback e no standalone. Veja [arquitetura e limites da cena 3D](SMC-ELITE-WORLD-3D.md).
+
 ## Auditoria e recuperação
 
 Base: `850e222` em `main`, árvore de trabalho limpa antes da implementação. Branch: `feature/smc-elite-world`. O World não substitui o clássico nem entra automaticamente após login. A versão comercial de apresentação e todos os módulos existentes permanecem no repositório.
@@ -67,9 +69,9 @@ Em Ajuda existe também uma opção própria de redução de movimento, sem cont
 
 ## Desempenho e assets
 
-Implementação SVG/CSS 2.5D, não um motor 3D. A arquitetura, paredes, estações, portas e avatar são construídos por código e a grade determina colisões e caminhos. Nenhuma imagem de referência é carregada pela Home ou usada como tela interativa.
+A base compatível é SVG/CSS 2.5D; o enhancement servido usa Three.js/WebGL. A arquitetura, paredes, estações, portas e avatar são construídos por código e a grade determina colisões e caminhos. Nenhuma imagem de referência é carregada pela Home ou usada como tela interativa.
 
-A ponte é pequena e só carrega estilos e módulos da cena após o clique. Não há dependência nova de produção. O conjunto World fica abaixo de 100 KB de fonte sem compressão, e aumenta marginalmente o standalone já existente (~27 MB). Não há loop JS no repouso: `requestAnimationFrame` roda somente durante o trajeto; é cancelado ao sair ou ocultar a aba. As portas são atualizadas apenas quando a proximidade muda.
+A ponte é pequena e só carrega estilos e módulos da cena após o clique. Não há dependência nova de produção. O núcleo compatível fica abaixo de 100 KB de fonte; o enhancement 3D acrescenta cerca de 700 KB (vendor minificado e renderer), carregado somente na entrada, e aumenta marginalmente o standalone já existente (~27 MB). Não há loop JS no repouso: `requestAnimationFrame` roda somente durante o trajeto; é cancelado ao sair ou ocultar a aba. As portas são atualizadas apenas quando a proximidade muda.
 
 Medição no Chromium deste ambiente: trajeto de ~176 unidades em 1,3 s, 57–59 frames observados e **zero chamadas ao render do aplicativo durante o movimento**. É uma medição de teste, não benchmark universal de hardware. O modo reduzido e a lista de salas oferecem alternativa sem animação.
 
@@ -107,7 +109,7 @@ Capturas de navegador estão em `docs/world-evidence/`, com galeria `index.html`
 
 ## Limitações e próximos passos
 
-- A cena é uma interpretação vetorial 2.5D das referências. Não é uma reprodução fotorealista ou 3D WebGL; os interiores priorizam as ferramentas reais em uma moldura cenográfica leve.
+- O lobby servido é uma modelagem procedural WebGL e não uma reprodução fotorrealista exata; o fallback é vetorial. Os interiores continuam priorizando as ferramentas reais em uma moldura cenográfica leve.
 - Não há comunidade, rede social, live, XP ou personalização de avatar nesta entrega.
 - Não houve teste em Safari/iPhone físico ou hardware de baixo desempenho; o teclado, toque/viewport e movimento reduzido foram exercitados no Chromium.
 - Cloud foi validado contra fixture, não contra o Supabase de produção. IA real e calendário externo não foram consultados para demonstrar o World; seus fluxos existentes continuam disponíveis quando configurados.

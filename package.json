@@ -19,7 +19,8 @@
     "test:cloud:ui": "node tests/cloud-workspace.cjs",
     "test:growth": "node tests/growth-ui.cjs && node tests/growth-reviews-ui.cjs && node tests/growth-achievements-ui.cjs",
     "test:panel": "node tests/panel-experience-ui.cjs",
-    "test:world": "node tests/world-map.cjs && node tests/world-ui.cjs && node tests/world-integration.cjs && node tests/world-cloud.cjs && node tests/world-offline.cjs"
+    "test:world": "node tests/world-map.cjs && node tests/world-ui.cjs && node tests/world-integration.cjs && node tests/world-cloud.cjs && node tests/world-offline.cjs",
+    "test:world:3d": "node tests/world-3d.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"

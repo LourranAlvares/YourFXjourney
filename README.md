@@ -391,4 +391,4 @@ registros explícitos de execução, com estado de leitura salvo na conta.
 
 ## SMC Elite World (opcional)
 
-Uma segunda navegação 2.5D, com avatar, salas e acesso às ferramentas originais. O clássico continua padrão e não há migração de dados. Na publicação pública, o botão único da Home fica habilitado por padrão; `SMC_WORLD_ENABLED=false` o desativa. Entrar no World continua opcional e o clássico permanece padrão. Consulte [arquitetura, testes, uso e rollback](docs/SMC-ELITE-WORLD.md). `npm run test:world` executa as suítes específicas (requer Playwright/Chromium para UI).
+Uma segunda navegação com lobby WebGL 3D, fallback 2.5D, avatar, salas e acesso às ferramentas originais. O clássico continua padrão e não há migração de dados. Na publicação pública, o botão único da Home fica habilitado por padrão; `SMC_WORLD_ENABLED=false` o desativa. Entrar no World continua opcional e o clássico permanece padrão. Consulte [arquitetura, testes, uso e rollback](docs/SMC-ELITE-WORLD.md). `npm run test:world` executa as suítes específicas (requer Playwright/Chromium para UI).

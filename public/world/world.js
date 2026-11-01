@@ -40,6 +40,7 @@
         if (action === "lobby") this.lobby();
         if (action === "destinations") this.showDestinations();
         if (action === "help") this.showHelp();
+        if (action === "camera") this.map?.changeView?.();
         if (action === "reset") {
           this.position = { x: 384, y: 336 };
           this.saveUI();
@@ -200,26 +201,48 @@
       this.room = null;
       try {
         this.render(SMCWorldUI.lobby(SMCWorldRooms.rooms, this.help));
-        this.map = new SMCWorldMap.MapController(
-          this.root.querySelector("#smc-world-map"),
-          SMCWorldRooms.rooms,
-          {
-            position: this.position,
-            reduceMotion: this.reduceMotion,
-            onEnter: (id) => this.open(id),
-            onPosition: (p) => {
-              this.position = { ...p };
-              this.saveUI();
+        const createMap = (Controller) =>
+          new Controller(
+            this.root.querySelector("#smc-world-map"),
+            SMCWorldRooms.rooms,
+            {
+              position: this.position,
+              reduceMotion: this.reduceMotion,
+              onGraphicsLost: () => {
+                this.graphicsFallback = true;
+                this.lobby();
+              },
+              onEnter: (id) => this.open(id),
+              onPosition: (p) => {
+                this.position = { ...p };
+                this.saveUI();
+              },
+              onNear: (r) => {
+                const n = document.getElementById("smc-world-near");
+                if (n)
+                  n.textContent = r
+                    ? "E / Enter · " + r.name
+                    : "Clique no piso para caminhar";
+              },
             },
-            onNear: (r) => {
-              const n = document.getElementById("smc-world-near");
-              if (n)
-                n.textContent = r
-                  ? "E / Enter · " + r.name
-                  : "Clique no piso para caminhar";
-            },
-          },
-        );
+          );
+        try {
+          this.map = createMap(
+            window.SMCWorld3D && !this.graphicsFallback
+              ? SMCWorld3D
+              : SMCWorldMap.MapController,
+          );
+        } catch {
+          this.map = createMap(SMCWorldMap.MapController);
+          this.status(
+            "Modo compatível ativo: o dispositivo não disponibilizou a cena 3D.",
+          );
+        }
+        this.sceneLayout = this.map.rooms;
+        if (!this.map.renderer)
+          this.status(
+            "Modo compatível 2.5D: a cena WebGL não está disponível neste ambiente. Todas as salas continuam acessíveis.",
+          );
         this.root.querySelector("h1")?.setAttribute("tabindex", "-1");
         this.root.querySelector("h1")?.focus({ preventScroll: true });
         window.scrollTo(0, 0);
@@ -253,7 +276,9 @@
       this.map?.destroy();
       this.map = null;
       this.room = room.id;
-      this.position = { x: room.door[0], y: room.door[1] };
+      const effectiveRoom =
+        this.sceneLayout?.find((r) => r.id === room.id) || room;
+      this.position = { x: effectiveRoom.door[0], y: effectiveRoom.door[1] };
       this.saveUI();
       try {
         this.render(SMCWorldUI.room(room, route, this.isAdmin()));
