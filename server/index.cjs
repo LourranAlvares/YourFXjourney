@@ -524,6 +524,8 @@ function createApp(options = {}) {
           "/YourFXjourney.html",
           "/YourFXjourney-standalone.html",
           "/public/account.html",
+          "/public/apresentacao/SMC-Elite-Apresentacao.pdf",
+          "/public/apresentacao/SMC-Elite-Apresentacao.pptx",
         ].includes(publicPath) ||
         /^\/public\/[A-Za-z0-9_./-]+\.(?:js|css|svg|png|ico|woff2)$/.test(
           publicPath,
@@ -544,6 +546,8 @@ function createApp(options = {}) {
       if (!stat.isFile())
         throw new APIError(404, "not_found", "Arquivo não encontrado.");
       const types = {
+        ".pdf": "application/pdf",
+        ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         ".html": "text/html; charset=utf-8",
         ".js": "text/javascript; charset=utf-8",
         ".css": "text/css; charset=utf-8",
