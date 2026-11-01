@@ -388,3 +388,7 @@ O Diário reúne controles num resumo compacto e mostra calendário/galeria lado
 a lado no desktop. O Painel usa um único gráfico principal com seletor de P&L,
 saldo e drawdown. O topo simplifica a conexão e reúne alertas por regras sobre
 registros explícitos de execução, com estado de leitura salvo na conta.
+
+## SMC Elite World (opcional)
+
+Uma segunda navegação 2.5D, com avatar, salas e acesso às ferramentas originais. O clássico continua padrão e não há migração de dados. No servidor, `SMC_WORLD_ENABLED=true` habilita um único botão na Home; ausente/false mantém o clássico como antes. Consulte [arquitetura, testes, uso e rollback](docs/SMC-ELITE-WORLD.md). `npm run test:world` executa as suítes específicas (requer Playwright/Chromium para UI).

@@ -25203,4 +25203,1739 @@ document.addEventListener("pointerdown", (event) => {
   }, 1400);
 });
 </script>
+<style>/* All World appearance is opt-in. Classic selectors and values are untouched. */
+body.smc-world-active > header {
+  display: none !important;
+}
+body.smc-world-active > #main {
+  display: none !important;
+}
+body.smc-world-active {
+  background: #080d13 !important;
+}
+.smc-world[hidden] {
+  display: none !important;
+}
+.smc-world {
+  --world-gold: #d9bc7c;
+  --world-line: #766442;
+  --world-muted: #aab5c3;
+  position: relative;
+  min-height: 100svh;
+  background:
+    radial-gradient(ellipse at 50% 20%, #28272166, transparent 65%), #080d13;
+  color: #edf0f4;
+  padding: 20px clamp(12px, 3vw, 44px) 32px;
+  font-family: "SMC Inter", Inter, system-ui, sans-serif;
+  box-sizing: border-box;
+  isolation: isolate;
+}
+.smc-world * {
+  box-sizing: border-box;
+}
+.smc-world
+  :is(.smc-world-hud, .smc-world-lobby, .smc-world-room-routes)
+  button {
+  cursor: pointer;
+  border: 1px solid #756342;
+  background: #141b23;
+  color: #e8dcbe;
+  border-radius: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: normal;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.smc-world
+  :is(.smc-world-hud, .smc-world-lobby, .smc-world-room-routes)
+  button:hover:not(:disabled) {
+  border-color: #d9bc7c;
+  background: #29271e;
+}
+.smc-world
+  :is(.smc-world-hud, .smc-world-lobby, .smc-world-room-routes)
+  button:disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+.smc-world :is(button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--world-gold) !important;
+  outline-offset: 4px;
+}
+.smc-world-hud {
+  position: sticky !important;
+  top: 8px !important;
+  inset-inline: auto !important;
+  width: 100% !important;
+  z-index: 40;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: center !important;
+  gap: 16px;
+  padding: 14px 18px !important;
+  border: 1px solid #655436 !important;
+  border-radius: 13px;
+  background: #0c131bf5 !important;
+  box-shadow: 0 10px 30px #0005;
+  flex-wrap: wrap !important;
+}
+.smc-world-brand {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #e4c787;
+}
+.smc-world-brand b {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  padding-left: 8px;
+  color: #aeb7c6;
+}
+.smc-world-location {
+  display: block;
+  font-size: 11px;
+  color: var(--world-muted);
+  margin-top: 5px;
+}
+.smc-world-hud nav {
+  display: flex !important;
+  flex-direction: row !important;
+  position: static !important;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.smc-world .smc-world-exit {
+  border-color: #d9bc7c;
+  background: #c8a865;
+  color: #111820;
+  font-weight: 650;
+}
+.smc-world-status {
+  color: #d9bc7c;
+  font-size: 12px;
+  min-height: 0;
+  margin: 8px 0;
+}
+.smc-world-status:empty {
+  display: none;
+}
+.smc-world-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0 16px;
+}
+.smc-world-eyebrow {
+  font-size: 10px;
+  color: #d9bc7c;
+  letter-spacing: 0.2em;
+}
+.smc-world h1 {
+  font-size: clamp(24px, 3vw, 39px);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin: 8px 0;
+}
+.smc-world-intro p,
+.smc-world-access p {
+  font-size: 13px;
+  color: var(--world-muted);
+  margin: 8px 0;
+  line-height: 1.5;
+}
+.smc-world-instructions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #8d79422e;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #c0c7d0;
+  background: #c4a15508;
+  line-height: 1.6;
+}
+.smc-world-map-wrap {
+  position: relative;
+  aspect-ratio: 1100/650;
+  max-width: 1400px;
+  margin: 0 auto;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 18px;
+  background: radial-gradient(ellipse at 50% 60%, #b2944f0c, transparent 70%);
+}
+.smc-world-map {
+  position: absolute;
+  inset: 0;
+}
+.smc-world-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.smc-world-signs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.smc-world .smc-world-sign {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: clamp(9px, 1vw, 13px);
+  background: #0b131be8;
+  border: 1px solid #8b7347;
+  box-shadow: 0 5px 18px #0008;
+  min-height: 28px;
+  padding: 5px 9px;
+  white-space: nowrap;
+}
+.smc-world-sign > span {
+  color: #dfc48a;
+}
+.smc-world-sign small {
+  display: block;
+  font-size: 9px;
+  color: #bec5ce;
+}
+.smc-world .smc-world-sign.closed {
+  flex-wrap: wrap;
+  max-width: 120px;
+}
+.smc-world-door.near {
+  fill: #f1d28c;
+  opacity: 1;
+  stroke: #fff0bd;
+  stroke-width: 3;
+}
+.smc-world-near {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  border: 1px solid #625131;
+  border-radius: 30px;
+  background: #0b121be8;
+  font-size: 12px;
+  color: #e0c38a;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.smc-world-map.walking .smc-world-avatar-body {
+  animation: smc-world-walk 0.28s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.smc-world-access {
+  border: 1px solid #4b4435;
+  background: #0c131ad9;
+  padding: 20px;
+  border-radius: 14px;
+  max-width: 1400px;
+  margin: 12px auto;
+}
+.smc-world-access h2 {
+  font-size: 18px;
+  margin: 0;
+}
+.smc-world-room-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.smc-world-room-list button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  min-height: 64px;
+}
+.smc-world-room-list button > span:first-child {
+  font-size: 23px;
+  color: #d9bc7c;
+}
+.smc-world-room-list button > span:nth-child(2) {
+  flex: 1;
+}
+.smc-world-room-list small {
+  display: block;
+  color: var(--world-muted);
+  font-size: 10px;
+  margin-top: 3px;
+}
+.smc-world-room-shell {
+  position: relative;
+  margin: 20px auto 0;
+  max-width: 1800px;
+  isolation: isolate;
+  border: 1px solid #665333;
+  border-radius: 16px;
+  overflow: clip;
+  background: linear-gradient(120deg, #0e171edb, #101419f5);
+}
+.smc-world-room-ambience {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    linear-gradient(120deg, transparent 40%, #cfa8670a),
+    repeating-linear-gradient(90deg, transparent 0 170px, #b69b5b0c 171px 174px);
+}
+.smc-world-room-ambience i {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  height: 110px;
+  width: 22%;
+  border: 1px solid #d5b5783a;
+  border-radius: 50%;
+  transform: rotateX(60deg);
+  box-shadow: 0 0 18px #d5b57814;
+}
+.smc-world-room-ambience i:nth-child(2) {
+  left: 40%;
+  width: 30%;
+}
+.smc-world-room-ambience i:nth-child(3) {
+  left: 78%;
+  width: 15%;
+}
+.smc-world-room-ambience > span {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  color: #d5b57810;
+  font-size: 45px;
+  letter-spacing: 0.15em;
+  font-weight: 800;
+}
+.smc-world-room-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 26px 24px 16px;
+}
+.smc-world-room-heading p {
+  font-size: 10px;
+  color: #d9bc7c;
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+.smc-world-room-heading h1 {
+  font-size: 27px;
+  margin: 8px 0;
+}
+.smc-world-room-heading small {
+  color: var(--world-muted);
+  font-size: 12px;
+}
+.smc-world-room-emblem {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 72px;
+  border: 1px solid #8b7346;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #c5a05b22, #10171d);
+  font-size: 34px;
+  color: #e0c485;
+}
+.smc-world-room-routes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 24px 20px;
+}
+.smc-world-room-routes [aria-current="page"] {
+  background: #d5b57820;
+  border-color: #d5b578;
+  color: #f0d59d;
+}
+.smc-world-workspace {
+  border-top: 1px solid #76644260;
+  background: #090f16df;
+  min-width: 0;
+  padding: 0 16px 24px;
+}
+body.smc-world-active .smc-world-workspace #main {
+  display: block !important;
+  position: relative;
+  margin: 0 !important;
+  padding: 20px 0 0 !important;
+  max-width: none !important;
+  width: 100% !important;
+  background: none !important;
+  min-width: 0;
+}
+body.smc-world-active .smc-world-workspace .terminal-topbar {
+  display: none !important;
+}
+body.smc-world-active .smc-world-workspace .page-top {
+  padding: 0 8px;
+}
+.smc-world-destinations section {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid #76644260;
+  border-radius: 10px;
+}
+.smc-world-destinations h3 {
+  font-size: 14px;
+  margin-top: 0;
+}
+.smc-world-destinations button {
+  margin: 4px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  border: 1px solid #8a7346;
+  background: #111a24;
+  color: #e6d7b9;
+  min-height: 36px;
+}
+.smc-world-destinations small {
+  display: block;
+  color: #aeb8c4;
+  line-height: 1.5;
+}
+.smc-world-error {
+  padding: 40px 20px;
+}
+.smc-world-error p {
+  color: var(--world-muted);
+}
+@keyframes smc-world-walk {
+  from {
+    transform: translateY(0) rotate(-3deg);
+  }
+  to {
+    transform: translateY(-3px) rotate(3deg);
+  }
+}
+@media (max-width: 1100px) {
+  .smc-world-room-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .smc-world-hud {
+    position: relative !important;
+    top: 0 !important;
+  }
+  .smc-world .smc-world-sign {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
+@media (max-width: 760px) {
+  .smc-world {
+    padding: 10px 10px 20px;
+  }
+  .smc-world-hud {
+    padding: 12px !important;
+    gap: 12px;
+  }
+  .smc-world-hud nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+  .smc-world-hud button {
+    font-size: 11px;
+    padding: 8px;
+  }
+  .smc-world-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 18px;
+  }
+  .smc-world-instructions {
+    align-items: flex-start;
+    font-size: 11px;
+  }
+  .smc-world-room-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .smc-world-map-wrap {
+    margin-top: 20px;
+    overflow: visible;
+  }
+  .smc-world .smc-world-sign {
+    font-size: 8px;
+    gap: 3px;
+    padding: 3px 4px;
+    min-height: 25px;
+    max-width: 90px;
+    white-space: normal;
+  }
+  .smc-world-sign small {
+    font-size: 7px;
+  }
+  .smc-world-sign > span {
+    display: none;
+  }
+  .smc-world-near {
+    font-size: 9px;
+    padding: 5px 8px;
+    bottom: -8px;
+  }
+  .smc-world-access {
+    padding: 14px;
+    margin-top: 26px;
+  }
+  .smc-world-room-heading {
+    padding: 18px 12px;
+  }
+  .smc-world-room-heading h1 {
+    font-size: 22px;
+  }
+  .smc-world-room-emblem {
+    width: 46px;
+    flex: 0 0 46px;
+    height: 54px;
+    font-size: 24px;
+  }
+  .smc-world-room-routes {
+    padding: 0 12px 16px;
+  }
+  .smc-world-workspace {
+    padding: 0 10px 16px;
+  }
+  .smc-world-room-ambience > span {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .smc-world * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* The original app styles every header as a sidebar; explicitly isolate this HUD. */
+body.smc-world-active .smc-world .smc-world-hud {
+  position: sticky !important;
+  inset: 8px auto auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  overflow: visible !important;
+  padding: 14px 18px !important;
+  margin: 0 !important;
+  transform: none !important;
+  background: #0c131bf5 !important;
+  border: 1px solid #655436 !important;
+}
+body.smc-world-active .smc-world .smc-world-hud nav {
+  position: static !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  width: auto !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex: 0 1 auto !important;
+}
+@media (max-width: 760px) {
+  body.smc-world-active .smc-world .smc-world-hud {
+    position: relative !important;
+    inset: auto !important;
+    padding: 12px !important;
+  }
+  body.smc-world-active .smc-world .smc-world-hud nav {
+    display: grid !important;
+    width: 100% !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+body.smc-world-active .smc-world .smc-world-hud {
+  visibility: visible !important;
+  z-index: 50 !important;
+}
+.smc-world button,
+.smc-world [tabindex] {
+  scroll-margin-top: 120px;
+}
+@media (max-width: 760px) {
+  .smc-world button,
+  .smc-world [tabindex] {
+    scroll-margin-top: 20px;
+  }
+}
+body.smc-world-active .smc-world .smc-world-room-routes {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.smc-world-room-shell {
+  animation: smc-world-enter 0.18s ease-out;
+}
+@keyframes smc-world-enter {
+  from {
+    opacity: 0.6;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .smc-world-room-shell {
+    animation: none !important;
+  }
+}
+.smc-world-map-wrap {
+  max-width: min(1250px, calc((100svh - 330px) * 1.6923));
+  min-width: min(100%, 680px);
+}
+.smc-world-sign svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+.smc-world-room-list svg {
+  width: 23px;
+  height: 23px;
+  display: block;
+}
+.smc-world-room-emblem svg {
+  width: 32px;
+  height: 32px;
+}
+.smc-world-room-list b {
+  font-size: 0;
+  width: 12px;
+  height: 12px;
+  position: relative;
+  flex: 0 0 12px;
+}
+.smc-world-room-list b::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  top: 1px;
+  right: 1px;
+}
+.smc-world-room-list b::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 11px;
+  border-top: 1px solid currentColor;
+  transform: rotate(-45deg);
+  top: 6px;
+  right: 0;
+}
+@media (max-width: 760px) {
+  .smc-world-map-wrap {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .smc-world-sign svg {
+    display: none;
+  }
+}
+.smc-world-room-list button {
+  min-width: 0;
+  gap: 8px;
+  padding: 10px;
+}
+.smc-world-room-list button > span:nth-child(2) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  body.smc-world-active .smc-world .smc-world-hud {
+    position: sticky !important;
+    inset: 6px auto auto !important;
+  }
+  .smc-world :is(button, input, textarea, select, [tabindex]) {
+    scroll-margin-top: 210px;
+  }
+}
+.smc-world-motion-reduced * {
+  animation: none !important;
+  transition: none !important;
+}
+</style><script>window.SMC_WORLD_EMBEDDED=true;
+/* Navigation only. No financial store, score, importer or API is created here. */
+(function (root) {
+  "use strict";
+  const rooms = [
+    {
+      id: "dash",
+      name: "Sala do Painel",
+      short: "Performance",
+      icon: "▥",
+      x: 32,
+      y: 32,
+      w: 160,
+      h: 128,
+      door: [112, 192],
+      routes: ["dash", "ana", "ins", "cal"],
+    },
+    {
+      id: "trades",
+      name: "Sala do Diário",
+      short: "Diário",
+      icon: "▤",
+      x: 224,
+      y: 32,
+      w: 160,
+      h: 128,
+      door: [304, 192],
+      routes: ["trades", "rev"],
+    },
+    {
+      id: "plan",
+      name: "Escritório do Trading Plan",
+      short: "Trading Plan",
+      icon: "▧",
+      x: 416,
+      y: 32,
+      w: 160,
+      h: 128,
+      door: [496, 192],
+      routes: ["plan", "str", "pat"],
+    },
+    {
+      id: "analyst",
+      name: "Sala de Análises",
+      short: "Análises",
+      icon: "⌕",
+      x: 608,
+      y: 32,
+      w: 128,
+      h: 128,
+      door: [672, 192],
+      routes: ["analyst"],
+    },
+    {
+      id: "risk",
+      name: "Sala de Risco",
+      short: "Risco",
+      icon: "◇",
+      x: 32,
+      y: 416,
+      w: 160,
+      h: 128,
+      door: [112, 384],
+      routes: ["risk"],
+    },
+    {
+      id: "economic",
+      name: "Sala de Notícias",
+      short: "Notícias",
+      icon: "◷",
+      x: 224,
+      y: 416,
+      w: 160,
+      h: 128,
+      door: [304, 384],
+      routes: ["economic", "home"],
+    },
+    {
+      id: "tools",
+      name: "Sala de Ferramentas",
+      short: "Ferramentas",
+      icon: "⚒",
+      x: 416,
+      y: 416,
+      w: 160,
+      h: 128,
+      door: [496, 384],
+      routes: ["share", "trades", "risk", "cal", "pat", "str"],
+    },
+    {
+      id: "achievements",
+      name: "Sala de Conquistas",
+      short: "Conquistas",
+      icon: "♜",
+      x: 608,
+      y: 416,
+      w: 128,
+      h: 128,
+      door: [672, 384],
+      routes: ["achievements", "rev"],
+    },
+    {
+      id: "settings",
+      name: "Serviços e Configurações",
+      short: "Configurações",
+      icon: "⚙",
+      x: 672,
+      y: 240,
+      w: 80,
+      h: 96,
+      door: [640, 288],
+      routes: ["settings", "admin"],
+    },
+    {
+      id: "community",
+      name: "Comunidade · em desenvolvimento",
+      short: "Comunidade",
+      icon: "♧",
+      x: 32,
+      y: 240,
+      w: 96,
+      h: 96,
+      door: [160, 288],
+      routes: [],
+      future: true,
+    },
+  ];
+  const api = {
+    rooms,
+    find: (id) => rooms.find((r) => r.id === id),
+    forRoute: (route) =>
+      rooms.find((r) => r.id === route) ||
+      rooms.find((r) => r.routes.includes(route)),
+    allowed: (route, admin) =>
+      rooms.some((r) => r.routes.includes(route)) &&
+      (route !== "admin" || admin),
+  };
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.SMCWorldRooms = api;
+})(globalThis);
+
+(function (root) {
+  "use strict";
+  const step = 16,
+    project = (x, y) => ({ x: 460 + (x - y) * 0.7, y: 70 + (x + y) * 0.36 }),
+    unproject = (x, y) => ({
+      x: ((x - 460) / 0.7 + (y - 70) / 0.36) / 2,
+      y: ((y - 70) / 0.36 - (x - 460) / 0.7) / 2,
+    });
+  function walkable(x, y, rooms) {
+    return (
+      x >= 16 &&
+      x <= 752 &&
+      y >= 16 &&
+      y <= 560 &&
+      !rooms.some(
+        (r) =>
+          x >= r.x - 8 &&
+          x <= r.x + r.w + 8 &&
+          y >= r.y - 8 &&
+          y <= r.y + r.h + 8,
+      )
+    );
+  }
+  function path(from, to, rooms) {
+    const snap = (v) => Math.round(v / step) * step,
+      start = [snap(from.x), snap(from.y)],
+      end = [snap(to.x), snap(to.y)],
+      key = (a) => a.join(","),
+      q = [start],
+      prev = new Map([[key(start), null]]);
+    if (!walkable(...end, rooms)) return [];
+    for (let i = 0; i < q.length && i < 2000; i++) {
+      const a = q[i];
+      if (key(a) === key(end)) {
+        const out = [];
+        let k = key(a);
+        while (prev.get(k) !== null) {
+          const [x, y] = k.split(",").map(Number);
+          out.unshift({ x, y });
+          k = prev.get(k);
+        }
+        return out;
+      }
+      for (const [dx, dy] of [
+        [step, 0],
+        [-step, 0],
+        [0, step],
+        [0, -step],
+      ]) {
+        const b = [a[0] + dx, a[1] + dy],
+          k = key(b);
+        if (!prev.has(k) && walkable(...b, rooms)) {
+          prev.set(k, key(a));
+          q.push(b);
+        }
+      }
+    }
+    return [];
+  }
+  function scene(rooms) {
+    const p = (x, y, z = 0) => {
+        const v = project(x, y);
+        return `${v.x},${v.y - z}`;
+      },
+      poly = (points, fill, stroke = "#715d36") =>
+        `<polygon points="${points.join(" ")}" fill="${fill}" stroke="${stroke}" stroke-width="1.1"/>`;
+    let s = `<svg class="smc-world-scene" viewBox="0 0 1100 650" aria-label="Edifício isométrico SMC Elite" role="img"><defs><linearGradient id="wwfloor" x2="1" y2="1"><stop stop-color="#24282c"/><stop offset="1" stop-color="#0d1219"/></linearGradient><radialGradient id="wwglow"><stop stop-color="#d9b76e" stop-opacity=".22"/><stop offset="1" stop-color="#d9b76e" stop-opacity="0"/></radialGradient></defs><ellipse cx="500" cy="390" rx="470" ry="240" fill="url(#wwglow)"/>`;
+    s += poly([p(0, 0), p(768, 0), p(768, 576), p(0, 576)], "url(#wwfloor)");
+    s += poly(
+      [p(0, 576), p(768, 576), p(768, 576, -22), p(0, 576, -22)],
+      "#080c11",
+    );
+    s += poly(
+      [p(768, 0), p(768, 576), p(768, 576, -22), p(768, 0, -22)],
+      "#121821",
+    );
+    for (let x = 0; x <= 768; x += 32)
+      s += `<path d="M${p(x, 0)} L${p(x, 576)}" stroke="#d7b879" opacity=".075"/>`;
+    for (let y = 0; y <= 576; y += 32)
+      s += `<path d="M${p(0, y)} L${p(768, y)}" stroke="#d7b879" opacity=".075"/>`;
+    for (const r of rooms) {
+      const { x, y, w, h } = r;
+      s += `<g class="smc-world-building" data-building="${r.id}">`;
+      s += poly(
+        [p(x, y, 65), p(x + w, y, 65), p(x + w, y), p(x, y)],
+        "#222b36",
+      );
+      s += poly(
+        [p(x, y, 65), p(x, y + h, 65), p(x, y + h), p(x, y)],
+        "#18222c",
+      );
+      s += poly(
+        [p(x, y), p(x + w, y), p(x + w, y + h), p(x, y + h)],
+        "#1c252b",
+      );
+      for (let k = 0; k < 3; k++) {
+        const xx = x + 18 + (k * (w - 30)) / 3,
+          yy = y + 25;
+        s += poly(
+          [
+            p(xx, yy, 19),
+            p(xx + 24, yy, 19),
+            p(xx + 24, yy + 22, 19),
+            p(xx, yy + 22, 19),
+          ],
+          "#33414a",
+        );
+        s += `<path d="M${p(xx + 3, yy + 3, 37)} L${p(xx + 22, yy + 3, 37)} L${p(xx + 22, yy + 3, 23)} L${p(xx + 3, yy + 3, 23)} Z" fill="#142b35" stroke="#b39760"/>`;
+        s += `<circle cx="${project(xx + 8, yy + 38).x}" cy="${project(xx + 8, yy + 38).y - 8}" r="6" fill="#4e4734"/>`;
+      }
+      const d = project(...r.door);
+      s += `<ellipse class="smc-world-door" data-door="${r.id}" cx="${d.x}" cy="${d.y}" rx="22" ry="10" fill="${r.future ? "#38404a" : "#b89b5c"}" opacity=".6"/><path d="M${p(x, y + h)} L${p(x + w, y + h)} L${p(x + w, y + h, 8)}" fill="none" stroke="#d8b777" stroke-width="2"/></g>`;
+    }
+    const center = project(384, 288);
+    s += `<ellipse cx="${center.x}" cy="${center.y}" rx="65" ry="30" fill="#12191f" stroke="#a48a56"/><text x="${center.x}" y="${center.y + 4}" text-anchor="middle" fill="#d9bb7d" font-size="16" font-family="sans-serif" letter-spacing="3">SMC ELITE</text><g class="smc-world-avatar" id="smc-world-avatar" aria-hidden="true"><ellipse cy="3" rx="13" ry="6" fill="#0009"/><g class="smc-world-avatar-body"><path d="M-6,-15 L-7,0 M6,-15 L7,0" stroke="#d5b578" stroke-width="6" stroke-linecap="round"/><rect x="-10" y="-35" width="20" height="23" rx="6" fill="#222e39" stroke="#ddbd77"/><path d="M-11,-29 L-15,-17 M11,-29 L15,-17" stroke="#bfa36b" stroke-width="5" stroke-linecap="round"/><rect x="-15" y="-63" width="30" height="28" rx="13" fill="#1a2027" stroke="#ddbd77" stroke-width="2"/><rect x="-11" y="-58" width="22" height="15" rx="7" fill="#080d13"/><path d="M-7,-50 Q-4,-54 -1,-50 M2,-50 Q5,-54 8,-50" fill="none" stroke="#e9c883" stroke-width="2"/></g></g></svg>`;
+    return s;
+  }
+  class MapController {
+    constructor(host, rooms, options) {
+      this.host = host;
+      this.rooms = rooms;
+      this.options = options;
+      this.position = options.position || { x: 384, y: 336 };
+      if (!walkable(this.position.x, this.position.y, rooms))
+        this.position = { x: 384, y: 336 };
+      host.innerHTML = scene(rooms);
+      this.queue = [];
+      this.frame = 0;
+      this.destination = null;
+      this.onKey = (e) => this.key(e);
+      this.onHidden = () => {
+        if (document.hidden) this.stop();
+      };
+      document.addEventListener("keydown", this.onKey);
+      document.addEventListener("visibilitychange", this.onHidden);
+      host.addEventListener(
+        "click",
+        (this.click = (e) => {
+          if (e.target.closest("button")) return;
+          const rect = host.querySelector("svg").getBoundingClientRect(),
+            v = unproject(
+              ((e.clientX - rect.left) * 1100) / rect.width,
+              ((e.clientY - rect.top) * 650) / rect.height,
+            );
+          this.go(v);
+        }),
+      );
+      this.paint();
+    }
+    paint() {
+      const v = project(this.position.x, this.position.y);
+      this.host
+        .querySelector("#smc-world-avatar")
+        ?.setAttribute(
+          "transform",
+          `translate(${v.x},${v.y}) scale(${innerWidth < 760 ? 1.4 : 1})`,
+        );
+      const near = this.near(),
+        id = near?.id || null;
+      if (id !== this.nearId) {
+        this.nearId = id;
+        this.host
+          .querySelectorAll("[data-door]")
+          .forEach((d) => d.classList.toggle("near", d.dataset.door === id));
+        this.options.onNear?.(near);
+      }
+    }
+    near() {
+      return this.rooms
+        .filter((r) => !r.future)
+        .find(
+          (r) =>
+            Math.hypot(
+              this.position.x - r.door[0],
+              this.position.y - r.door[1],
+            ) < 45,
+        );
+    }
+    go(v, room = null) {
+      this.stop();
+      this.queue = path(this.position, v, this.rooms);
+      this.destination = room;
+      if (!this.queue.length) {
+        if (room && this.near()?.id === room.id) this.options.onEnter(room.id);
+        return;
+      }
+      if (
+        this.options.reduceMotion ||
+        matchMedia("(prefers-reduced-motion:reduce)").matches
+      ) {
+        this.position = this.queue.at(-1);
+        this.queue = [];
+        this.paint();
+        this.options.onPosition?.(this.position);
+        if (room) this.options.onEnter(room.id);
+        return;
+      }
+      this.host.classList.add("walking");
+      this.last = performance.now();
+      const tick = (t) => {
+        if (document.hidden) return this.stop();
+        const dt = Math.min(40, t - this.last);
+        this.last = t;
+        const target = this.queue[0];
+        if (!target) return this.stop();
+        const dx = target.x - this.position.x,
+          dy = target.y - this.position.y,
+          d = Math.hypot(dx, dy),
+          distance = dt * 0.19;
+        if (d <= distance) {
+          this.position = { ...target };
+          this.queue.shift();
+        } else {
+          this.position.x += (dx / d) * distance;
+          this.position.y += (dy / d) * distance;
+        }
+        this.paint();
+        if (this.queue.length) this.frame = requestAnimationFrame(tick);
+        else {
+          this.frame = 0;
+          this.host.classList.remove("walking");
+          this.options.onPosition?.(this.position);
+          const enter = this.destination;
+          this.destination = null;
+          if (enter) this.options.onEnter(enter.id);
+        }
+      };
+      this.frame = requestAnimationFrame(tick);
+    }
+    key(e) {
+      if (
+        e.defaultPrevented ||
+        e.altKey ||
+        e.ctrlKey ||
+        e.metaKey ||
+        document.querySelector("dialog[open]") ||
+        e.target.closest("input,textarea,select,button,[contenteditable=true]")
+      )
+        return;
+      const deltas = {
+        ArrowUp: [0, -16],
+        w: [0, -16],
+        W: [0, -16],
+        ArrowDown: [0, 16],
+        s: [0, 16],
+        S: [0, 16],
+        ArrowLeft: [-16, 0],
+        a: [-16, 0],
+        A: [-16, 0],
+        ArrowRight: [16, 0],
+        d: [16, 0],
+        D: [16, 0],
+      };
+      if (deltas[e.key]) {
+        e.preventDefault();
+        const [dx, dy] = deltas[e.key];
+        this.go({
+          x: Math.round(this.position.x / 16) * 16 + dx,
+          y: Math.round(this.position.y / 16) * 16 + dy,
+        });
+      } else if (["e", "E", "Enter"].includes(e.key) && this.near()) {
+        e.preventDefault();
+        this.options.onEnter(this.near().id);
+      }
+    }
+    walkTo(id) {
+      const r = this.rooms.find((r) => r.id === id);
+      if (r && !r.future) this.go({ x: r.door[0], y: r.door[1] }, r);
+    }
+    stop() {
+      cancelAnimationFrame(this.frame);
+      this.frame = 0;
+      this.queue = [];
+      this.destination = null;
+      this.host.classList.remove("walking");
+    }
+    destroy() {
+      this.stop();
+      document.removeEventListener("keydown", this.onKey);
+      document.removeEventListener("visibilitychange", this.onHidden);
+      this.host.removeEventListener("click", this.click);
+    }
+  }
+  const api = { project, unproject, walkable, path, MapController };
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.SMCWorldMap = api;
+})(globalThis);
+
+(function (root) {
+  "use strict";
+  const e = (s) =>
+    String(s ?? "").replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c],
+    );
+  const icon = (r) =>
+    typeof terminalIcon === "function"
+      ? terminalIcon(
+          { tools: "tools", community: "ins", achievements: "ins" }[r.id] ||
+            r.id,
+        )
+      : r.icon;
+  const routeLabel = (id) =>
+    ({
+      home: "Briefing / Início",
+      dash: "Painel completo",
+      trades: "Diário e importações",
+      plan: "Trading Plan",
+      analyst: "Análise de prints",
+      economic: "Calendário econômico",
+      risk: "Calculadoras de risco",
+      achievements: "Conquistas e certificados",
+      settings: "Conta e configurações",
+      admin: "Administração",
+      ana: "Análise histórica",
+      ins: "Raio-X do Trader",
+      cal: "Calendário",
+      pat: "Padrões",
+      str: "Estratégias",
+      rev: "Revisões",
+      share: "Calendário compartilhável",
+    })[id] || id;
+  function header() {
+    return `<header class="smc-world-hud"><div><span class="smc-world-brand">SMC ELITE <b>WORLD</b></span><span class="smc-world-location" id="smc-world-location">Átrio · Recepção</span></div><nav aria-label="Navegação do World"><button data-world-action="lobby">Voltar ao World</button><button data-world-action="destinations">Salas e ferramentas</button><button data-world-action="help">Ajuda</button><button class="smc-world-exit" data-world-action="classic">Voltar ao modo clássico</button></nav></header><p id="smc-world-status" class="smc-world-status" role="status" aria-live="polite"></p>`;
+  }
+  function lobby(rooms, help) {
+    return `<div class="smc-world-lobby"><div class="smc-world-intro"><div><span class="smc-world-eyebrow">SEU ESPAÇO DE TRADING</span><h1>Bem-vindo à sua empresa.</h1><p>Mesmo plano. Mesmo diário. Outra maneira de navegar.</p></div><button data-world-action="reset">Reposicionar avatar</button></div>${help ? `<aside class="smc-world-instructions"><span>Toque em uma sala para caminhar. Use WASD / setas e E para entrar. Prefere acesso direto? Use a lista de salas.</span><button data-world-action="dismiss-help" aria-label="Dispensar orientação">Entendi</button></aside>` : ""}<div class="smc-world-map-wrap"><div id="smc-world-map" class="smc-world-map"></div><div class="smc-world-signs">${rooms
+      .map((r) => {
+        const p = SMCWorldMap.project(r.x + r.w / 2, r.y + r.h / 2);
+        return `<button class="smc-world-sign ${r.future ? "closed" : ""}" style="left:${p.x / 11}%;top:${(p.y - 62) / 6.5}%" data-world-walk="${r.id}" ${r.future ? "disabled" : ""}><span>${icon(r)}</span>${e(r.short)}${r.future ? "<small>Em desenvolvimento</small>" : ""}</button>`;
+      })
+      .join(
+        "",
+      )}</div><div class="smc-world-near" id="smc-world-near">Clique no piso para caminhar</div></div><div class="smc-world-access"><div><h2>Acesso direto às salas</h2><p>Entre com um clique, sem precisar caminhar.</p></div><div class="smc-world-room-list">${rooms.map((r) => `<button data-world-room="${r.id}" ${r.future ? "disabled" : ""}><span>${icon(r)}</span><span>${e(r.name)}${r.future ? "<small>Em desenvolvimento</small>" : ""}</span>${r.future ? "" : "<b>↗</b>"}</button>`).join("")}</div></div></div>`;
+  }
+  function room(room, route, admin) {
+    return `<div class="smc-world-room-shell" data-world-room-id="${room.id}"><div class="smc-world-room-ambience" aria-hidden="true"><i></i><i></i><i></i><span>SMC ELITE / ${e(room.short)}</span></div><div class="smc-world-room-heading"><span class="smc-world-room-emblem">${icon(room)}</span><div><p>DEPARTAMENTO / ${e(room.short)}</p><h1>${e(room.name)}</h1><small>Ferramenta original · dados da sua conta</small></div></div><nav class="smc-world-room-routes" aria-label="Ferramentas desta sala">${room.routes
+      .filter((r) => r !== "admin" || admin)
+      .map(
+        (r) =>
+          `<button data-world-route="${r}" aria-current="${route === r ? "page" : "false"}">${e(routeLabel(r))}</button>`,
+      )
+      .join(
+        "",
+      )}</nav><div id="smc-world-workspace" class="smc-world-workspace"></div></div>`;
+  }
+  function destinations(rooms, admin) {
+    return `<div class="smc-world-destinations"><h2>Salas e ferramentas</h2><p>As mesmas funções do modo clássico, sem sair do World.</p>${rooms
+      .filter((r) => !r.future)
+      .map(
+        (r) =>
+          `<section><h3>${e(r.name)}</h3>${r.routes
+            .filter((id) => id !== "admin" || admin)
+            .map(
+              (id) =>
+                `<button data-world-route="${id}">${e(routeLabel(id))}</button>`,
+            )
+            .join(
+              "",
+            )}${r.id === "tools" ? "<small>Importação, OCR e prints estão no Diário; exportações no Calendário compartilhável.</small>" : ""}</section>`,
+      )
+      .join(
+        "",
+      )}<p>Comunidade: em desenvolvimento. Sem feed ou transmissão nesta versão.</p></div>`;
+  }
+  root.SMCWorldUI = { e, header, lobby, room, destinations, routeLabel };
+})(globalThis);
+
+(function (root) {
+  "use strict";
+  class World {
+    constructor(bridge) {
+      this.bridge = bridge;
+      this.owner = K;
+      this.room = null;
+      this.active = false;
+      this.map = null;
+      this.drafts = new Map();
+      this.originalParent = document.getElementById("main").parentNode;
+      this.anchor = document.createComment("classic-main-anchor");
+      this.originalParent.insertBefore(
+        this.anchor,
+        document.getElementById("main"),
+      );
+      this.key = "smc-elite-world-ui-v1:" + K;
+      this.position = { x: 384, y: 336 };
+      this.help = true;
+      this.reduceMotion = false;
+      try {
+        const ui = JSON.parse(localStorage.getItem(this.key) || "null");
+        if (ui && Number.isFinite(ui.x) && Number.isFinite(ui.y))
+          this.position = { x: ui.x, y: ui.y };
+        if (ui?.help === false) this.help = false;
+        this.reduceMotion = ui?.reduceMotion === true;
+      } catch {}
+      this.root = document.createElement("section");
+      this.root.id = "smc-world";
+      this.root.className = "smc-world";
+      this.root.setAttribute("aria-label", "SMC Elite World");
+      this.root.classList.toggle("smc-world-motion-reduced", this.reduceMotion);
+      this.root.hidden = true;
+      document.body.append(this.root);
+      this.onClick = (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        const action = button.dataset.worldAction;
+        if (action === "classic") this.exit();
+        if (action === "lobby") this.lobby();
+        if (action === "destinations") this.showDestinations();
+        if (action === "help") this.showHelp();
+        if (action === "reset") {
+          this.position = { x: 384, y: 336 };
+          this.saveUI();
+          this.lobby();
+        }
+        if (action === "dismiss-help") {
+          this.help = false;
+          this.saveUI();
+          this.lobby();
+        }
+        if (button.dataset.worldRoom) this.open(button.dataset.worldRoom);
+        if (button.dataset.worldWalk)
+          this.map?.walkTo(button.dataset.worldWalk);
+        if (button.dataset.worldRoute) this.navigate(button.dataset.worldRoute);
+      };
+      this.root.addEventListener("click", this.onClick);
+      this.onEscape = (event) => {
+        if (
+          event.key !== "Escape" ||
+          event.defaultPrevented ||
+          !this.active ||
+          document.querySelector("dialog[open]") ||
+          event.target.closest("input,textarea,select,[contenteditable=true]")
+        )
+          return;
+        if (this.room) {
+          event.preventDefault();
+          this.lobby();
+        }
+      };
+      document.addEventListener("keydown", this.onEscape);
+      this.onPageHide = () => this.map?.stop();
+      window.addEventListener("pagehide", this.onPageHide);
+    }
+    isAdmin() {
+      return (
+        CLOUD_BOOT &&
+        eliteCloud.ready &&
+        eliteCloud.user?.status === "active" &&
+        eliteCloud.user?.role === "admin"
+      );
+    }
+    canUse() {
+      return (
+        K === this.owner &&
+        (!CLOUD_BOOT ||
+          (eliteCloud.ready && eliteCloud.user?.status === "active"))
+      );
+    }
+    blocked() {
+      if (document.querySelector("dialog[open]")) {
+        this.status("Conclua ou feche o diálogo aberto antes de alternar.");
+        return true;
+      }
+      return false;
+    }
+    status(text) {
+      const node = document.getElementById("smc-world-status");
+      if (node) node.textContent = text;
+    }
+    saveUI() {
+      try {
+        localStorage.setItem(
+          this.key,
+          JSON.stringify({
+            x: Math.round(this.position.x),
+            y: Math.round(this.position.y),
+            help: this.help,
+            reduceMotion: this.reduceMotion,
+          }),
+        );
+      } catch {}
+    }
+    park() {
+      const main = document.getElementById("main");
+      if (main.parentNode !== this.originalParent)
+        this.originalParent.insertBefore(main, this.anchor.nextSibling);
+    }
+    formFields(main) {
+      return [
+        ...main.querySelectorAll(
+          "input:not([type=file]):not([type=password]),textarea,select",
+        ),
+      ].filter((n) => !n.closest(".smc-filters-disclosure"));
+    }
+    remember() {
+      const main = document.getElementById("main"),
+        fields = this.formFields(main).map((n, i) => ({
+          id: n.id,
+          index: i,
+          value: n.value,
+          checked: n.checked,
+          type: n.type,
+        })),
+        details = [...main.querySelectorAll("details")].map((n) => n.open);
+      this.drafts.set(tab, {
+        fields,
+        details,
+        criteriaHTML:
+          tab === "plan"
+            ? main.querySelector("#ta-plan-criteria")?.innerHTML
+            : null,
+        planVersion: taCurrentPlan()?.version,
+        scroll: window.scrollY,
+      });
+    }
+    restore(route) {
+      const draft = this.drafts.get(route);
+      if (
+        !draft ||
+        (route === "plan" && draft.planVersion !== taCurrentPlan()?.version)
+      )
+        return;
+      const main = document.getElementById("main");
+      if (route === "plan" && typeof draft.criteriaHTML === "string") {
+        const criteria = main.querySelector("#ta-plan-criteria");
+        if (criteria) criteria.innerHTML = draft.criteriaHTML;
+      }
+      const nodes = this.formFields(main);
+      for (const field of draft.fields) {
+        const n = field.id
+          ? nodes.find((n) => n.id === field.id)
+          : nodes[field.index];
+        if (n && n.type === field.type) {
+          n.value = field.value;
+          if (["checkbox", "radio"].includes(field.type))
+            n.checked = field.checked;
+        }
+      }
+      main.querySelectorAll("details").forEach((n, i) => {
+        if (draft.details[i] !== undefined) n.open = draft.details[i];
+      });
+    }
+    enter() {
+      if (this.active || this.blocked() || !this.canUse()) return;
+      if (typeof eliteMobileClose === "function") eliteMobileClose(false);
+      this.classicRoute = tab;
+      this.active = true;
+      document.body.classList.add("smc-world-active");
+      this.root.hidden = false;
+      this.lobby();
+    }
+    render(content) {
+      this.root.setAttribute("role", this.room ? "region" : "main");
+      this.park();
+      this.root.innerHTML =
+        SMCWorldUI.header() + `<div id="smc-world-content">${content}</div>`;
+      this.root.querySelector("[data-world-action=lobby]").hidden = !this.room;
+      this.root.querySelector("#smc-world-location").textContent = this.room
+        ? SMCWorldRooms.find(this.room).name
+        : "Átrio · Recepção";
+    }
+    lobby() {
+      if (!this.active || this.blocked()) return;
+      this.remember();
+      this.map?.destroy();
+      this.map = null;
+      this.room = null;
+      try {
+        this.render(SMCWorldUI.lobby(SMCWorldRooms.rooms, this.help));
+        this.map = new SMCWorldMap.MapController(
+          this.root.querySelector("#smc-world-map"),
+          SMCWorldRooms.rooms,
+          {
+            position: this.position,
+            reduceMotion: this.reduceMotion,
+            onEnter: (id) => this.open(id),
+            onPosition: (p) => {
+              this.position = { ...p };
+              this.saveUI();
+            },
+            onNear: (r) => {
+              const n = document.getElementById("smc-world-near");
+              if (n)
+                n.textContent = r
+                  ? "E / Enter · " + r.name
+                  : "Clique no piso para caminhar";
+            },
+          },
+        );
+        this.root.querySelector("h1")?.setAttribute("tabindex", "-1");
+        this.root.querySelector("h1")?.focus({ preventScroll: true });
+        window.scrollTo(0, 0);
+      } catch (error) {
+        this.fail(error);
+      }
+    }
+    open(id) {
+      const room = SMCWorldRooms.find(id);
+      if (!room || room.future || !this.canUse()) return;
+      this.navigate(
+        room.routes.find((r) => SMCWorldRooms.allowed(r, this.isAdmin())),
+        room.id,
+      );
+    }
+    navigate(route, roomId = null) {
+      if (
+        !this.active ||
+        !this.canUse() ||
+        this.blocked() ||
+        !SMCWorldRooms.allowed(route, this.isAdmin())
+      )
+        return false;
+      const room =
+        SMCWorldRooms.find(roomId) ||
+        (this.room && SMCWorldRooms.find(this.room).routes.includes(route)
+          ? SMCWorldRooms.find(this.room)
+          : SMCWorldRooms.forRoute(route));
+      if (!room || room.future) return false;
+      this.remember();
+      this.map?.destroy();
+      this.map = null;
+      this.room = room.id;
+      this.position = { x: room.door[0], y: room.door[1] };
+      this.saveUI();
+      try {
+        this.render(SMCWorldUI.room(room, route, this.isAdmin()));
+        this.root
+          .querySelector("#smc-world-workspace")
+          .append(document.getElementById("main"));
+        this.pendingRestore = route;
+        this.bridge.go(route);
+        this.root
+          .querySelector(".smc-world-room-heading h1")
+          ?.setAttribute("tabindex", "-1");
+        this.root
+          .querySelector(".smc-world-room-heading h1")
+          ?.focus({ preventScroll: true });
+        window.scrollTo(0, 0);
+        return true;
+      } catch (error) {
+        this.fail(error);
+        return false;
+      }
+    }
+    attach() {
+      if (!this.active || !this.room) return;
+      const host = this.root.querySelector("#smc-world-workspace");
+      if (!host) return;
+      host.append(document.getElementById("main"));
+      if (this.pendingRestore) {
+        this.restore(this.pendingRestore);
+        this.pendingRestore = null;
+      }
+      this.root
+        .querySelectorAll("[data-world-route]")
+        .forEach((n) =>
+          n.setAttribute(
+            "aria-current",
+            n.dataset.worldRoute === tab ? "page" : "false",
+          ),
+        );
+      if (tab === "dash" && typeof panelFitChart === "function")
+        panelFitChart();
+    }
+    afterRender() {
+      if (!this.active) return;
+      if (!this.canUse()) {
+        this.exit(true);
+        this.drafts.clear();
+        return;
+      }
+      this.attach();
+    }
+    showDestinations() {
+      if (this.blocked()) return;
+      const dialog = growthDialog(
+        "Destinos do SMC Elite World",
+        SMCWorldUI.destinations(SMCWorldRooms.rooms, this.isAdmin()),
+      );
+      dialog.querySelectorAll("[data-world-route]").forEach(
+        (n) =>
+          (n.onclick = () => {
+            dialog.close();
+            this.navigate(n.dataset.worldRoute);
+          }),
+      );
+    }
+    showHelp() {
+      if (this.blocked()) return;
+      const dialog = growthDialog(
+        "Como navegar no World",
+        "<p>WASD ou setas movem o avatar. Perto de uma porta, use E ou Enter. Toque na placa da sala para caminhar e entrar. Use a lista de salas para acesso imediato.</p><p>Escape retorna ao átrio quando não há formulário em foco ou diálogo aberto. Os botões de retorno estão sempre no topo. A preferência de movimento reduzido do dispositivo é respeitada.</p><p>As ferramentas são as mesmas do clássico. Não existem pontos, XP ou resultados de exemplo.</p>",
+      );
+      const label = document.createElement("label");
+      label.className = "growth-checkbox";
+      label.innerHTML =
+        '<input type="checkbox" id="smc-world-motion"> Reduzir movimento no World';
+      const checkbox = label.querySelector("input");
+      checkbox.checked = this.reduceMotion;
+      checkbox.onchange = () => {
+        this.reduceMotion = checkbox.checked;
+        this.root.classList.toggle(
+          "smc-world-motion-reduced",
+          this.reduceMotion,
+        );
+        this.saveUI();
+        if (this.map) {
+          this.map.options.reduceMotion = this.reduceMotion;
+          this.map.stop();
+        }
+      };
+      dialog.append(label);
+    }
+    exit(force = false) {
+      if (!force && this.blocked()) return;
+      if (!force && this.active) this.remember();
+      this.map?.destroy();
+      this.map = null;
+      this.park();
+      this.active = false;
+      this.room = null;
+      this.root.hidden = true;
+      document.body.classList.remove("smc-world-active");
+      if (!force && this.canUse()) {
+        const route = this.classicRoute || "home";
+        if (tab !== route) {
+          this.pendingClassicRestore = route;
+          this.bridge.go(route);
+          this.restore(route);
+        } else {
+          if (tab === "dash" && typeof panelFitChart === "function")
+            panelFitChart();
+        }
+        document
+          .getElementById("smc-world-enter")
+          ?.focus({ preventScroll: true });
+      }
+    }
+    fail(error) {
+      this.map?.destroy();
+      this.map = null;
+      this.park();
+      this.room = null;
+      this.root.innerHTML =
+        SMCWorldUI.header() +
+        '<div class="smc-world-error"><h1>Não foi possível abrir este ambiente</h1><p>Seus dados continuam no workspace original. Volte ao modo clássico para continuar.</p></div>';
+      this.status("Falha na cena. O retorno ao clássico permanece disponível.");
+      console.warn("SMC World scene unavailable:", error?.message);
+    }
+    dispose() {
+      this.exit(true);
+      document.removeEventListener("keydown", this.onEscape);
+      window.removeEventListener("pagehide", this.onPageHide);
+      this.root.remove();
+      this.anchor.remove();
+      this.drafts.clear();
+    }
+  }
+  root.SMCWorldController = World;
+})(globalThis);
+
+/* Small, data-free bridge. Heavy scene code/styles load only after explicit entry. */
+(function () {
+  "use strict";
+  const meta = document.querySelector('meta[name="smc-world-enabled"]'),
+    enabled = meta
+      ? meta.content === "true"
+      : location.protocol === "file:" ||
+        ["localhost", "127.0.0.1"].includes(location.hostname);
+  if (!enabled) return;
+  const baseR = R,
+    baseGo = taGo;
+  let world = null,
+    loading = null,
+    styleReady = false;
+  function allowed() {
+    return (
+      !CLOUD_BOOT ||
+      (typeof eliteCloud !== "undefined" &&
+        eliteCloud.ready &&
+        eliteCloud.user?.status === "active")
+    );
+  }
+  function button() {
+    if (
+      !allowed() ||
+      world?.active ||
+      tab !== "home" ||
+      document.getElementById("smc-world-enter")
+    )
+      return;
+    const host = document.querySelector(".smc-home .scene-greeting");
+    if (!host) return;
+    const b = document.createElement("button");
+    b.id = "smc-world-enter";
+    b.className = "b s";
+    b.style.cssText =
+      "margin-top:14px;display:inline-flex;align-items:center;gap:8px;font-size:12px;max-width:100%;white-space:normal";
+    b.textContent = "Entrar no SMC Elite World";
+    b.onclick = enter;
+    host.append(b);
+  }
+  function load() {
+    if (window.SMCWorldController) return Promise.resolve();
+    if (loading) return loading;
+    loading = (async () => {
+      if (!window.SMC_WORLD_EMBEDDED) {
+        if (!styleReady)
+          await new Promise((resolve, reject) => {
+            const l = document.createElement("link");
+            l.rel = "stylesheet";
+            l.href = "public/world/world.css";
+            l.onload = () => {
+              styleReady = true;
+              resolve();
+            };
+            l.onerror = () => {
+              l.remove();
+              reject(Error("Falha ao carregar o estilo World."));
+            };
+            document.head.append(l);
+          });
+        for (const name of ["world-rooms", "world-map", "world-ui", "world"])
+          await new Promise((resolve, reject) => {
+            const s = document.createElement("script");
+            s.src = "public/world/" + name + ".js";
+            s.onload = resolve;
+            s.onerror = () => {
+              s.remove();
+              reject(Error("Falha ao carregar o World."));
+            };
+            document.body.append(s);
+          });
+      }
+    })().catch((e) => {
+      loading = null;
+      throw e;
+    });
+    return loading;
+  }
+  async function enter() {
+    if (!allowed() || document.querySelector("dialog[open]")) return;
+    const b = document.getElementById("smc-world-enter");
+    if (b) {
+      b.disabled = true;
+      b.textContent = "Abrindo SMC Elite World…";
+    }
+    try {
+      await load();
+      if (!allowed()) return;
+      if (world && world.owner !== K) {
+        world.dispose();
+        world = null;
+      }
+      if (!world) world = new SMCWorldController({ go: baseGo });
+      world.enter();
+    } catch (e) {
+      if (b) {
+        b.textContent = "Tentar abrir SMC Elite World";
+        b.title = e.message;
+      }
+    } finally {
+      if (b) {
+        b.disabled = false;
+        if (world?.active) b.textContent = "Entrar no SMC Elite World";
+      }
+    }
+  }
+  R = function () {
+    if (world && !world.canUse()) {
+      world.dispose();
+      world = null;
+    }
+    if (world?.active && !world.room) return;
+    try {
+      const result = baseR();
+      world?.afterRender();
+      button();
+      return result;
+    } catch (error) {
+      if (world?.active) {
+        world.fail(error);
+        return;
+      }
+      throw error;
+    }
+  };
+  taGo = function (route) {
+    if (world?.active) return world.navigate(route);
+    const result = baseGo(route);
+    if (world?.canUse()) world.restore(route);
+    return result;
+  };
+  window.SMCWorld = {
+    enter,
+    get controller() {
+      return world;
+    },
+    get enabled() {
+      return enabled;
+    },
+    exit: () => world?.exit(),
+  };
+})();
+</script>
 <script>if(CLOUD_BOOT){eliteCloudBoot()}else{R();taCheckConnection()}setInterval(()=>{if(CLOUD_BOOT&&!eliteCloud.ready)return;if(['home','economic'].includes(tab)&&!document.querySelector('dialog[open]')&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))R()},60000);</script></body></html>

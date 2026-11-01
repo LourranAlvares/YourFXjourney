@@ -567,12 +567,23 @@ function createApp(options = {}) {
         ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(
           publicPath,
         );
-      const payload = appDocument
+      let payload = appDocument
         ? (await fs.readFile(real, "utf8")).replace(
             "<head>",
             '<head><meta name="elitex-cloud" content="1">',
           )
         : await fs.readFile(real);
+      if (
+        ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(publicPath)
+      ) {
+        const enabled = env.SMC_WORLD_ENABLED === "true";
+        payload = Buffer.from(
+          String(payload).replace(
+            "<head>",
+            '<head><meta name="smc-world-enabled" content="' + enabled + '">',
+          ),
+        );
+      }
       res.setHeader("content-length", Buffer.byteLength(payload));
       res.setHeader(
         "cache-control",

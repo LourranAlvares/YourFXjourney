@@ -4,6 +4,11 @@ root=Path(__file__).resolve().parents[1]
 files={'library':'tesseract.min.js','worker':'worker.min.js','core':'core/tesseract-core-lstm.wasm.js','eng':'lang/eng.traineddata.gz','por':'lang/por.traineddata.gz'}
 assets={k:base64.b64encode((root/'vendor/ocr'/f).read_bytes()).decode() for k,f in files.items()}
 source=(root/'YourFXjourney.html').read_text()
+# World is code-only and remains offline capable; scene assets contain no sample data.
+world_names=['world-rooms','world-map','world-ui','world','world-bootstrap']
+world_code='window.SMC_WORLD_EMBEDDED=true;\n'+'\n'.join((root/'public/world'/f'{n}.js').read_text().replace('</script','<\\/script') for n in world_names)
+source=source.replace('<script src="public/world/world-bootstrap.js"></script>', '<style>'+(root/'public/world/world.css').read_text()+'</style><script>'+world_code+'</script>')
+
 for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience']:
  source=source.replace(f'<script src="public/{name}.js"></script>', '<script>'+ (root/'public'/f'{name}.js').read_text().replace('</script', '<\\/script') +'</script>')
 source=source.replace('<link rel="stylesheet" href="public/assistant.css">', '<style>'+(root/'public/assistant.css').read_text()+'</style>')
