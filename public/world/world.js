@@ -40,6 +40,10 @@
         if (action === "lobby") this.lobby();
         if (action === "destinations") this.showDestinations();
         if (action === "help") this.showHelp();
+        if (action === "capital" && this.canUse() && !this.blocked())
+          accountOpenEditor();
+        if (action === "search" && this.canUse() && !this.blocked())
+          eliteOpenTradeSearch();
         if (action === "community-preview") this.previewCommunity();
         if (action === "camera") this.map?.changeView?.();
         if (action === "reset") {
@@ -55,7 +59,11 @@
         if (button.dataset.worldRoom) this.open(button.dataset.worldRoom);
         if (button.dataset.worldWalk)
           this.map?.walkTo(button.dataset.worldWalk);
-        if (button.dataset.worldRoute) this.navigate(button.dataset.worldRoute);
+        if (button.dataset.worldRoute) {
+          if (this.room === "tools")
+            this.toolSelection = button.dataset.worldRoute;
+          this.navigate(button.dataset.worldRoute);
+        }
       };
       this.root.addEventListener("click", this.onClick);
       this.onEscape = (event) => {
@@ -127,10 +135,24 @@
         ),
       ].filter((n) => !n.closest(".smc-filters-disclosure"));
     }
+    fieldKey(n) {
+      if (n.id) return "id:" + n.id;
+      const criterion = n.closest("[data-criterion-id]");
+      if (criterion && n.dataset.cfield)
+        return (
+          "criterion:" + criterion.dataset.criterionId + ":" + n.dataset.cfield
+        );
+      const label =
+        n.getAttribute("aria-label") ||
+        n.name ||
+        n.closest("label")?.textContent?.replace(/\s+/g, " ").trim();
+      return label ? n.type + ":" + label : null;
+    }
     remember() {
       const main = document.getElementById("main"),
         fields = this.formFields(main).map((n, i) => ({
           id: n.id,
+          key: this.fieldKey(n),
           index: i,
           value: n.value,
           checked: n.checked,
@@ -162,9 +184,11 @@
       }
       const nodes = this.formFields(main);
       for (const field of draft.fields) {
-        const n = field.id
-          ? nodes.find((n) => n.id === field.id)
-          : nodes[field.index];
+        const n = field.key
+          ? nodes.find((n) => this.fieldKey(n) === field.key)
+          : field.id
+            ? nodes.find((n) => n.id === field.id)
+            : nodes[field.index];
         if (n && n.type === field.type) {
           n.value = field.value;
           if (["checkbox", "radio"].includes(field.type))
@@ -257,6 +281,7 @@
     open(id) {
       const room = SMCWorldRooms.find(id);
       if (!room || room.future || !this.canUse()) return;
+      if (id === "tools") this.toolSelection = null;
       this.navigate(
         room.routes.find((r) => SMCWorldRooms.allowed(r, this.isAdmin())),
         room.id,
@@ -328,6 +353,12 @@
       const host = this.root.querySelector("#smc-world-workspace");
       if (!host) return;
       host.append(document.getElementById("main"));
+      window.SMCWorldStations?.mount(
+        document.getElementById("main"),
+        this.room,
+        tab,
+        this,
+      );
       if (this.pendingRestore) {
         this.restore(this.pendingRestore);
         this.pendingRestore = null;
@@ -383,7 +414,7 @@
     showHelp() {
       if (this.blocked()) return;
       const controls = window.SMCWorldScenes?.enabled
-        ? "Clique ou toque numa placa para entrar. Use Tab ou setas para escolher uma sala e Enter ou E para abrir. O personagem permanece no cenário; não é necessário caminhar. Dentro das salas, amplie a área de trabalho para editar com mais espaço."
+        ? "Clique ou toque numa placa para entrar. Use Tab ou setas para escolher uma sala e Enter ou E para abrir. O personagem caminha até a entrada escolhida. A lista de salas permite acesso imediato. Dentro das salas, use os painéis do ambiente ou amplie a área de trabalho."
         : "WASD ou setas movem o avatar. Perto de uma porta, use E ou Enter. Toque na placa da sala para caminhar e entrar. Use a lista de salas para acesso imediato.";
       const dialog = growthDialog(
         "Como navegar no World",
@@ -414,6 +445,10 @@
     exit(force = false) {
       if (!force && this.blocked()) return;
       if (!force && this.active) this.remember();
+      const hadStations = document
+        .getElementById("main")
+        .classList.contains("world-station-main");
+      document.getElementById("main").classList.remove("world-station-main");
       this.map?.destroy();
       this.map = null;
       this.park();
@@ -422,9 +457,10 @@
       this.root.hidden = true;
       document.body.classList.remove("smc-world-active");
       document.body.classList.remove("smc-world-cinematic");
+      window.SMCWorldScenes?.stopClock();
       if (!force && this.canUse()) {
         const route = this.classicRoute || "home";
-        if (tab !== route) {
+        if (tab !== route || hadStations) {
           this.pendingClassicRestore = route;
           this.bridge.go(route);
           this.restore(route);
@@ -456,6 +492,7 @@
       this.root.remove();
       this.anchor.remove();
       this.drafts.clear();
+      this.journalFiles = [];
     }
   }
   root.SMCWorldController = World;

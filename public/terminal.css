@@ -3389,3 +3389,124 @@ td {
     font-size: 30px;
   }
 }
+.journal-record-notice {
+  position: fixed;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  z-index: 2147483646;
+  width: max-content;
+  max-width: calc(100vw - 28px);
+  padding: 14px 20px;
+  border: 1px solid #b99a58;
+  border-radius: 10px;
+  background: #12221eee;
+  color: #e7f3e9;
+  box-shadow: 0 8px 30px #0008;
+  font: 13px/1.5 system-ui;
+}
+.journal-record-notice[hidden] {
+  display: none;
+}
+.journal-record-notice[data-state="error"],
+.diary-save-status[data-state="error"] {
+  background: #351c1d;
+  color: #ffe3e3;
+  border-color: #a85252;
+}
+.diary-save-status {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  border: 1px solid #9b7b43;
+  border-radius: 8px;
+  padding: 12px;
+  background: #12211e;
+  color: #ecf5ec;
+  font-size: 13px;
+}
+.diary-partial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+.diary-partial-card {
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--bg);
+}
+.diary-partial-card > img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 7px;
+}
+.diary-partial-card > div {
+  min-width: 0;
+}
+.diary-partial-card h3 {
+  font-size: 14px;
+  margin: 0 0 7px;
+}
+.diary-partial-card p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  max-height: 100px;
+  overflow: auto;
+}
+.diary-partial-card small {
+  display: block;
+  margin: 8px 0;
+  color: var(--mu);
+  font-size: 11px;
+}
+#account-initial-form {
+  display: grid;
+  gap: 14px;
+  max-width: 600px;
+}
+#account-initial-form label {
+  display: grid;
+  gap: 6px;
+}
+#account-initial-form input,
+#account-initial-form select {
+  width: 100%;
+}
+.account-import-evidence {
+  padding: 12px;
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+}
+.account-capital-edit {
+  font-size: 11px;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .diary-partial-grid {
+    grid-template-columns: 1fr;
+  }
+  .diary-partial-card {
+    flex-direction: column;
+  }
+  .diary-partial-card > img {
+    width: 100%;
+    height: 150px;
+  }
+}
+@media (max-width: 480px) {
+  body.smc-shell .reference-top-actions {
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .terminal-topbar:not(.reference-topbar) {
+    height: auto;
+    min-height: 60px;
+    flex-wrap: wrap;
+  }
+}

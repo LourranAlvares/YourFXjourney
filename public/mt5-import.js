@@ -75,6 +75,47 @@ function mt5Rows(text) {
     return lines.map((line) => line.split("\t").map((x) => x.trim()));
   return csv(header ? lines.slice(lines.indexOf(header)).join("\n") : text);
 }
+function mt5InitialCapital(text) {
+  const rows = /<(?:!doctype|html|table)\b/i.test(text)
+    ? mt5Rows(text)
+    : csv(text);
+  const candidates = [];
+  for (const row of rows) {
+    for (let i = 0; i < row.length; i++) {
+      const label = String(row[i] || "").trim();
+      const match = label.match(
+        /^(initial deposit|initial balance|saldo inicial|capital inicial|dep[oó]sito inicial)\s*(?::\s*(.*))?$/i,
+      );
+      if (!match) continue;
+      const rest = [match[2], ...row.slice(i + 1)].filter(Boolean);
+      const joined = rest.join(" "),
+        currency =
+          (joined.match(/\b(USD|EUR|GBP|BRL)\b/i) || [])[1]?.toUpperCase() ||
+          null;
+      for (const raw of rest) {
+        const clean = String(raw)
+          .replace(/\b(USD|EUR|GBP|BRL)\b/gi, "")
+          .replace(/[£$€]/g, "")
+          .trim();
+        const amount = mt5Number(clean);
+        if (amount !== null && amount >= 0) {
+          candidates.push({
+            amount,
+            currency,
+            source: "Saldo inicial explícito no relatório MT5",
+          });
+          break;
+        }
+      }
+    }
+  }
+  const unique = [
+    ...new Map(
+      candidates.map((c) => [c.amount + ":" + c.currency, c]),
+    ).values(),
+  ];
+  return unique.length === 1 ? unique[0] : null;
+}
 function parseMT5(text) {
   const rows = mt5Rows(text);
   let header = null,
@@ -253,6 +294,7 @@ function parseMT5(text) {
     };
   return {
     trades,
+    initialCapital: mt5InitialCapital(text),
     note: `MT5: posições fechadas; ${col("net") >= 0 ? "resultado líquido do relatório" : "lucro + comissão + swap + taxas, quando presentes"}. Horários mantidos como no relatório da corretora. ${skipped ? skipped + " linha(s) incompleta(s) ignorada(s). " : ""}S/L do relatório pode ter sido alterado durante a operação: confirme o stop inicial antes de usar R.`,
     skipped,
   };
@@ -274,6 +316,24 @@ function importMT5(parsed) {
     fresh.push(t);
   }
   const next = { ...S, trades: [...S.trades, ...fresh] };
+  if (parsed.initialCapital) {
+    next.capitalImportEvidence = {
+      ...parsed.initialCapital,
+      accountId: String(S.accountId || ""),
+      importedAt: new Date().toISOString(),
+    };
+    if (
+      !S.balanceConfirmed &&
+      (!S.currency ||
+        (parsed.initialCapital.currency &&
+          S.currency === parsed.initialCapital.currency))
+    ) {
+      next.balance = parsed.initialCapital.amount;
+      next.balanceConfirmed = true;
+      if (parsed.initialCapital.currency)
+        next.currency = parsed.initialCapital.currency;
+    }
+  }
   try {
     persistState(next);
   } catch {

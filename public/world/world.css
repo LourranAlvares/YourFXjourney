@@ -1399,3 +1399,1338 @@ body.smc-world-active.smc-world-cinematic .smc-world {
     margin: 6px 0;
   }
 }
+/* Functional room stations. Individual controls live on the room walls/desks. */
+body.smc-world-cinematic .smc-cinema-room.has-stations .smc-world-workspace {
+  left: 18%;
+  right: 2%;
+  top: 15%;
+  bottom: 15%;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+  border-radius: 0;
+}
+body.smc-world-cinematic .has-stations #main.world-station-main {
+  padding: 0 !important;
+  height: 100%;
+  min-height: 0;
+  position: relative;
+  overflow: visible;
+}
+.world-stations {
+  display: grid;
+  gap: 9px;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  color: #e9e5dc;
+  font-size: 12px;
+}
+.world-stations [hidden] {
+  display: none !important;
+}
+.world-station {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 12px;
+  border: 1px solid #ae8948;
+  border-radius: 9px;
+  background: linear-gradient(140deg, #101619f5, #080d10f5);
+  box-shadow: 0 3px 15px #0007;
+  scrollbar-color: #9b7739 #101418;
+}
+.world-station h2,
+.world-stations .card h2 {
+  font-size: 13px !important;
+  margin: 0 0 10px;
+  letter-spacing: 0;
+}
+.world-station h3 {
+  font-size: 12px;
+  margin: 9px 0;
+}
+.world-station p,
+.world-station small {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.world-station > small {
+  display: block;
+  color: #b8bec1;
+}
+.world-station label,
+.world-stations form label {
+  font-size: 11px;
+  line-height: 1.5;
+  display: block;
+  color: #d1d4d5;
+}
+.world-station input,
+.world-station select,
+.world-station textarea {
+  font: inherit;
+  font-size: 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 31px;
+  border-radius: 6px;
+  background: #10161bd9;
+  border: 1px solid #56524a;
+  color: #eee;
+  padding: 7px;
+}
+.world-station textarea {
+  min-height: 50px;
+  resize: vertical;
+}
+.world-station button,
+.world-stations button,
+.world-plan-editor button {
+  min-height: 32px;
+  font: inherit;
+  font-size: 11px;
+  border: 1px solid #9b7a3f;
+  background: #151b1e;
+  color: #ecd8af;
+  border-radius: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+.world-station .world-primary,
+.world-stations .world-primary {
+  background: linear-gradient(135deg, #f6d78d, #c79b4d);
+  color: #18130b;
+  font-weight: 700;
+}
+.world-station dl {
+  margin: 0;
+}
+.world-station dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid #b9975226;
+  padding: 7px 0;
+}
+.world-station dt {
+  color: #c3c8c8;
+}
+.world-station dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 650;
+  color: #e9cd8a;
+}
+.world-stations .card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  padding: 0 !important;
+  margin-bottom: 8px !important;
+  min-width: 0;
+}
+.world-stations .section-head {
+  margin-bottom: 8px;
+  gap: 6px;
+}
+.world-stations .muted-note,
+.world-stations .eyebrow {
+  font-size: 10px !important;
+  line-height: 1.4;
+}
+.world-station .panel-empty,
+.world-station .world-empty {
+  min-height: 50px;
+  display: grid;
+  place-content: center;
+  color: #aab3b8;
+}
+.world-station-options,
+.world-station-more {
+  position: absolute;
+  top: -34px;
+  right: 0;
+  z-index: 12;
+  font-size: 11px;
+}
+.world-station-more {
+  right: 145px;
+}
+.world-station-options > summary,
+.world-station-more > summary {
+  cursor: pointer;
+  border: 1px solid #93743b;
+  background: #0c1217;
+  padding: 7px 10px;
+  border-radius: 6px;
+}
+.world-station-options > div,
+.world-station-more > div {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: min(540px, 70vw);
+  max-height: 55vh;
+  overflow: auto;
+  background: #0c1217;
+  border: 1px solid #93743b;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 10px 35px #000a;
+}
+.world-stations-dashboard {
+  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-template-rows: 32px minmax(110px, 1.1fr) minmax(88px, auto) minmax(
+      100px,
+      1fr
+    );
+}
+.world-stations-dashboard > .panel-tabs {
+  grid-column: 1/-1;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.world-stations-dashboard .world-equity {
+  grid-column: 1;
+  grid-row: 2;
+}
+.world-stations-dashboard .world-drawdown {
+  grid-column: 2;
+  grid-row: 2;
+}
+.world-stations-dashboard .world-summary {
+  grid-column: 3;
+  grid-row: 2;
+}
+.world-stations-dashboard .world-metrics {
+  grid-column: 1/-1;
+  grid-row: 3;
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 6px;
+  margin: 0 !important;
+}
+.world-stations-dashboard .world-metrics .k {
+  padding: 8px !important;
+  min-height: 0 !important;
+  background: #0d1418ed !important;
+  border: 1px solid #967640 !important;
+  border-radius: 7px;
+}
+.world-stations-dashboard .world-metrics .k b {
+  font-size: 17px !important;
+  margin: 4px 0;
+}
+.world-stations-dashboard .world-metrics .k small {
+  font-size: 9px !important;
+}
+.world-stations-dashboard .world-metrics .k > small:last-child {
+  display: none;
+}
+.world-stations-dashboard .world-assets {
+  grid-column: 1;
+  grid-row: 4;
+}
+.world-stations-dashboard .world-sessions {
+  grid-column: 2;
+  grid-row: 4;
+}
+.world-stations-dashboard .world-recent {
+  grid-column: 3;
+  grid-row: 4;
+}
+.world-stations-dashboard .world-consistency,
+.world-stations-dashboard .world-calendar {
+  display: none;
+}
+.world-stations-dashboard:has(.world-wide) {
+  grid-template-rows: 32px 1fr;
+}
+.world-stations-dashboard .world-wide {
+  grid-column: 1/-1;
+  grid-row: 2;
+}
+.world-stations .terminal-chart {
+  min-height: 120px;
+  height: 160px;
+}
+.world-stations .terminal-chart svg {
+  height: 130px;
+}
+.world-stations .terminal-chart-controls {
+  display: none;
+}
+.world-stations table {
+  font-size: 10px;
+  min-width: 0 !important;
+}
+.world-stations th,
+.world-stations td {
+  padding: 6px;
+}
+.world-stations-plan {
+  grid-template-columns: 180px 1fr;
+}
+.world-plan-nav {
+  grid-column: 1;
+}
+.world-plan-nav nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.world-plan-nav button {
+  width: 100%;
+  text-align: left;
+}
+.world-plan-nav [aria-pressed="true"] {
+  background: #b18c45;
+  color: #101315;
+}
+.world-plan-overview {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+}
+.world-plan-rules {
+  grid-column: 1;
+  grid-row: 1;
+}
+.world-plan-setup {
+  grid-column: 2;
+  grid-row: 1;
+}
+.world-plan-summary {
+  grid-column: 3;
+  grid-row: 1;
+}
+.world-plan-check {
+  grid-column: 1/-1;
+  grid-row: 2;
+}
+.world-rule-list {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+.world-rule-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #a0824a26;
+}
+.world-rule-list small {
+  display: block;
+  color: #abb4bb;
+}
+.world-plan-editor {
+  grid-column: 2;
+  overflow: auto;
+  min-height: 0;
+  background: #0c1419f2;
+  border: 1px solid #a48349;
+  border-radius: 8px;
+  padding: 14px;
+}
+.world-plan-editor .plan-design-top {
+  position: sticky;
+  top: -14px;
+  background: #0c1419;
+  z-index: 2;
+  padding: 10px 0;
+}
+.world-plan-editor .plan-design-top h1 {
+  font-size: 18px !important;
+}
+.world-plan-editor .plan-design-section {
+  grid-template-columns: 1fr !important;
+  padding: 10px !important;
+}
+.world-plan-editor .plan-section-heading p {
+  display: none;
+}
+.world-plan-editor .plan-section-heading h2 {
+  font-size: 13px;
+}
+.world-plan-editor .plan-section-icon {
+  display: none;
+}
+body.smc-world-cinematic
+  .smc-cinema-room.has-stations[data-world-room-id="trades"]
+  .smc-world-workspace {
+  inset: 8% 2% 5%;
+}
+.world-stations-journal {
+  grid-template-columns: 1.2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.world-journal-entry {
+  grid-column: 2;
+  grid-row: 1/3;
+}
+.world-journal-records {
+  grid-column: 1;
+  grid-row: 2;
+}
+.world-journal-period {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  max-height: 90px;
+  background: #0c1419eb !important;
+  border: 1px solid #9b7a3f !important;
+  padding: 8px !important;
+  overflow: auto;
+}
+.world-journal-period .grid {
+  display: none;
+}
+.world-entry-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.world-entry-blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0;
+}
+.world-entry-blocks fieldset {
+  min-width: 0;
+  border: 1px solid #655234;
+  border-radius: 7px;
+  padding: 9px;
+}
+.world-entry-blocks legend {
+  font-size: 11px;
+  color: #d9b76c;
+}
+.world-print-drop {
+  min-height: 100px;
+  display: grid !important;
+  place-content: center;
+  border: 1px dashed #8f7446;
+  border-radius: 8px;
+  padding: 10px;
+}
+.world-print-drop input {
+  margin-top: 10px;
+  font-size: 10px;
+}
+.world-journal-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.world-journal-entry .world-primary {
+  width: 100%;
+  margin: 10px 0;
+}
+.world-journal-records .diary-gallery {
+  display: block;
+}
+.world-journal-records .diary-entry {
+  border-bottom: 1px solid #76613d !important;
+  padding: 8px 0 !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.world-journal-records .diary-cover,
+.world-journal-records .diary-no-print,
+.world-journal-records .diary-entry > p {
+  display: none;
+}
+.world-journal-records .diary-pagination {
+  font-size: 10px;
+}
+.world-journal-records .section-head {
+  grid-column: 1;
+}
+.world-journal-records .diary-entry-actions {
+  grid-column: 2;
+  grid-row: 1/3;
+  align-self: center;
+}
+.world-stations-analyst {
+  grid-template-columns: 1.3fr 0.8fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.world-analysis-print {
+  grid-column: 1;
+  grid-row: 1;
+}
+.world-analysis-print .ta-image-upload {
+  min-height: 100px;
+  height: 100%;
+  max-height: 180px;
+}
+.world-analysis-print .ta-image-upload img {
+  max-height: 150px;
+}
+.world-analysis-print > div > p {
+  font-size: 9px;
+  max-height: 45px;
+  overflow: auto;
+}
+.world-analysis-context {
+  grid-column: 1/3;
+  grid-row: 2;
+}
+.world-analysis-context .fg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.world-analysis-context textarea {
+  min-height: 34px;
+  height: 38px;
+}
+.world-analysis-report {
+  grid-column: 3;
+  grid-row: 1/3;
+}
+.world-analysis-criteria {
+  grid-column: 2;
+  grid-row: 1;
+}
+.world-analysis-guide {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  max-height: 85%;
+  z-index: 3;
+}
+.world-analysis-guide:not([open]) {
+  background: #0c1519;
+  padding: 7px;
+}
+.world-stations-risk {
+  grid-template-columns: 1fr 1.3fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.world-risk-calc {
+  grid-column: 1;
+  grid-row: 1/3;
+}
+.world-risk-calc .fg {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.world-risk-capital {
+  grid-column: 3;
+  grid-row: 1;
+}
+.world-risk-limits {
+  grid-column: 3;
+  grid-row: 2;
+}
+.world-risk-chart {
+  grid-column: 2;
+  grid-row: 2;
+}
+.world-risk-coverage {
+  grid-column: 2;
+  grid-row: 1;
+}
+body.smc-world-cinematic
+  .smc-cinema-room.has-stations[data-world-room-id="economic"]
+  .smc-world-workspace {
+  inset: 15% 2% 7%;
+}
+.world-stations-news {
+  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-rows: 1fr 150px;
+}
+.world-news-calendar {
+  grid-column: 1;
+  grid-row: 1;
+}
+.world-news-markets {
+  grid-column: 3;
+  grid-row: 1;
+}
+.world-news-session {
+  grid-column: 3;
+  grid-row: 2;
+}
+.world-news-briefing {
+  grid-column: 2;
+  grid-row: 2;
+}
+.world-news-events {
+  grid-column: 1;
+  grid-row: 2;
+}
+.world-news-calendar .row {
+  gap: 5px;
+}
+body.smc-world-cinematic
+  .smc-cinema-room.has-stations[data-world-room-id="tools"]
+  .smc-world-workspace {
+  inset: 15% 5% 12%;
+}
+.world-stations-tools {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: 1fr 1fr;
+  gap: 18px;
+}
+.world-stations-tools > [data-world-tool] {
+  align-self: start;
+  position: relative;
+  text-align: left;
+  padding: 18px;
+  background: linear-gradient(145deg, #11191bf2, #080d11ee);
+  min-height: 95px;
+  border-color: #d1a14d;
+  box-shadow: 0 0 12px #c7954529;
+}
+.world-stations-tools > [data-world-tool] strong {
+  display: block;
+  font-size: 16px;
+  color: #f1d58d;
+}
+.world-stations-tools > [data-world-tool] span {
+  display: block;
+  margin-top: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #c0c5c8;
+}
+.world-stations-tools > [data-world-tool] b {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  color: #e0bc69;
+}
+.world-tool-risk {
+  grid-column: 1/3;
+  grid-row: 1;
+}
+.world-tool-share {
+  grid-column: 5/7;
+  grid-row: 1;
+}
+.world-tool-ocr {
+  grid-column: 1/3;
+  grid-row: 2;
+}
+.world-tool-import {
+  grid-column: 3/5;
+  grid-row: 2;
+}
+.world-tool-str {
+  grid-column: 5/7;
+  grid-row: 2;
+}
+.world-tool-selected {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #0b1218f7;
+}
+.world-tool-more {
+  grid-column: 3/5;
+  grid-row: 1;
+  align-self: end;
+  font-size: 10px;
+  background: #0b1218dd;
+  padding: 8px;
+  border-radius: 7px;
+}
+body.smc-world-cinematic
+  .smc-cinema-room.has-stations[data-world-room-id="achievements"]
+  .smc-world-workspace {
+  inset: 15% 3% 9%;
+}
+.world-stations-achievements {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 35px 180px;
+}
+.world-certificates {
+  grid-column: 1;
+  grid-row: 1;
+}
+.world-achievement-summary {
+  grid-column: 3;
+  grid-row: 1;
+}
+.world-progress-value {
+  display: block;
+  font-size: 32px;
+  color: #eacb82;
+}
+.world-achievement-summary progress {
+  width: 100%;
+  accent-color: #e2bd68;
+}
+.world-achievement-categories {
+  grid-column: 1/-1;
+  grid-row: 2;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+}
+.world-achievement-cards {
+  grid-column: 1/-1;
+  grid-row: 3;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 8px;
+  overflow: auto;
+  min-height: 0;
+}
+.world-achievement-cards .growth-achievement {
+  padding: 10px !important;
+  border: 1px solid #ad8744 !important;
+  background: #0a1218f2 !important;
+  border-radius: 8px;
+  min-width: 145px;
+}
+.world-achievement-cards .growth-achievement h3 {
+  font-size: 12px;
+}
+body.smc-world-cinematic .has-stations.is-expanded .smc-world-workspace {
+  inset: 35px 12px 12px !important;
+}
+body.smc-world-cinematic dialog.world-journal-review {
+  margin: 5vh 3vw auto auto;
+  width: min(600px, 90vw);
+  max-height: 90vh;
+  border: 1px solid #bc9349;
+  background: #0b1219f5;
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  .world-stations {
+    font-size: 11px;
+    gap: 6px;
+  }
+  .world-station {
+    padding: 8px;
+  }
+  .world-stations-plan {
+    grid-template-columns: 145px 1fr;
+  }
+  .world-plan-overview {
+    grid-template-columns: 1fr 1fr;
+  }
+  .world-plan-summary {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .world-plan-check {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .world-stations-dashboard .world-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    overflow: auto;
+  }
+}
+@media (max-width: 760px) {
+  body.smc-world-cinematic
+    .smc-cinema-room.has-stations[data-world-room-id]
+    .smc-world-workspace {
+    position: relative;
+    inset: auto;
+    padding: 12px 0;
+    background: none;
+    overflow: visible;
+  }
+  body.smc-world-cinematic .has-stations #main.world-station-main {
+    height: auto;
+  }
+  .world-stations {
+    display: flex !important;
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+  }
+  .world-station {
+    max-height: none;
+    overflow: visible;
+    padding: 14px;
+  }
+  .world-station-options,
+  .world-station-more {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 8px 0;
+  }
+  .world-station-options > div,
+  .world-station-more > div {
+    position: relative;
+    width: 100%;
+    max-height: 60vh;
+  }
+  .world-station-options > summary,
+  .world-station-more > summary {
+    min-height: 38px;
+  }
+  .world-plan-overview {
+    display: flex;
+    flex-direction: column;
+  }
+  .world-plan-editor {
+    max-height: none;
+    overflow: visible;
+  }
+  .world-plan-nav nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .world-plan-editor .plan-design-top {
+    position: static;
+  }
+  .world-journal-period {
+    max-height: none;
+    align-self: stretch;
+  }
+  .world-entry-blocks,
+  .world-journal-bottom {
+    grid-template-columns: 1fr;
+  }
+  .world-analysis-context .fg {
+    grid-template-columns: 1fr 1fr;
+  }
+  .world-stations-dashboard .world-metrics {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .world-stations-dashboard .world-consistency,
+  .world-stations-dashboard .world-calendar {
+    display: block;
+  }
+  .world-analysis-guide {
+    align-self: stretch;
+  }
+  .world-tool-selected {
+    position: relative;
+    inset: auto;
+  }
+  .world-achievement-cards {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    overflow: visible;
+  }
+  .world-achievement-categories {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.smc-cinema-avatar {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  width: 7.4%;
+  aspect-ratio: 543/724;
+  pointer-events: none;
+  z-index: 4;
+  transform-origin: 50% 100%;
+}
+.smc-cinema-avatar:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 10%;
+  border: 2px solid #f1cd7e;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #f1b32e99;
+  z-index: -1;
+}
+.smc-cinema-avatar-sprite {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: url("assets/avatar-walk.webp") 33.333% 0 / 400% 100% no-repeat;
+}
+.smc-cinema-avatar.is-walking .smc-cinema-avatar-sprite {
+  animation: smc-robot-walk 0.48s step-end infinite;
+}
+@keyframes smc-robot-walk {
+  0% {
+    background-position: 0 0;
+  }
+  25% {
+    background-position: 33.333% 0;
+  }
+  50% {
+    background-position: 66.666% 0;
+  }
+  75% {
+    background-position: 100% 0;
+  }
+}
+.smc-world .smc-cinema-door.is-destination {
+  border-color: #f1cf7b !important;
+  box-shadow: 0 0 22px #d9ab4c77 !important;
+  background: #ba873d18 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .smc-cinema-avatar-sprite {
+    animation: none !important;
+  }
+}
+.world-stations .card.world-station {
+  padding: 12px !important;
+  border: 1px solid #ae8948 !important;
+  background: linear-gradient(140deg, #101619f5, #080d10f5) !important;
+  box-shadow: 0 3px 15px #0007 !important;
+}
+body.smc-world-cinematic
+  .smc-cinema-room.has-stations[data-world-room-id="plan"]
+  .smc-world-workspace {
+  inset: 16% 3% 34% 16%;
+}
+.world-plan-overview {
+  grid-template-rows: 1fr 90px;
+}
+.world-plan-check {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 6px;
+}
+.world-plan-check h2 {
+  grid-column: 1/-1;
+}
+.world-plan-check > p {
+  display: none;
+}
+.world-journal-entry form {
+  padding-bottom: 48px;
+}
+.world-journal-entry .world-primary {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  box-shadow: 0 -8px 16px #080d10;
+}
+@media (max-width: 760px) {
+  body.smc-world-cinematic
+    .smc-cinema-room.has-stations[data-world-room-id="plan"]
+    .smc-world-workspace {
+    position: relative;
+    inset: auto;
+  }
+  .world-plan-overview {
+    display: flex;
+  }
+  .world-plan-check {
+    display: block;
+  }
+}
+.world-stations .card.world-journal-period {
+  padding: 9px !important;
+  border: 1px solid #ad8744 !important;
+  background: #0b1218ee !important;
+}
+.world-journal-entry {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.world-journal-entry > form {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-bottom: 10px;
+}
+.world-journal-entry > .world-primary {
+  position: static;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+.world-print-drop {
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .world-journal-entry {
+    overflow: visible;
+  }
+  .world-journal-entry > form {
+    overflow: visible;
+  }
+}
+@media (min-width: 1101px) {
+  .world-stations-dashboard {
+    grid-template-columns: 1.25fr 1fr 1fr 0.9fr;
+  }
+  .world-stations-dashboard .world-equity {
+    grid-column: 1/3;
+  }
+  .world-stations-dashboard .world-drawdown {
+    grid-column: 3;
+  }
+  .world-stations-dashboard .world-summary {
+    grid-column: 4;
+  }
+  .world-stations-dashboard .world-metrics {
+    grid-column: 1/4;
+  }
+  .world-stations-dashboard .world-calendar {
+    display: block;
+    grid-column: 4;
+    grid-row: 3/5;
+  }
+  .world-stations-dashboard .world-assets {
+    grid-column: 1;
+  }
+  .world-stations-dashboard .world-sessions {
+    grid-column: 2;
+  }
+  .world-stations-dashboard .world-recent {
+    grid-column: 3;
+  }
+  .world-stations-dashboard .world-calendar .cal {
+    font-size: 10px;
+  }
+}
+/* Keep the graph itself visible in the compact wall stations. Full controls remain in the expanded area. */
+.has-stations:not(.is-expanded) .world-stations .terminal-chart-toolbar,
+.has-stations:not(.is-expanded) .world-stations .chart-readout,
+.has-stations:not(.is-expanded) .world-stations .terminal-chart-caption {
+  display: none !important;
+}
+.has-stations:not(.is-expanded) .world-stations .terminal-chart {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+.has-stations:not(.is-expanded) .world-stations .terminal-chart-svg {
+  height: 110px !important;
+  min-height: 0 !important;
+  max-height: 110px !important;
+}
+.world-equity > h2 {
+  display: none;
+}
+.world-calendar h2,
+.world-calendar .calendar-summary,
+.world-calendar .calendar-hint {
+  display: none !important;
+}
+.world-calendar .cal {
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  min-width: 0 !important;
+  gap: 3px !important;
+}
+.world-calendar .cal > .ch:nth-child(8),
+.world-calendar .cd.wk {
+  display: none !important;
+}
+.world-calendar .cd {
+  min-height: 19px !important;
+  height: 19px !important;
+  padding: 2px !important;
+  min-width: 0 !important;
+  gap: 0 !important;
+  font-size: 9px !important;
+}
+.world-calendar .cd b {
+  font-size: 9px !important;
+}
+.world-calendar .cd > small,
+.world-calendar .day-pnl {
+  display: none !important;
+}
+.world-calendar .month-title {
+  min-width: 0 !important;
+  font-size: 10px !important;
+}
+.world-calendar .month-actions {
+  gap: 3px !important;
+}
+.world-calendar .month-actions button {
+  padding: 4px !important;
+  min-height: 25px !important;
+}
+/* The World is its own full-room interface, with its controls integrated into the environment. */
+@media (min-width: 1001px) {
+  body.smc-shell.smc-world-cinematic:not(.terminal-collapsed) {
+    --sidebar-width: 160px;
+  }
+  body.smc-world-cinematic > header {
+    width: 160px !important;
+    padding: 18px 9px !important;
+  }
+  body.smc-world-cinematic > header #nav button {
+    font-size: 11px;
+    padding: 9px 8px;
+  }
+  body.smc-world-cinematic > header .smc-logo {
+    max-width: 120px;
+  }
+}
+body.smc-world-cinematic .smc-world {
+  padding: 0 !important;
+  background: #080c0e;
+}
+body.smc-world-cinematic .smc-world .smc-world-hud.smc-cinema-hud {
+  position: relative !important;
+  inset: auto !important;
+  padding: 7px 12px !important;
+  border: 0 !important;
+  border-bottom: 1px solid #635033 !important;
+  border-radius: 0 !important;
+  min-height: 47px !important;
+  gap: 9px;
+  flex-wrap: nowrap !important;
+  background: #080e12f8 !important;
+  box-shadow: none;
+}
+.world-hud-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 100px;
+}
+.smc-world .world-hud-search button {
+  min-height: 30px;
+  padding: 5px 9px;
+  background: #0c1319;
+  border-color: #57472d;
+}
+.smc-world .world-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  text-align: left;
+  color: #aeb9c3;
+}
+.world-search span {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.world-search kbd {
+  font-size: 9px;
+  border: 1px solid #49515a;
+  border-radius: 4px;
+  padding: 1px 4px;
+  white-space: nowrap;
+}
+.world-hud-date {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap;
+  font-size: 10px;
+  color: #c9cdce;
+}
+.world-hud-date b {
+  font-size: 12px;
+  color: #e9ca80;
+  font-variant-numeric: tabular-nums;
+}
+body.smc-world-cinematic .smc-world .smc-cinema-hud nav {
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+.smc-world .smc-cinema-hud nav button {
+  font-size: 10px;
+  min-height: 30px;
+  padding: 5px 8px;
+}
+.smc-world .smc-cinema-hud .smc-world-exit {
+  background: linear-gradient(135deg, #292218, #171a1a);
+  color: #efd48e;
+  border-color: #c4a051;
+}
+.smc-world-cinematic #smc-world-content {
+  position: relative;
+}
+.smc-world-cinematic .smc-cinema-room {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.smc-world-cinematic .smc-cinema-room > .smc-world-room-heading {
+  position: absolute;
+  top: 14px;
+  left: 22px;
+  z-index: 6;
+  padding: 0;
+  max-width: 78%;
+  text-shadow: 0 2px 6px #000;
+}
+.smc-world-cinematic .smc-cinema-room > .smc-world-room-heading p {
+  display: none;
+}
+.smc-world-cinematic .smc-cinema-room > .smc-world-room-heading h1 {
+  font-size: 26px;
+  margin: 0 0 5px;
+}
+.smc-world-cinematic .smc-cinema-room > .smc-world-room-heading small {
+  font-size: 11px;
+  color: #d4d4d0;
+}
+.smc-world-cinematic .smc-cinema-room > .smc-cinema-stage {
+  height: calc(100svh - 47px);
+  min-height: 600px;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+}
+.smc-world-cinematic .smc-cinema-room > .smc-cinema-stage:after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 90px;
+  background: linear-gradient(#04080c99, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+.smc-world-cinematic .smc-cinema-image {
+  object-fit: cover;
+}
+.smc-world-cinematic .has-stations #smc-world-workspace {
+  z-index: 2;
+}
+.smc-world-cinematic .smc-cinema-room .smc-cinema-toolbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  padding: 8px 22px;
+  z-index: 7;
+  gap: 8px;
+}
+.smc-world-cinematic .smc-cinema-room .smc-cinema-toolbar button {
+  font-size: 11px;
+  min-height: 34px;
+  padding: 7px 11px;
+  background: #0b1115ed;
+  box-shadow: 0 0 10px #0004;
+}
+.smc-world-cinematic .smc-cinema-room .smc-cinema-toolbar [data-cinema-expand] {
+  background: linear-gradient(135deg, #f0cf7e, #bb8c3e);
+}
+.smc-world-cinematic .smc-cinema-title {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  z-index: 5;
+  padding: 0;
+  text-shadow: 0 2px 6px #000;
+}
+.smc-world-cinematic .smc-cinema-title p {
+  display: none;
+}
+.smc-world-cinematic .smc-cinema-title h1 {
+  font-size: 28px;
+  margin: 0 0 6px;
+}
+.smc-world-cinematic .smc-cinema-title span {
+  color: #e3e0d6;
+}
+.smc-world-cinematic .smc-cinema-lobby > .smc-cinema-stage {
+  border: 0;
+  border-radius: 0;
+  aspect-ratio: 16/9;
+}
+.smc-world-cinematic .smc-cinema-lobby > .smc-world-access {
+  padding: 16px 22px;
+}
+.world-stations .diary-partials {
+  margin-bottom: 12px !important;
+}
+.world-stations .diary-partial-grid {
+  display: block;
+}
+.world-stations .diary-partial-card {
+  margin-bottom: 8px;
+}
+.world-stations .diary-partial-card > img {
+  width: 75px;
+  height: 75px;
+}
+.world-original-options .terminal-topbar,
+.world-original-options > .page-top {
+  display: none !important;
+}
+@media (max-width: 1250px) {
+  .world-hud-date {
+    display: none;
+  }
+  .world-search kbd {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  body.smc-world-cinematic .smc-world .smc-world-hud.smc-cinema-hud {
+    flex-wrap: wrap !important;
+    padding: 8px !important;
+  }
+  .world-hud-search {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  body.smc-world-cinematic .smc-world .smc-cinema-hud nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    width: 100% !important;
+  }
+  .smc-world-cinematic .smc-cinema-room > .smc-world-room-heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    padding: 14px;
+    max-width: none;
+    background: #090e13;
+  }
+  .smc-world-cinematic .smc-cinema-room > .smc-world-room-heading h1 {
+    font-size: 23px;
+  }
+  .smc-world-cinematic .smc-cinema-room > .smc-cinema-stage {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    padding-top: 60%;
+    overflow: visible;
+  }
+  .smc-world-cinematic .smc-cinema-room > .smc-cinema-stage:after {
+    display: none;
+  }
+  .smc-world-cinematic .smc-cinema-room .smc-cinema-toolbar {
+    position: relative;
+    inset: auto;
+    padding: 12px;
+  }
+  .smc-world-cinematic .smc-cinema-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    padding: 14px;
+  }
+  .smc-world-cinematic .smc-cinema-title h1 {
+    font-size: 24px;
+  }
+  .smc-world-cinematic .smc-cinema-lobby > .smc-world-access {
+    padding: 14px;
+  }
+  .smc-world-cinematic .smc-cinema-future > .smc-cinema-stage {
+    padding-top: 0;
+  }
+}

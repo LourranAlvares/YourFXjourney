@@ -9,7 +9,7 @@ world_names=['world-rooms','world-map','world-ui','world','world-bootstrap']
 world_code='window.SMC_WORLD_EMBEDDED=true;\n'+'\n'.join((root/'public/world'/f'{n}.js').read_text().replace('</script','<\\/script') for n in world_names)
 source=source.replace('<script src="public/world/world-bootstrap.js"></script>', '<style>'+(root/'public/world/world.css').read_text()+'</style><script>'+world_code+'</script>')
 
-for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience']:
+for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','journal-records','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience']:
  source=source.replace(f'<script src="public/{name}.js"></script>', '<script>'+ (root/'public'/f'{name}.js').read_text().replace('</script', '<\\/script') +'</script>')
 source=source.replace('<link rel="stylesheet" href="public/assistant.css">', '<style>'+(root/'public/assistant.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/terminal.css">', '<style>'+(root/'public/terminal.css').read_text()+'</style>')

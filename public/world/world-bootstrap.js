@@ -80,7 +80,20 @@
             document.body.append(script);
           });
           await SMCWorldScenes.prepare();
-          if (SMCWorldScenes.enabled) return;
+          if (SMCWorldScenes.enabled) {
+            try {
+              await new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.src = "public/world/world-stations.js";
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.append(script);
+              });
+            } catch {
+              /* Original operational views remain available. */
+            }
+            return;
+          }
         } catch {
           /* Keep the independently usable scene fallbacks below. */
         }

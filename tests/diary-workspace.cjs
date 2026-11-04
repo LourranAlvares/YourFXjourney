@@ -50,6 +50,7 @@ const { chromium } = require("playwright"),
         }),
       ];
       diaryMonth = "2026-10";
+      SC.month = "2026-10";
       taGo("trades");
     });
     assert.equal(await p.locator(".diary-entry").count(), 3);

@@ -45,7 +45,7 @@ function accountCurrencyControl() {
     current && !ACCOUNT_CURRENCIES.some(([code]) => code === current)
       ? `<option value="${esc(current)}" selected>${esc(current)}</option>`
       : "";
-  return `<label class="account-currency-control" title="Moeda dos registros. Define a unidade exibida; não faz conversão de câmbio."><span>Moeda da conta</span><select aria-label="Moeda da conta" onchange="setAccountCurrency(this.value)"><option value="" ${!current ? "selected" : ""}>Moeda</option>${extra}${ACCOUNT_CURRENCIES.map(([code, symbol]) => `<option value="${code}" ${current === code ? "selected" : ""}>${code} · ${symbol}</option>`).join("")}</select></label>`;
+  return `<label class="account-currency-control" title="Moeda dos registros. Define a unidade exibida; não faz conversão de câmbio."><span>Moeda da conta</span><select aria-label="Moeda da conta" onchange="setAccountCurrency(this.value)"><option value="" ${!current ? "selected" : ""}>Moeda</option>${extra}${ACCOUNT_CURRENCIES.map(([code, symbol]) => `<option value="${code}" ${current === code ? "selected" : ""}>${code} · ${symbol}</option>`).join("")}</select></label><button class="b s account-capital-edit" type="button" onclick="accountOpenEditor()" aria-label="Editar capital inicial">Capital</button>`;
 }
 function setAccountCurrency(code) {
   if (code !== "" && !ACCOUNT_CURRENCIES.some(([value]) => value === code))
@@ -165,4 +165,165 @@ function riskChoosePercent(value) {
 function riskResetCalculator() {
   riskCalculator = { base: "", percent: "", manualBase: false };
   R();
+}
+
+/* The confirmed initial capital remains editable. Never infer it from P&L alone. */
+function accountOpenEditor() {
+  if (CLOUD_BOOT && (!eliteCloud.ready || eliteCloud.user?.status !== "active"))
+    return;
+  const owner = K;
+  const scope = accountInitialScope();
+  const evidence =
+    (S.capitalImportEvidence?.accountId || "") === scope.id
+      ? S.capitalImportEvidence
+      : null;
+  const current =
+    scope.confirmed && Number.isFinite(scope.amount) ? scope.amount : "";
+  const options = [
+    ["", "Não informada"],
+    ["GBP", "GBP · Libra"],
+    ["USD", "USD · Dólar"],
+    ["EUR", "EUR · Euro"],
+    ["BRL", "BRL · Real"],
+  ];
+  if (scope.currency && !options.some(([id]) => id === scope.currency))
+    options.push([scope.currency, scope.currency]);
+  const dialog = growthDialog(
+    "Capital inicial" + (scope.name ? " · " + scope.name : " da conta"),
+    `<form id="account-initial-form" novalidate><p>Informe o saldo anterior à primeira operação do histórico. Alterar esse valor recalcula a base da conta e não modifica trades, depósitos ou retiradas.</p><label>Capital inicial<input id="account-edit-baseline" type="number" min="0" step="any" inputmode="decimal" value="${esc(current)}" placeholder="Não confirmado"></label><label>Moeda<select id="account-edit-currency">${options.map(([id, label]) => `<option value="${esc(id)}" ${scope.currency === id ? "selected" : ""}>${esc(label)}</option>`).join("")}</select></label>${evidence ? `<aside class="account-import-evidence"><p>O relatório importado informa capital inicial de <b>${esc(evidence.amount)} ${esc(evidence.currency || "")}</b>.</p><button class="b s" type="button" id="account-use-import">Usar valor do relatório</button></aside>` : '<p class="muted-note">Sem saldo inicial explícito no relatório, o resultado dos trades sozinho não determina o capital da conta.</p>'}<p id="account-edit-status" role="status"></p><div class="row"><button type="submit" class="b">Salvar capital inicial</button><button type="button" class="b s" id="account-unconfirm">Deixar capital não confirmado</button></div></form>`,
+  );
+  const form = dialog.querySelector("form");
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    if (
+      K !== owner ||
+      (CLOUD_BOOT &&
+        (!eliteCloud.ready || eliteCloud.user?.status !== "active"))
+    )
+      return;
+    const raw = form.querySelector("#account-edit-baseline").value,
+      amount = Number(raw);
+    if (raw === "" || !Number.isFinite(amount) || amount < 0) {
+      form.querySelector("#account-edit-status").textContent =
+        "Informe um valor maior ou igual a zero, ou deixe o capital não confirmado.";
+      return;
+    }
+    try {
+      const next = accountInitialPatch(
+        scope,
+        amount,
+        form.querySelector("#account-edit-currency").value,
+        true,
+      );
+      persistState(next);
+      S = next;
+      dialog.close();
+      riskCalculator.manualBase = false;
+      accountRefreshAfterEdit();
+      diaryNotice(
+        "Capital inicial atualizado. As operações foram preservadas.",
+      );
+    } catch (error) {
+      form.querySelector("#account-edit-status").textContent =
+        "Não foi possível salvar. " + error.message;
+    }
+  };
+  dialog.querySelector("#account-unconfirm").onclick = () => {
+    if (
+      K !== owner ||
+      (CLOUD_BOOT &&
+        (!eliteCloud.ready || eliteCloud.user?.status !== "active"))
+    )
+      return;
+    try {
+      const next = accountInitialPatch(
+        scope,
+        scope.amount,
+        scope.currency,
+        false,
+      );
+      persistState(next);
+      S = next;
+      dialog.close();
+      riskCalculator.manualBase = false;
+      accountRefreshAfterEdit();
+      diaryNotice("Capital inicial deixado como não confirmado.");
+    } catch (error) {
+      form.querySelector("#account-edit-status").textContent =
+        "Não foi possível salvar. " + error.message;
+    }
+  };
+  dialog.querySelector("#account-use-import")?.addEventListener("click", () => {
+    form.querySelector("#account-edit-baseline").value = evidence.amount;
+    if (evidence.currency && options.some(([id]) => id === evidence.currency))
+      form.querySelector("#account-edit-currency").value = evidence.currency;
+  });
+  form.querySelector("input").focus();
+}
+function accountCommitInitial() {
+  const input = document.getElementById("account-baseline"),
+    raw = input?.value ?? "",
+    amount = Number(raw);
+  if (raw === "" || !Number.isFinite(amount) || amount < 0) {
+    diaryNotice("Informe um capital inicial maior ou igual a zero.", true);
+    return false;
+  }
+  try {
+    const next = accountInitialPatch(
+      accountInitialScope(),
+      amount,
+      document.getElementById("account-currency").value,
+      true,
+    );
+    persistState(next);
+    S = next;
+    riskCalculator.manualBase = false;
+    accountRefreshAfterEdit();
+    diaryNotice("Capital inicial atualizado.");
+    return true;
+  } catch (error) {
+    diaryNotice("Não foi possível salvar o capital. " + error.message, true);
+    return false;
+  }
+}
+
+function accountRefreshAfterEdit() {
+  const world = window.SMCWorld?.controller;
+  if (world?.active) {
+    world.refreshLayout();
+  } else R();
+}
+
+function accountInitialScope() {
+  const id = String(
+    (typeof panelUI !== "undefined" && panelUI.account) || S.accountId || "",
+  );
+  const entry = (S.tradingAccounts || []).find((a) => String(a.id) === id);
+  return {
+    id,
+    name: entry?.name || id,
+    entry: !!entry,
+    amount: entry ? entry.initialBalance : S.balance,
+    confirmed: entry ? entry.balanceConfirmed : S.balanceConfirmed,
+    currency: entry?.currency || S.currency || "",
+  };
+}
+function accountInitialPatch(scope, amount, currency, confirmed) {
+  if (scope.entry) {
+    return {
+      ...S,
+      currency,
+      tradingAccounts: S.tradingAccounts.map((a) =>
+        String(a.id) === scope.id
+          ? {
+              ...a,
+              initialBalance: amount,
+              balanceConfirmed: confirmed,
+              currency,
+            }
+          : a,
+      ),
+    };
+  }
+  return { ...S, balance: amount, balanceConfirmed: confirmed, currency };
 }

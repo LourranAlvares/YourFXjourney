@@ -134,6 +134,7 @@ const assert = require("node:assert/strict"),
     // The future community is a clearly labelled visual preview, never a new data route.
     assert(await p.locator("[data-world-walk=community]").isDisabled());
     await p.locator("[data-world-room=plan]").click();
+    await p.locator("[data-plan-section=identity]").click();
     await p.locator("#tp-name").fill("Rascunho antes da prévia");
     await p.locator("[data-world-action=lobby]").click();
     const tabBefore = await p.evaluate(() => tab);

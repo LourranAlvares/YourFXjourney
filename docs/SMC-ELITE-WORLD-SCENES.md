@@ -1,3 +1,5 @@
+> Atualização: as salas agora usam estações operacionais próprias, e o avatar caminha no lobby. Veja [a implementação atual](SMC-ELITE-WORLD-STATIONS.md). O texto abaixo registra a etapa anterior de preparação dos cenários.
+
 # SMC Elite World — teste visual com cenários
 
 ## O que mudou
