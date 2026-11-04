@@ -19,22 +19,23 @@ const { chromium } = require("playwright"),
       await r.continue();
     });
     await p.goto("http://127.0.0.1:" + app.server.address().port);
-    await p.waitForSelector(".scene-login", { timeout: 15000 });
+    await p.evaluate(() => taGo("settings"));
+    await p.waitForSelector("#ta-password", { timeout: 15000 });
     assert(calls >= 2);
     await p.locator("#ta-password").fill("synthetic connection password");
     await p
-      .locator(".scene-login")
-      .getByRole("button", { name: "Conectar", exact: true })
+      .locator(".ta-login")
+      .getByRole("button", { name: "Conectar ao servidor", exact: true })
       .click();
     await p.waitForFunction(() => taConnection.authenticated);
-    assert.equal(await p.locator(".scene-login").count(), 0);
+    assert.equal(await p.locator(".ta-login").count(), 0);
     const cookie = (await p.context().cookies()).find(
       (c) => c.name === "trade_session",
     );
     assert(cookie.httpOnly);
     await p.reload();
     await p.waitForFunction(() => taConnection.authenticated);
-    assert.equal(await p.locator(".scene-login").count(), 0);
+    assert.equal(await p.locator(".ta-login").count(), 0);
     await p.evaluate(() => {
       taConnection.available = false;
       taLastStatusAt = 0;

@@ -24,7 +24,9 @@
     "test:world:scenes": "node tests/world-scenes.cjs && node tests/world-scenes-rooms.cjs",
     "test:world:stations": "node tests/world-stations.cjs",
     "test:journal:optional": "node tests/journal-optional.cjs",
-    "test:ocr": "node tests/screenshot.cjs"
+    "test:ocr": "node tests/screenshot.cjs",
+    "test:session:prompts": "node tests/session-prompts.cjs",
+    "test:ocr:recovery": "node tests/ocr-recovery.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"

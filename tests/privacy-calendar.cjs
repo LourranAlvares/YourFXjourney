@@ -67,8 +67,8 @@ const { chromium } = require("playwright"),
   await p.getByRole("button", { name: "Mostrar valores", exact: true }).click();
   assert.match(await p.locator(".primary-metrics").innerText(), /260/);
   await p.evaluate(() => {
-    tab = "share";
-    R();
+    SC.month = "2026-10";
+    taGo("share");
   });
   assert.match(
     await p.locator(".share-live-day.positive b").innerText(),

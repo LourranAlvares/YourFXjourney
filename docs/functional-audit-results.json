@@ -1,0 +1,261 @@
+[
+  {
+    "test": "management-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "home-preparation.cjs",
+    "code": 1
+  },
+  {
+    "test": "world-map.cjs",
+    "code": 0
+  },
+  {
+    "test": "asset-picker.cjs",
+    "code": 0,
+    "rerun": "passed after updating navigation/selectors to current UI"
+  },
+  {
+    "test": "connection-recovery.cjs",
+    "code": 0,
+    "rerun": "passed after updating navigation/selectors to current UI"
+  },
+  {
+    "test": "journal-optional.cjs",
+    "code": 0
+  },
+  {
+    "test": "experience-engine.cjs",
+    "code": 0
+  },
+  {
+    "test": "journal-context.cjs",
+    "code": 0
+  },
+  {
+    "test": "office-ui.cjs",
+    "code": 1
+  },
+  {
+    "test": "smc-theme.cjs",
+    "code": 0
+  },
+  {
+    "test": "home-preparation-layout.cjs",
+    "code": 0
+  },
+  {
+    "test": "home-momentum.cjs",
+    "code": 1
+  },
+  {
+    "test": "growth-reviews-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "unified-workspace.cjs",
+    "code": 1
+  },
+  {
+    "test": "layout-density.cjs",
+    "code": 0
+  },
+  {
+    "test": "terminal-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-offline.cjs",
+    "code": 0
+  },
+  {
+    "test": "daily-workspace.cjs",
+    "code": 0
+  },
+  {
+    "test": "growth-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "reference-layout.cjs",
+    "code": 1
+  },
+  {
+    "test": "smc-mobile-details.cjs",
+    "code": 0
+  },
+  {
+    "test": "diary-workspace.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-stations.cjs",
+    "code": 0
+  },
+  {
+    "test": "currency-risk.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-integration.cjs",
+    "code": 0
+  },
+  {
+    "test": "compact-analysis.cjs",
+    "code": 0
+  },
+  {
+    "test": "assistant-functions.cjs",
+    "code": 1
+  },
+  {
+    "test": "privacy-calendar.cjs",
+    "code": 0,
+    "rerun": "passed after updating navigation/selectors to current UI"
+  },
+  {
+    "test": "local-setup.cjs",
+    "code": 0
+  },
+  {
+    "test": "growth-achievements-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "cloud-workspace.cjs",
+    "code": 0
+  },
+  {
+    "test": "registration-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "premium-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "assistant-server.cjs",
+    "code": 0
+  },
+  {
+    "test": "growth-engine.cjs",
+    "code": 0
+  },
+  {
+    "test": "panel-experience-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "smc-design.cjs",
+    "code": 1
+  },
+  {
+    "test": "cloud-database.cjs",
+    "code": 0
+  },
+  {
+    "test": "plan-layout-ui.cjs",
+    "code": 0
+  },
+  {
+    "test": "management-database.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-scenes.cjs",
+    "code": 0
+  },
+  {
+    "test": "dashboard-reference.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-scenes-rooms.cjs",
+    "code": 0
+  },
+  {
+    "test": "mt5-import.cjs",
+    "code": 0
+  },
+  {
+    "test": "plan-engine.cjs",
+    "code": 0
+  },
+  {
+    "test": "mobile-upcoming.cjs",
+    "code": 1
+  },
+  {
+    "test": "world-3d.cjs",
+    "code": 0
+  },
+  {
+    "test": "screenshot.cjs",
+    "code": 0
+  },
+  {
+    "test": "world-cloud.cjs",
+    "code": 0
+  },
+  {
+    "test": "session-engine.cjs",
+    "code": 0
+  },
+  {
+    "test": "panel-engine.cjs",
+    "code": 0
+  },
+  {
+    "test": "assistant-ui.cjs",
+    "code": 1
+  },
+  {
+    "test": "insights.cjs",
+    "code": 1
+  },
+  {
+    "test": "share-r-sources.cjs",
+    "code": 1
+  },
+  {
+    "test": "shot-opening.cjs",
+    "code": 1
+  },
+  {
+    "test": "clear-history.cjs",
+    "code": 1
+  },
+  {
+    "test": "sharing.cjs",
+    "code": 1
+  },
+  {
+    "test": "dashboard.cjs",
+    "code": 1
+  },
+  {
+    "test": "import-risk.cjs",
+    "code": 1
+  },
+  {
+    "test": "share-risk-setup.cjs",
+    "code": 1
+  },
+  {
+    "test": "connection-onboarding.cjs",
+    "code": 1
+  },
+  {
+    "test": "session-prompts.cjs",
+    "code": 0
+  },
+  {
+    "test": "ocr-recovery.cjs",
+    "code": 0
+  }
+]

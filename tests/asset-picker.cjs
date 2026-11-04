@@ -16,12 +16,7 @@ const { createApp } = require("../server/index.cjs");
     p.on("pageerror", (e) => errors.push(e.message));
     const base = "http://127.0.0.1:" + app.server.address().port;
     await p.goto(base);
-    await p.waitForSelector(".ta-ready-card");
-    assert.equal(await p.locator(".ta-ready-step").count(), 3);
-    assert.match(
-      await p.locator(".ta-ready-card").innerText(),
-      /Restaurar backup/,
-    );
+    await p.waitForSelector(".reference-assets");
     await p.evaluate(() => {
       S.assistantProfile = {
         ...taProfile(),
@@ -43,7 +38,10 @@ const { createApp } = require("../server/index.cjs");
       R();
     });
     const snapshot = await p.evaluate(() => JSON.stringify(S.trades));
-    await p.getByRole("button", { name: "Editar ativos", exact: true }).click();
+    await p
+      .locator(".reference-assets")
+      .getByRole("button", { name: "Editar", exact: true })
+      .click();
     const dialog = p.locator("#ta-assets-dialog");
     assert.equal(
       await dialog
@@ -59,7 +57,10 @@ const { createApp } = require("../server/index.cjs");
       "EUR/USD",
       "GBPUSD",
     ]);
-    await p.getByRole("button", { name: "Editar ativos", exact: true }).click();
+    await p
+      .locator(".reference-assets")
+      .getByRole("button", { name: "Editar", exact: true })
+      .click();
     await dialog.locator("[data-asset-search]").fill("ouro");
     assert.equal(await dialog.locator(".ta-asset-option").count(), 1);
     await dialog
@@ -114,7 +115,10 @@ const { createApp } = require("../server/index.cjs");
     assert.ok(
       (await p.evaluate(() => taProfile().instruments)).includes("ETHUSD"),
     );
-    await p.getByRole("button", { name: "Editar ativos", exact: true }).click();
+    await p
+      .locator(".reference-assets")
+      .getByRole("button", { name: "Editar", exact: true })
+      .click();
     await dialog
       .locator(".ta-asset-selected")
       .getByRole("button", { name: "Remover ETHUSD", exact: true })
@@ -152,9 +156,7 @@ const { createApp } = require("../server/index.cjs");
         ),
         "home overflow " + width,
       );
-      await p
-        .getByRole("button", { name: "Editar ativos", exact: true })
-        .click();
+      await p.getByRole("button", { name: "Editar", exact: true }).click();
       assert.ok(
         await p.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth + 1,

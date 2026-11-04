@@ -381,3 +381,14 @@ body.smc-shell #growth-dialog.growth-certificate-dialog {
     margin-top: 12px;
   }
 }
+/* Keep unanswered session prompts visible across routes and World compositions. */
+body > .growth-prompt {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 950;
+  width: min(680px, calc(100vw - 32px));
+  box-sizing: border-box;
+  box-shadow: 0 8px 32px #0009;
+  margin: 0;
+}

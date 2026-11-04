@@ -72,6 +72,7 @@ function growthStart() {
     );
   try {
     growthCommit((g) => {
+      g.monitor.enabled = true;
       g.activeRun = {
         id: crypto.randomUUID(),
         sessionKey: s.key,
@@ -144,7 +145,7 @@ function growthCheckin(tradeId = "") {
     tradeId: tradeId || null,
   };
   growthDialog(
-    "How are you feeling right now?",
+    "Como você está se sentindo agora?",
     `<p class="muted-note">${esc(growthUI.checkin.sessionLabel)} · ${esc(SessionEngine.formatInZone(at, zone))}. Resposta pessoal, sem diagnóstico.</p><div class="growth-emotions">${Object.entries(
       GrowthEngine.emotions,
     )
@@ -404,7 +405,42 @@ function growthRefreshPanels() {
   if (node) node.outerHTML = growthInsights();
   if (typeof growthReconcile === "function") growthReconcile();
 }
+function growthEnableAuto() {
+  try {
+    growthCommit((g) => {
+      g.monitor.enabled = true;
+      g.monitor.mode = "auto";
+    });
+    growthTick();
+  } catch (e) {
+    growthError(e);
+  }
+}
+function growthMonitorCard() {
+  const s = growthSession(),
+    g = growthData();
+  if (!s.configured) return "";
+  const running =
+    g.monitor.enabled &&
+    (g.monitor.mode === "auto" || g.activeRun?.sessionKey === s.key);
+  return `<section class="card growth-monitor-status"><strong>Check-ins da sessão</strong><p>${g.monitor.enabled ? (running ? "Ativos no seu horário · intervalo de " + g.monitor.frequency + " min." : "Aguardando você confirmar o início da atividade.") : "Desativados. O horário da sessão, sozinho, não ativa as perguntas."}</p><div class="row">${s.status === "active" && !running ? '<button class="b s" onclick="growthStart();growthTick()">Iniciar check-ins nesta sessão</button>' : ""}${!g.monitor.enabled || g.monitor.mode !== "auto" ? '<button class="b s" onclick="growthEnableAuto()">Ativar automaticamente no meu horário</button>' : ""}<button class="b s" onclick="growthCheckin()">Como estou me sentindo</button><button class="b s" onclick="taGo('settings');document.querySelector('.growth-settings-host')?.setAttribute('open','')">Configurar lembretes automáticos</button></div></section>`;
+}
+function growthSyncPrompt() {
+  const banner = document.getElementById("growth-live-prompt");
+  if (!banner) return;
+  const s = growthSession(),
+    g = growthData();
+  if (
+    banner.dataset.owner !== K ||
+    banner.dataset.session !== s.key ||
+    s.status !== "active" ||
+    !g.monitor.enabled ||
+    (CLOUD_BOOT && !eliteCloud.ready)
+  )
+    banner.remove();
+}
 function growthTick() {
+  growthSyncPrompt();
   if (
     document.hidden ||
     (CLOUD_BOOT && !eliteCloud.ready) ||
@@ -434,9 +470,12 @@ function growthTick() {
     const banner = document.createElement("section");
     banner.id = "growth-live-prompt";
     banner.className = "growth-prompt";
+    banner.dataset.owner = K;
+    banner.dataset.session = s.key;
+    banner.setAttribute("role", "status");
     banner.innerHTML =
-      '<span>How are you feeling right now?</span><button class="b s" onclick="this.closest(\'section\').remove();growthCheckin()">Responder</button><button class="b s" onclick="growthPrompt(\'snooze\')">Adiar 10 min</button><button class="b s" onclick="growthPrompt(\'ignore\')">Ignorar sessão</button><button class="b s" onclick="growthPrompt(\'disable\')">Desativar</button>';
-    document.querySelector(".reference-topbar")?.after(banner);
+      '<span>Como você está se sentindo agora?</span><button class="b s" onclick="this.closest(\'section\').remove();growthCheckin()">Responder</button><button class="b s" onclick="growthPrompt(\'snooze\')">Adiar 10 min</button><button class="b s" onclick="growthPrompt(\'ignore\')">Ignorar sessão</button><button class="b s" onclick="growthPrompt(\'disable\')">Desativar</button>';
+    document.body.append(banner);
   } catch {
     /* A full/unavailable browser cache must not create repeated prompts. */
   }
@@ -447,7 +486,13 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function growthAfterRender() {
+  growthSyncPrompt();
   if (CLOUD_BOOT && !eliteCloud.ready) return;
+  if (tab === "home" && !document.querySelector(".growth-monitor-status")) {
+    const home = document.querySelector(".smc-home");
+    if (home) home.insertAdjacentHTML("beforeend", growthMonitorCard());
+  }
+  setTimeout(growthTick, 0);
   if (tab === "settings" && !document.getElementById("growth-settings")) {
     const host = document.createElement("details");
     host.className = "card growth-settings-host";
