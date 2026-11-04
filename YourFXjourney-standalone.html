@@ -22809,6 +22809,8 @@ function growthSyncPrompt() {
     banner.dataset.session !== s.key ||
     s.status !== "active" ||
     !g.monitor.enabled ||
+    g.prompts[s.key]?.ignored ||
+    g.prompts[s.key]?.snoozedUntil > Date.now() ||
     (CLOUD_BOOT && !eliteCloud.ready)
   )
     banner.remove();
