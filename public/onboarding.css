@@ -1,0 +1,124 @@
+#first-use-tour {
+  position: fixed;
+  left: calc(var(--sidebar-width, 0px) + 16px);
+  bottom: 16px;
+  width: min(420px, calc(100vw - 32px));
+  max-height: 70dvh;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid #b69650;
+  border-radius: 14px;
+  background: #0b1118fa;
+  color: #eee;
+  box-shadow: 0 12px 48px #000a;
+  z-index: 940;
+  font: 14px/1.5 system-ui;
+}
+#first-use-tour h2 {
+  font-size: 21px;
+  margin: 12px 0;
+  color: #f2d48b;
+}
+#first-use-tour p {
+  margin: 10px 0;
+}
+.tour-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #d9bf84;
+  font-size: 12px;
+}
+.tour-heading button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 2px 10px;
+}
+.tour-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 16px;
+}
+.tour-skip {
+  background: transparent;
+  border: 0;
+  color: #c8cdd4;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0;
+  font: inherit;
+}
+#first-use-tour progress {
+  width: 100%;
+  accent-color: #d8b764;
+  height: 6px;
+}
+.tour-error {
+  color: #ffb4ad;
+}
+.tour-ready {
+  color: #78d9b5;
+}
+#first-use-tour button:focus-visible {
+  outline: 2px solid #f2d48b;
+  outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  #first-use-tour {
+    left: 16px;
+    padding: 16px;
+    max-height: 55dvh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #first-use-tour {
+    scroll-behavior: auto;
+  }
+}
+
+#first-use-tour[data-phase="welcome"] {
+  position: static;
+  width: 100%;
+  max-height: none;
+  margin: 16px 0;
+  box-shadow: none;
+}
+@media (max-width: 1000px) {
+  body.smc-shell .reference-top-actions {
+    flex-wrap: wrap;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+@media (min-width: 761px) and (max-width: 1000px) {
+  body.smc-shell .reference-top-actions {
+    flex-shrink: 1;
+  }
+  body.smc-shell .reference-search {
+    min-width: 0;
+    flex: 1;
+  }
+  body.smc-shell .reference-topbar {
+    height: auto;
+    min-height: 60px;
+  }
+}
+
+#first-use-tour.tour-minimized {
+  left: auto;
+  right: 16px;
+  bottom: auto;
+  top: 76px;
+  width: auto;
+  max-width: calc(100vw - 32px);
+  padding: 8px;
+}
+#first-use-tour.tour-minimized .tour-error:empty {
+  display: none;
+}

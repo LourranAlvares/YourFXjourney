@@ -26,7 +26,8 @@
     "test:journal:optional": "node tests/journal-optional.cjs",
     "test:ocr": "node tests/screenshot.cjs",
     "test:session:prompts": "node tests/session-prompts.cjs",
-    "test:ocr:recovery": "node tests/ocr-recovery.cjs"
+    "test:ocr:recovery": "node tests/ocr-recovery.cjs",
+    "test:onboarding": "node tests/onboarding-ui.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"
