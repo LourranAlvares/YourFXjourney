@@ -32,10 +32,10 @@
       route: "home",
     },
     {
-      title: "Conheça o SMC Elite World",
-      text: "Na Home, escolha “Entrar no SMC Elite World”. Clique nas entradas para o personagem caminhar até as salas. O World usa os mesmos dados, com outra experiência visual.",
-      action: "Ir para a Home",
-      route: "home",
+      title: "Acompanhe sua evolução",
+      text: "No Painel, acompanhe os resultados dos registros concluídos, o risco e a evolução da conta. Registros sem resultado conhecido ficam fora das estatísticas financeiras.",
+      action: "Conhecer o Painel",
+      route: "dash",
     },
     {
       title: "Tudo pronto para explorar",
@@ -126,7 +126,7 @@
     host.dataset.owner = K;
     host.setAttribute("aria-label", "Tutorial de primeiro acesso");
     host.classList.toggle("tour-minimized", active && minimized);
-    host.innerHTML = `<div class="tour-heading"><span>SMC Elite · ${active ? "Passo " + (index + 1) + " de " + steps.length : "Boas-vindas"}</span><button type="button" data-tour="skip" aria-label="Pular tutorial">×</button></div><h2>${active ? step.title : "Vamos configurar sua conta?"}</h2><p>${active ? step.text : "Conheça o site em poucos passos, configure sua conta e descubra o Diário e o World. Você também pode pular e explorar por conta própria."}</p>${active ? '<progress aria-label="Progresso do tutorial" max="' + steps.length + '" value="' + (index + 1) + '"></progress>' : ""}${active && configured() ? '<p class="tour-ready">Seu perfil e capital já estão configurados.</p>' : ""}<div class="tour-actions">${!active ? '<button type="button" class="b" data-tour="start">Começar passo a passo</button>' : `${step.action ? '<button type="button" class="b" data-tour="open">' + step.action + "</button>" : ""}${index > 0 ? '<button type="button" class="b s" data-tour="back">Voltar</button>' : ""}<button type="button" class="b s" data-tour="next">${index === steps.length - 1 ? "Concluir tutorial" : "Próximo"}</button>`}<button type="button" class="tour-skip" data-tour="skip">Pular e descobrir sozinho</button></div><p class="tour-error" role="status"></p>`;
+    host.innerHTML = `<div class="tour-heading"><span>SMC Elite · ${active ? "Passo " + (index + 1) + " de " + steps.length : "Boas-vindas"}</span><button type="button" data-tour="skip" aria-label="Pular tutorial">×</button></div><h2>${active ? step.title : "Vamos configurar sua conta?"}</h2><p>${active ? step.text : "Conheça o site em poucos passos, configure sua conta e descubra o Diário e o Painel. Você também pode pular e explorar por conta própria."}</p>${active ? '<progress aria-label="Progresso do tutorial" max="' + steps.length + '" value="' + (index + 1) + '"></progress>' : ""}${active && configured() ? '<p class="tour-ready">Seu perfil e capital já estão configurados.</p>' : ""}<div class="tour-actions">${!active ? '<button type="button" class="b" data-tour="start">Começar passo a passo</button>' : `${step.action ? '<button type="button" class="b" data-tour="open">' + step.action + "</button>" : ""}${index > 0 ? '<button type="button" class="b s" data-tour="back">Voltar</button>' : ""}<button type="button" class="b s" data-tour="next">${index === steps.length - 1 ? "Concluir tutorial" : "Próximo"}</button>`}<button type="button" class="tour-skip" data-tour="skip">Pular e descobrir sozinho</button></div><p class="tour-error" role="status"></p>`;
     if (active && minimized)
       host.innerHTML =
         '<button class="b s" type="button" data-tour="resume">Continuar tutorial · passo ' +

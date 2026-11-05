@@ -577,7 +577,7 @@ function createApp(options = {}) {
       if (
         ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(publicPath)
       ) {
-        const enabled = env.SMC_WORLD_ENABLED !== "false";
+        const enabled = env.SMC_WORLD_ENABLED === "true";
         payload = Buffer.from(
           String(payload).replace(
             "<head>",

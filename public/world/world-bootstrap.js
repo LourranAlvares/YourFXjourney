@@ -2,10 +2,7 @@
 (function () {
   "use strict";
   const meta = document.querySelector('meta[name="smc-world-enabled"]'),
-    enabled = meta
-      ? meta.content === "true"
-      : location.protocol === "file:" ||
-        ["localhost", "127.0.0.1"].includes(location.hostname);
+    enabled = meta?.content === "true";
   if (!enabled) return;
   const baseR = R,
     baseGo = taGo;

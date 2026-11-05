@@ -389,12 +389,10 @@ a lado no desktop. O Painel usa um único gráfico principal com seletor de P&L,
 saldo e drawdown. O topo simplifica a conexão e reúne alertas por regras sobre
 registros explícitos de execução, com estado de leitura salvo na conta.
 
-## SMC Elite World (opcional)
+## SMC Elite World — pausado
 
-Uma segunda navegação com cenários baseados nas referências visuais, entrada por clique e oito salas integradas às ferramentas originais. O personagem caminha até as entradas por clique; as salas têm estações funcionais próprias. A Comunidade tem somente uma prévia marcada como em desenvolvimento. WebGL e SVG permanecem como recuperação se a apresentação por imagens falhar. O clássico continua padrão e não há migração de dados. Na publicação pública, o botão único da Home fica habilitado por padrão; `SMC_WORLD_ENABLED=false` o desativa. Entrar no World continua opcional e o clássico permanece padrão. Consulte [arquitetura, testes, uso e rollback](docs/SMC-ELITE-WORLD.md). `npm run test:world` executa as suítes específicas (requer Playwright/Chromium para UI).
+A pedido do proprietário, o World foi desativado para priorizar o modo principal. Não há botão de entrada nem carregamento de módulos/cenários World no site; o build standalone também deixou de embutir esse código. O tutorial apresenta o Painel no lugar do World. Os arquivos históricos foram preservados para uma eventual retomada; alterar apenas a variável `SMC_WORLD_ENABLED` não recoloca o botão, pois o HTML atual não carrega mais o bootstrap.
 
-Teste visual do World com lobby e interiores por clique: [arquitetura, uso, testes e limites](docs/SMC-ELITE-WORLD-SCENES.md).
-
-Estações funcionais e avatar com caminhada: [arquitetura, validação e limites](docs/SMC-ELITE-WORLD-STATIONS.md).
+`npm run test:world:disabled` verifica ausência de downloads e entrada World, preservação do Diário e a etapa atual do tutorial. As suítes antigas `test:world*` permanecem como referência da implementação pausada, e não são critérios do site principal nesta versão.
 
 O Diário aceita registros com todos os campos opcionais, incluindo apenas prints/notas. O capital inicial pode ser editado a qualquer momento no botão **Capital**. Veja [comportamento e verificações](docs/DIARY-OPTIONAL-CAPITAL.md).
