@@ -157,11 +157,17 @@ async function diarySaveRecord(mode = "auto") {
     // Persist first: a quota/auth failure must keep both saved records and this editor intact.
     persistState(next);
     S = next;
+    if (realized) {
+      diaryMonth = record.close.slice(0, 7);
+      F = { ...F, from: "", to: "", sym: "", strat: "" };
+    }
     shotGeneration++;
     dialog.close();
     R();
     diaryNotice(
-      realized
+      CLOUD_BOOT
+        ? "Registro preservado neste navegador; aguardando confirmação da nuvem."
+        : realized
         ? "Operação salva no Diário."
         : "Registro salvo no Diário. Complete o resultado e a data quando quiser incluir nas estatísticas.",
     );

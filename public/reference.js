@@ -49,7 +49,8 @@ function eliteConnectionLabel() {
   )
     return ["error", "conflict"].includes(eliteCloud.state)
       ? "Atenção"
-      : "Conectado";
+      : eliteCloud.state === "saving" ? "Salvando…"
+      : eliteCloud.pending ? "Pendente" : "Salvo na nuvem";
   if (taConnection.connecting) return "Conectando…";
   return taConnection.authenticated ? "Conectado" : "Desconectado";
 }

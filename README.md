@@ -396,3 +396,5 @@ A pedido do proprietário, o World foi desativado para priorizar o modo principa
 `npm run test:world:disabled` verifica ausência de downloads e entrada World, preservação do Diário e a etapa atual do tutorial. As suítes antigas `test:world*` permanecem como referência da implementação pausada, e não são critérios do site principal nesta versão.
 
 O Diário aceita registros com todos os campos opcionais, incluindo apenas prints/notas. O capital inicial pode ser editado a qualquer momento no botão **Capital**. Veja [comportamento e verificações](docs/DIARY-OPTIONAL-CAPITAL.md).
+
+O Trading Plan preserva rascunhos durante a edição. Salvamentos diferenciam cópia no navegador e confirmação na nuvem; veja [preservação de dados e testes](docs/DATA-PRESERVATION.md).

@@ -1,6 +1,7 @@
 /* Cloud state is scoped by authenticated user. Legacy browser data is opt-in only. */
 const eliteCloud = {
   ready: false,
+  generation: 0,
   user: null,
   revision: 0,
   pending: null,
@@ -25,9 +26,20 @@ function eliteCloudState(state, message) {
   eliteCloud.state = state;
   eliteCloud.message = message;
   eliteCloudAfterRender();
+  if (typeof planDraftCloudStatus === "function") planDraftCloudStatus();
 }
-function eliteCloudCache() {
+function eliteCloudCache(acceptedMutation = null, replace = false) {
   try {
+    const existing = JSON.parse(localStorage.getItem(K) || "null");
+    if (
+      !replace &&
+      existing &&
+      (existing.revision > eliteCloud.revision ||
+        (existing.dirty &&
+          existing.mutationId !== eliteCloud.mutation &&
+          existing.mutationId !== acceptedMutation))
+    )
+      return;
     localStorage.setItem(
       K,
       JSON.stringify({
@@ -49,22 +61,42 @@ function eliteCloudPersist(next) {
     throw Error(
       "Seus dados excedem o limite de envio. Exporte um backup antes de remover imagens.",
     );
-  eliteCloud.pending = JSON.parse(encoded);
-  eliteCloud.mutation = crypto.randomUUID();
+  const snapshot = JSON.parse(encoded),
+    mutation = crypto.randomUUID();
+  const existing = JSON.parse(localStorage.getItem(K) || "null");
+  if (
+    existing &&
+    (existing.revision > eliteCloud.revision ||
+      (existing.dirty && existing.mutationId !== eliteCloud.mutation))
+  ) {
+    eliteCloud.conflict = true;
+    eliteCloudState(
+      "conflict",
+      "Outra aba tem uma versão mais recente ou alterações pendentes. Seus campos foram mantidos; revise o salvamento antes de continuar.",
+    );
+    throw Error(
+      "Outra aba está salvando esta conta. Não feche o editor; revise o conflito nas Configurações.",
+    );
+  }
   try {
     localStorage.setItem(
       K,
       JSON.stringify({
-        data: next,
+        data: snapshot,
         revision: eliteCloud.revision,
         dirty: true,
-        mutationId: eliteCloud.mutation,
+        mutationId: mutation,
       }),
     );
-    eliteCloud.cacheOK = true;
   } catch {
     eliteCloud.cacheOK = false;
+    throw Error(
+      "Não foi possível preservar uma cópia no navegador. Nada foi confirmado como salvo; mantenha o editor aberto e exporte um backup.",
+    );
   }
+  eliteCloud.cacheOK = true;
+  eliteCloud.pending = snapshot;
+  eliteCloud.mutation = mutation;
   eliteCloudState(
     eliteCloud.conflict ? "conflict" : "pending",
     eliteCloud.conflict
@@ -82,6 +114,10 @@ async function eliteCloudFlush() {
   if (!eliteCloud.ready || !eliteCloud.pending || eliteCloud.conflict)
     return false;
   if (eliteCloud.flight) return eliteCloud.flight;
+  const owner = K,
+    generation = eliteCloud.generation;
+  const ownsFlight = () =>
+    eliteCloud.ready && K === owner && eliteCloud.generation === generation;
   const data = eliteCloud.pending,
     mutationId = eliteCloud.mutation,
     revision = eliteCloud.revision;
@@ -92,6 +128,7 @@ async function eliteCloudFlush() {
         method: "PUT",
         body: JSON.stringify({ data, revision, mutationId }),
       });
+      if (!ownsFlight()) return false;
       if (!Number.isSafeInteger(result.revision))
         throw Error("A nuvem não confirmou o salvamento.");
       eliteCloud.revision = result.revision;
@@ -100,13 +137,14 @@ async function eliteCloudFlush() {
         eliteCloud.pending = null;
         eliteCloud.mutation = null;
       }
-      eliteCloudCache();
+      eliteCloudCache(mutationId);
       eliteCloudState(
         eliteCloud.pending ? "pending" : "saved",
         eliteCloud.pending ? "Enviando últimas alterações…" : "Salvo na nuvem",
       );
       return true;
     } catch (e) {
+      if (!ownsFlight()) return false;
       if (e.status === 409) {
         eliteCloud.conflict = true;
         eliteCloudState(
@@ -125,13 +163,15 @@ async function eliteCloudFlush() {
       }
       return false;
     } finally {
-      eliteCloud.flight = null;
-      clearTimeout(eliteCloud.timer);
-      if (eliteCloud.pending && !eliteCloud.conflict && eliteCloud.ready)
-        eliteCloud.timer = setTimeout(
-          eliteCloudFlush,
-          Math.min(60000, eliteCloud.retry ? 10000 * eliteCloud.retry : 1000),
-        );
+      if (ownsFlight()) {
+        eliteCloud.flight = null;
+        clearTimeout(eliteCloud.timer);
+        if (eliteCloud.pending && !eliteCloud.conflict && eliteCloud.ready)
+          eliteCloud.timer = setTimeout(
+            eliteCloudFlush,
+            Math.min(60000, eliteCloud.retry ? 10000 * eliteCloud.retry : 1000),
+          );
+      }
     }
   })();
   return eliteCloud.flight;
@@ -149,10 +189,7 @@ function eliteCloudAfterRender() {
     label.classList.add("cloud-status");
     label.dataset.state = eliteCloud.state;
     label.setAttribute("role", "status");
-    label.title =
-      typeof eliteConnectionLabel === "function"
-        ? eliteConnectionLabel()
-        : eliteCloud.message;
+    label.title = eliteCloud.message;
   }
   const small = document.querySelector(".elite-profile small");
   if (small) small.textContent = eliteCloud.user.email;
@@ -193,10 +230,14 @@ function eliteCloudGate(message) {
     `<section class="cloud-gate"><h1>Seu espaço SMC Elite</h1><p role="status">${esc(message)}</p><div><button class="b" onclick="eliteCloudBoot()">Tentar novamente</button> <a href="/account">Minha conta</a></div></section>`;
 }
 async function eliteCloudBoot() {
+  const generation = ++eliteCloud.generation;
+  clearTimeout(eliteCloud.timer);
+  eliteCloud.flight = null;
   eliteCloud.ready = false;
   eliteCloudGate("Carregando seus dados na nuvem…");
   try {
     await taCheckConnection(true);
+    if (generation !== eliteCloud.generation) return;
     const user = taConnection.user;
     if (!taConnection.authenticated || !user || user.status !== "active") {
       location.replace("/account");
@@ -205,6 +246,7 @@ async function eliteCloudBoot() {
     eliteCloud.user = user;
     K = "elitex-workspace:" + user.id;
     const remote = await taApi("/api/workspace");
+    if (generation !== eliteCloud.generation) return;
     if (
       !remote.data ||
       !Array.isArray(remote.data.trades) ||
@@ -219,8 +261,13 @@ async function eliteCloudBoot() {
     } catch {}
     eliteCloud.revision = remote.revision;
     eliteCloud.pending = null;
+    eliteCloud.mutation = null;
     eliteCloud.conflict = false;
-    if (cached?.dirty && cached.data && Array.isArray(cached.data.trades)) {
+    if (
+      (cached?.dirty || cached?.revision > remote.revision) &&
+      cached.data &&
+      Array.isArray(cached.data.trades)
+    ) {
       S = cached.data;
       eliteCloud.pending = cached.data;
       eliteCloud.mutation = cached.mutationId || crypto.randomUUID();
@@ -254,6 +301,7 @@ async function eliteCloudBoot() {
     R();
     if (eliteCloud.pending && !eliteCloud.conflict) eliteCloudFlush();
   } catch (e) {
+    if (generation !== eliteCloud.generation) return;
     eliteCloudGate(e.message + " Seu histórico local não foi apagado.");
   }
 }
@@ -315,7 +363,7 @@ async function eliteCloudLoadRemote() {
     eliteCloud.pending = null;
     eliteCloud.mutation = null;
     eliteCloud.conflict = false;
-    eliteCloudCache();
+    eliteCloudCache(null, true);
     eliteCloudState("saved", "Versão da nuvem carregada");
     document.querySelectorAll("dialog[open]").forEach((d) => d.close());
     R();

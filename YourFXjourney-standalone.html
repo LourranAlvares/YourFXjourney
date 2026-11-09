@@ -15905,6 +15905,7 @@ function taReadCriterion(row) {
   };
 }
 function taSavePlan() {
+  if (typeof planDraftCapture === "function" && !planDraftCapture(true)) return;
   try {
     const prev = taCurrentPlan(),
       draft = {
@@ -15941,10 +15942,14 @@ function taSavePlan() {
     ])
       draft[key] = $("#tp-" + key).value;
     const plan = TradePlanEngine.validatePlan(draft);
-    if (taPersist({ tradingPlans: [...taPlans(), plan] })) R();
+    if (taPersist({ tradingPlans: [...taPlans(), plan], tradingPlanDraft: null })) {
+      if (typeof planDraftSaved === "function") planDraftSaved();
+      R();
+    }
   } catch (e) {
     $("#ta-plan-error").textContent =
       e.message + (e.issues ? " · " + e.issues.join("; ") : "");
+    if (typeof planDraftNotice === "function") planDraftNotice("Rascunho salvo. Para ativar o plano, complete ou corrija os critérios indicados: " + e.message + (e.issues ? " · " + e.issues.join("; ") : ""));
   }
 }
 function taShowPlanVersion(version) {
@@ -18282,11 +18287,17 @@ async function diarySaveRecord(mode = "auto") {
     // Persist first: a quota/auth failure must keep both saved records and this editor intact.
     persistState(next);
     S = next;
+    if (realized) {
+      diaryMonth = record.close.slice(0, 7);
+      F = { ...F, from: "", to: "", sym: "", strat: "" };
+    }
     shotGeneration++;
     dialog.close();
     R();
     diaryNotice(
-      realized
+      CLOUD_BOOT
+        ? "Registro preservado neste navegador; aguardando confirmação da nuvem."
+        : realized
         ? "Operação salva no Diário."
         : "Registro salvo no Diário. Complete o resultado e a data quando quiser incluir nas estatísticas.",
     );
@@ -19604,7 +19615,8 @@ function eliteConnectionLabel() {
   )
     return ["error", "conflict"].includes(eliteCloud.state)
       ? "Atenção"
-      : "Conectado";
+      : eliteCloud.state === "saving" ? "Salvando…"
+      : eliteCloud.pending ? "Pendente" : "Salvo na nuvem";
   if (taConnection.connecting) return "Conectando…";
   return taConnection.authenticated ? "Conectado" : "Desconectado";
 }
@@ -20780,6 +20792,7 @@ window.addEventListener("resize", () => {
 <script>/* Cloud state is scoped by authenticated user. Legacy browser data is opt-in only. */
 const eliteCloud = {
   ready: false,
+  generation: 0,
   user: null,
   revision: 0,
   pending: null,
@@ -20804,9 +20817,20 @@ function eliteCloudState(state, message) {
   eliteCloud.state = state;
   eliteCloud.message = message;
   eliteCloudAfterRender();
+  if (typeof planDraftCloudStatus === "function") planDraftCloudStatus();
 }
-function eliteCloudCache() {
+function eliteCloudCache(acceptedMutation = null, replace = false) {
   try {
+    const existing = JSON.parse(localStorage.getItem(K) || "null");
+    if (
+      !replace &&
+      existing &&
+      (existing.revision > eliteCloud.revision ||
+        (existing.dirty &&
+          existing.mutationId !== eliteCloud.mutation &&
+          existing.mutationId !== acceptedMutation))
+    )
+      return;
     localStorage.setItem(
       K,
       JSON.stringify({
@@ -20828,22 +20852,42 @@ function eliteCloudPersist(next) {
     throw Error(
       "Seus dados excedem o limite de envio. Exporte um backup antes de remover imagens.",
     );
-  eliteCloud.pending = JSON.parse(encoded);
-  eliteCloud.mutation = crypto.randomUUID();
+  const snapshot = JSON.parse(encoded),
+    mutation = crypto.randomUUID();
+  const existing = JSON.parse(localStorage.getItem(K) || "null");
+  if (
+    existing &&
+    (existing.revision > eliteCloud.revision ||
+      (existing.dirty && existing.mutationId !== eliteCloud.mutation))
+  ) {
+    eliteCloud.conflict = true;
+    eliteCloudState(
+      "conflict",
+      "Outra aba tem uma versão mais recente ou alterações pendentes. Seus campos foram mantidos; revise o salvamento antes de continuar.",
+    );
+    throw Error(
+      "Outra aba está salvando esta conta. Não feche o editor; revise o conflito nas Configurações.",
+    );
+  }
   try {
     localStorage.setItem(
       K,
       JSON.stringify({
-        data: next,
+        data: snapshot,
         revision: eliteCloud.revision,
         dirty: true,
-        mutationId: eliteCloud.mutation,
+        mutationId: mutation,
       }),
     );
-    eliteCloud.cacheOK = true;
   } catch {
     eliteCloud.cacheOK = false;
+    throw Error(
+      "Não foi possível preservar uma cópia no navegador. Nada foi confirmado como salvo; mantenha o editor aberto e exporte um backup.",
+    );
   }
+  eliteCloud.cacheOK = true;
+  eliteCloud.pending = snapshot;
+  eliteCloud.mutation = mutation;
   eliteCloudState(
     eliteCloud.conflict ? "conflict" : "pending",
     eliteCloud.conflict
@@ -20861,6 +20905,10 @@ async function eliteCloudFlush() {
   if (!eliteCloud.ready || !eliteCloud.pending || eliteCloud.conflict)
     return false;
   if (eliteCloud.flight) return eliteCloud.flight;
+  const owner = K,
+    generation = eliteCloud.generation;
+  const ownsFlight = () =>
+    eliteCloud.ready && K === owner && eliteCloud.generation === generation;
   const data = eliteCloud.pending,
     mutationId = eliteCloud.mutation,
     revision = eliteCloud.revision;
@@ -20871,6 +20919,7 @@ async function eliteCloudFlush() {
         method: "PUT",
         body: JSON.stringify({ data, revision, mutationId }),
       });
+      if (!ownsFlight()) return false;
       if (!Number.isSafeInteger(result.revision))
         throw Error("A nuvem não confirmou o salvamento.");
       eliteCloud.revision = result.revision;
@@ -20879,13 +20928,14 @@ async function eliteCloudFlush() {
         eliteCloud.pending = null;
         eliteCloud.mutation = null;
       }
-      eliteCloudCache();
+      eliteCloudCache(mutationId);
       eliteCloudState(
         eliteCloud.pending ? "pending" : "saved",
         eliteCloud.pending ? "Enviando últimas alterações…" : "Salvo na nuvem",
       );
       return true;
     } catch (e) {
+      if (!ownsFlight()) return false;
       if (e.status === 409) {
         eliteCloud.conflict = true;
         eliteCloudState(
@@ -20904,13 +20954,15 @@ async function eliteCloudFlush() {
       }
       return false;
     } finally {
-      eliteCloud.flight = null;
-      clearTimeout(eliteCloud.timer);
-      if (eliteCloud.pending && !eliteCloud.conflict && eliteCloud.ready)
-        eliteCloud.timer = setTimeout(
-          eliteCloudFlush,
-          Math.min(60000, eliteCloud.retry ? 10000 * eliteCloud.retry : 1000),
-        );
+      if (ownsFlight()) {
+        eliteCloud.flight = null;
+        clearTimeout(eliteCloud.timer);
+        if (eliteCloud.pending && !eliteCloud.conflict && eliteCloud.ready)
+          eliteCloud.timer = setTimeout(
+            eliteCloudFlush,
+            Math.min(60000, eliteCloud.retry ? 10000 * eliteCloud.retry : 1000),
+          );
+      }
     }
   })();
   return eliteCloud.flight;
@@ -20928,10 +20980,7 @@ function eliteCloudAfterRender() {
     label.classList.add("cloud-status");
     label.dataset.state = eliteCloud.state;
     label.setAttribute("role", "status");
-    label.title =
-      typeof eliteConnectionLabel === "function"
-        ? eliteConnectionLabel()
-        : eliteCloud.message;
+    label.title = eliteCloud.message;
   }
   const small = document.querySelector(".elite-profile small");
   if (small) small.textContent = eliteCloud.user.email;
@@ -20972,10 +21021,14 @@ function eliteCloudGate(message) {
     `<section class="cloud-gate"><h1>Seu espaço SMC Elite</h1><p role="status">${esc(message)}</p><div><button class="b" onclick="eliteCloudBoot()">Tentar novamente</button> <a href="/account">Minha conta</a></div></section>`;
 }
 async function eliteCloudBoot() {
+  const generation = ++eliteCloud.generation;
+  clearTimeout(eliteCloud.timer);
+  eliteCloud.flight = null;
   eliteCloud.ready = false;
   eliteCloudGate("Carregando seus dados na nuvem…");
   try {
     await taCheckConnection(true);
+    if (generation !== eliteCloud.generation) return;
     const user = taConnection.user;
     if (!taConnection.authenticated || !user || user.status !== "active") {
       location.replace("/account");
@@ -20984,6 +21037,7 @@ async function eliteCloudBoot() {
     eliteCloud.user = user;
     K = "elitex-workspace:" + user.id;
     const remote = await taApi("/api/workspace");
+    if (generation !== eliteCloud.generation) return;
     if (
       !remote.data ||
       !Array.isArray(remote.data.trades) ||
@@ -20998,8 +21052,13 @@ async function eliteCloudBoot() {
     } catch {}
     eliteCloud.revision = remote.revision;
     eliteCloud.pending = null;
+    eliteCloud.mutation = null;
     eliteCloud.conflict = false;
-    if (cached?.dirty && cached.data && Array.isArray(cached.data.trades)) {
+    if (
+      (cached?.dirty || cached?.revision > remote.revision) &&
+      cached.data &&
+      Array.isArray(cached.data.trades)
+    ) {
       S = cached.data;
       eliteCloud.pending = cached.data;
       eliteCloud.mutation = cached.mutationId || crypto.randomUUID();
@@ -21033,6 +21092,7 @@ async function eliteCloudBoot() {
     R();
     if (eliteCloud.pending && !eliteCloud.conflict) eliteCloudFlush();
   } catch (e) {
+    if (generation !== eliteCloud.generation) return;
     eliteCloudGate(e.message + " Seu histórico local não foi apagado.");
   }
 }
@@ -21094,7 +21154,7 @@ async function eliteCloudLoadRemote() {
     eliteCloud.pending = null;
     eliteCloud.mutation = null;
     eliteCloud.conflict = false;
-    eliteCloudCache();
+    eliteCloudCache(null, true);
     eliteCloudState("saved", "Versão da nuvem carregada");
     document.querySelectorAll("dialog[open]").forEach((d) => d.close());
     R();
@@ -26700,6 +26760,165 @@ document.addEventListener("pointerdown", (event) => {
       document.getElementById("main")?.append(area);
     }
   };
+})();
+</script>
+<script>/* Preserve the editable plan independently of validation and immutable active versions. */
+(function () {
+  let memory = null,
+    baseline = "",
+    timer = null,
+    suppress = false,
+    message = "",
+    owner = null;
+  function snapshot() {
+    const form = document.getElementById("ta-plan-form");
+    if (!form || form.dataset.draftOwner !== K) return null;
+    return {
+      fields: Object.fromEntries(
+        [...form.querySelectorAll('[id^="tp-"]')].map((el) => [
+          el.id,
+          el.type === "checkbox" ? el.checked : el.value,
+        ]),
+      ),
+      criteria: [...form.querySelectorAll(".ta-criterion")].map((row) => ({
+        id: row.dataset.criterionId,
+        ...Object.fromEntries(
+          [...row.querySelectorAll("[data-cfield]")].map((el) => [
+            el.dataset.cfield,
+            el.type === "checkbox" ? el.checked : el.value,
+          ]),
+        ),
+      })),
+    };
+  }
+  window.planDraftNotice = function (text) {
+    message = text;
+    let node = document.getElementById("plan-save-notice");
+    if (node) node.textContent = text;
+  };
+  window.planDraftCapture = function (force = false) {
+    clearTimeout(timer);
+    if (suppress || (CLOUD_BOOT && !eliteCloud.ready)) return true;
+    const data = snapshot();
+    if (!data) return true;
+    const signature = JSON.stringify(data);
+    if (!force && signature === baseline && !memory) return true;
+    if (memory?.owner !== K) memory = null;
+    if (!force && memory?.written === signature) return true;
+    memory = { owner: K, data, written: memory?.written };
+    try {
+      const next = {
+        ...S,
+        tradingPlanDraft: {
+          version: 1,
+          baseVersion: taCurrentPlan()?.version || 0,
+          data,
+          updatedAt: new Date().toISOString(),
+        },
+      };
+      persistState(next);
+      S = next;
+      memory.written = signature;
+      planDraftNotice(
+        CLOUD_BOOT
+          ? "Rascunho preservado neste navegador; aguardando confirmação da nuvem."
+          : "Rascunho salvo neste navegador.",
+      );
+      return true;
+    } catch (e) {
+      planDraftNotice(
+        "Não foi possível salvar o rascunho. Seus campos continuam nesta aba. " +
+          e.message,
+      );
+      return false;
+    }
+  };
+  window.planDraftSaved = function () {
+    memory = null;
+    baseline = "";
+    suppress = true;
+    message = CLOUD_BOOT
+      ? "Plano preservado neste navegador; aguardando confirmação da nuvem."
+      : "Plano salvo neste navegador.";
+  };
+  window.planDraftCloudStatus = function () {
+    if (
+      CLOUD_BOOT &&
+      eliteCloud.state === "saved" &&
+      message.includes("aguardando confirmação")
+    )
+      planDraftNotice(
+        S.tradingPlanDraft
+          ? "Rascunho confirmado na nuvem."
+          : "Plano confirmado na nuvem.",
+      );
+  };
+  const render = R;
+  R = function () {
+    planDraftCapture();
+    const result = render.apply(this, arguments);
+    suppress = false;
+    const form = document.getElementById("ta-plan-form");
+    if (!form) return result;
+    form.dataset.draftOwner = K;
+    form.noValidate = true;
+    if (owner !== K) {
+      memory = null;
+      message = "";
+      owner = K;
+    }
+    const draft = memory?.data || S.tradingPlanDraft?.data;
+    if (draft) {
+      for (const [id, value] of Object.entries(draft.fields || {})) {
+        const el = document.getElementById(id);
+        if (!el || !form.contains(el)) continue;
+        if (el.type === "checkbox") el.checked = !!value;
+        else el.value = value;
+      }
+      if (Array.isArray(draft.criteria))
+        document.getElementById("ta-plan-criteria").innerHTML = draft.criteria
+          .map(taPlanVisualCriterion)
+          .join("");
+    }
+    baseline = JSON.stringify(snapshot());
+    const notice = document.createElement("p");
+    notice.id = "plan-save-notice";
+    notice.setAttribute("role", "status");
+    notice.setAttribute("aria-live", "polite");
+    notice.className = "muted-note";
+    form.querySelector(".plan-design-top").after(notice);
+    planDraftNotice(
+      message ||
+        (draft
+          ? "Rascunho recuperado. Seus campos foram preservados; Salvar plano ativa uma versão validada."
+          : ""),
+    );
+    return result;
+  };
+  for (const name of ["input", "change"])
+    document.addEventListener(name, (event) => {
+      if (!event.target.closest("#ta-plan-form")) return;
+      const data = snapshot();
+      if (!data) return;
+      memory = {
+        owner: K,
+        data,
+        written: memory?.owner === K ? memory.written : null,
+      };
+      clearTimeout(timer);
+      timer = setTimeout(() => planDraftCapture(), 350);
+    });
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("#ta-plan-form button")) {
+      clearTimeout(timer);
+      timer = setTimeout(() => planDraftCapture(), 0);
+    }
+  });
+  for (const name of ["pagehide", "beforeunload"])
+    window.addEventListener(name, () => planDraftCapture());
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) planDraftCapture();
+  });
 })();
 </script>
 <script>if(CLOUD_BOOT){eliteCloudBoot()}else{R();taCheckConnection()}setInterval(()=>{if(CLOUD_BOOT&&!eliteCloud.ready)return;if(['home','economic'].includes(tab)&&!document.querySelector('dialog[open]')&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))R()},60000);</script></body></html>

@@ -511,6 +511,7 @@ function taReadCriterion(row) {
   };
 }
 function taSavePlan() {
+  if (typeof planDraftCapture === "function" && !planDraftCapture(true)) return;
   try {
     const prev = taCurrentPlan(),
       draft = {
@@ -547,10 +548,14 @@ function taSavePlan() {
     ])
       draft[key] = $("#tp-" + key).value;
     const plan = TradePlanEngine.validatePlan(draft);
-    if (taPersist({ tradingPlans: [...taPlans(), plan] })) R();
+    if (taPersist({ tradingPlans: [...taPlans(), plan], tradingPlanDraft: null })) {
+      if (typeof planDraftSaved === "function") planDraftSaved();
+      R();
+    }
   } catch (e) {
     $("#ta-plan-error").textContent =
       e.message + (e.issues ? " · " + e.issues.join("; ") : "");
+    if (typeof planDraftNotice === "function") planDraftNotice("Rascunho salvo. Para ativar o plano, complete ou corrija os critérios indicados: " + e.message + (e.issues ? " · " + e.issues.join("; ") : ""));
   }
 }
 function taShowPlanVersion(version) {
