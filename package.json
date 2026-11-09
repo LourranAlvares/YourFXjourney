@@ -28,7 +28,8 @@
     "test:session:prompts": "node tests/session-prompts.cjs",
     "test:ocr:recovery": "node tests/ocr-recovery.cjs",
     "test:onboarding": "node tests/onboarding-ui.cjs",
-    "test:world:disabled": "node tests/world-disabled.cjs"
+    "test:world:disabled": "node tests/world-disabled.cjs",
+    "test:ocr:charts": "node tests/shot-reader.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"
