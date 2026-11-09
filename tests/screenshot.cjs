@@ -121,6 +121,7 @@ const { chromium } = require("playwright"),
     await p.evaluate(() => editShotDraft(S.tradeDrafts[0].id));
   });
   await test("optional emotions, planned stop/target/RR and screenshot persist without changing closed trades", async () => {
+    await p.locator("#journal-notes > summary").click();
     await p.locator("#f_emotion").selectOption("Calmo");
     await p
       .getByRole("button", { name: "Salvar planejamento", exact: true })

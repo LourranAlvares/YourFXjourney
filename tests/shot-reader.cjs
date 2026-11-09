@@ -108,7 +108,7 @@ const assert = require("node:assert/strict"),
       assert.equal(fields.pnl, "");
       assert.equal(fields.risk, "");
       assert(
-        (await p.locator("#trade-technical").getAttribute("open")) !== null,
+        (await p.locator("#journal-prices").getAttribute("open")) !== null,
       );
       await p.evaluate(() => saveT());
       assert.equal(await p.evaluate(() => S.tradeDrafts.at(-1).img.length), 1);

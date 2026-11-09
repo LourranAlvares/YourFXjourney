@@ -71,6 +71,7 @@ const { chromium } = require("playwright"),
     await p.locator("#f_symbol").fill("GBPUSD");
     await p.locator("#f_close").fill("2026-10-01T14:00");
     await p.locator("#f_pnl").fill("50");
+    await p.locator("#journal-notes > summary").click();
     await p.locator("#f_feelings").fill("Concentrado");
     await p
       .locator("#dlg")

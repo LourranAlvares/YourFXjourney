@@ -460,7 +460,7 @@ function createApp(options = {}) {
           json(res, 200, { authenticated: false });
           return;
         }
-        const aiRoute = ["/api/analyse", "/api/briefing"].includes(
+        const aiRoute = ["/api/analyse", "/api/briefing", "/api/extract-trade"].includes(
           url.pathname,
         );
         rate(
@@ -479,6 +479,10 @@ function createApp(options = {}) {
             200,
             await providers.briefing(await body(req), current.token),
           );
+          return;
+        }
+        if (req.method === "POST" && url.pathname === "/api/extract-trade") {
+          json(res, 200, await providers.extractTrade(await body(req), current.token));
           return;
         }
         if (req.method === "POST" && url.pathname === "/api/analyse") {

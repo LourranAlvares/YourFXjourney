@@ -398,3 +398,5 @@ A pedido do proprietário, o World foi desativado para priorizar o modo principa
 O Diário aceita registros com todos os campos opcionais, incluindo apenas prints/notas. O capital inicial pode ser editado a qualquer momento no botão **Capital**. Veja [comportamento e verificações](docs/DIARY-OPTIONAL-CAPITAL.md).
 
 O Trading Plan preserva rascunhos durante a edição. Salvamentos diferenciam cópia no navegador e confirmação na nuvem; veja [preservação de dados e testes](docs/DATA-PRESERVATION.md).
+
+O Diário oferece cadastro rápido, valores monetários com vírgula/ponto, Ganho/Perda, sugestões pessoais e leitura com IA por solicitação explícita. Veja [uso, privacidade e testes](docs/JOURNAL-PRACTICAL.md).

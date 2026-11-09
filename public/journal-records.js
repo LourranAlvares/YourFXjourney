@@ -84,14 +84,25 @@ function diaryReadRecord() {
   for (const [key, , type] of FL) {
     const input = document.getElementById("f_" + key),
       raw = input?.value ?? "";
-    record[key] =
-      type === "number"
-        ? raw.trim() === ""
-          ? null
-          : Number.isFinite(Number(raw))
-            ? Number(raw)
-            : null
-        : raw;
+    if (type === "number") {
+      const parsed =
+        typeof diaryFieldNumber === "function"
+          ? diaryFieldNumber(key, raw)
+          : rNumber(raw);
+      if (raw.trim() && parsed === null)
+        throw Error(
+          "Confira o valor de " +
+            (FL.find((f) => f[0] === key)?.[1] || key) +
+            ". Use números como -5,20 ou -5.20.",
+        );
+      record[key] = parsed;
+    } else record[key] = raw;
+  }
+  if (document.getElementById("f_leverage")) {
+    const raw = document.getElementById("f_leverage").value;
+    record.leverage = diaryFieldNumber("leverage", raw);
+    if (raw.trim() && record.leverage === null)
+      throw Error("Confira a alavancagem informada.");
   }
   record.symbol = String(record.symbol || "")
     .trim()
@@ -168,8 +179,8 @@ async function diarySaveRecord(mode = "auto") {
       CLOUD_BOOT
         ? "Registro preservado neste navegador; aguardando confirmação da nuvem."
         : realized
-        ? "Operação salva no Diário."
-        : "Registro salvo no Diário. Complete o resultado e a data quando quiser incluir nas estatísticas.",
+          ? "Operação salva no Diário."
+          : "Registro salvo no Diário. Complete o resultado e a data quando quiser incluir nas estatísticas.",
     );
     return true;
   } catch (error) {
@@ -202,8 +213,12 @@ function diaryEditPartial(id) {
     document.getElementById("shot-results").innerHTML =
       '<label class="shot-review"><input id="shot-reviewed" type="checkbox"> Conferi os campos reconhecidos para usar nos resultados</label>';
   }
-  document.getElementById("trade-technical").open = true;
+  document.getElementById("trade-technical").open =
+    typeof journalQuickRefresh !== "function";
+  if (document.getElementById("f_leverage"))
+    document.getElementById("f_leverage").value = cur.leverage ?? "";
   thumbs();
+  if (typeof journalQuickRefresh === "function") journalQuickRefresh(true);
   document.getElementById("shot-status").textContent =
     "Todos os campos são opcionais. Seus prints e notas podem ser salvos sem resultado financeiro.";
 }
@@ -218,7 +233,7 @@ function diaryPartialList() {
       const image = (record.img || []).find(
         (src) => typeof taSafeImage === "function" && taSafeImage(src),
       );
-      return `<article class="diary-partial-card">${image ? `<img src="${esc(image)}" alt="Print do registro ${esc(record.symbol || "sem ativo")}" loading="lazy">` : ""}<div><h3>${esc(record.symbol || "Registro sem ativo informado")}</h3><p>${esc(record.notes || record.lesson || record.feelings || "Você pode adicionar detalhes quando quiser.")}</p><small>${esc(record.close || "Data da operação não informada")}</small><div class="row"><button class="b s" data-id="${esc(record.id)}" onclick="editShotDraft(this.dataset.id)">Revisar / concluir</button><button class="b s" data-id="${esc(record.id)}" onclick="deleteShotDraft(this.dataset.id)">Excluir registro</button></div></div></article>`;
+      return `<article class="diary-partial-card">${image ? `<img src="${esc(image)}" alt="Print do registro ${esc(record.symbol || "sem ativo")}" loading="lazy">` : ""}<div><h3>${esc(record.symbol || "Registro sem ativo informado")}</h3><p>${esc(record.notes || record.lesson || record.feelings || "Você pode adicionar detalhes quando quiser.")}</p><small>${esc(record.close || "Fechamento não informado")}</small>${typeof record.pnl === "number" ? `<p>Resultado informado: <b>${esc(formatAccountMoney(record.pnl))}</b> · aguardando conclusão</p>` : ""}<div class="row"><button class="b s" data-id="${esc(record.id)}" onclick="editShotDraft(this.dataset.id)">Revisar / concluir</button><button class="b s" data-id="${esc(record.id)}" onclick="deleteShotDraft(this.dataset.id)">Excluir registro</button></div></div></article>`;
     })
     .join("")}</div></section>`;
 }

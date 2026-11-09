@@ -94,6 +94,7 @@ const assert = require("node:assert/strict"),
       taGo("trades");
       edit(null);
     });
+    await a.locator("#journal-notes > summary").click();
     await a.locator("#f_notes").fill("Registro manual offline");
     await a
       .locator("#dlg")
@@ -123,6 +124,7 @@ const assert = require("node:assert/strict"),
         throw Error("quota");
       };
     });
+    await a.locator("#journal-notes > summary").click();
     await a.locator("#f_notes").fill("Não pode confirmar se não salvou");
     await a
       .locator("#dlg")

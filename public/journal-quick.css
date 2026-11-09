@@ -1,0 +1,91 @@
+.journal-side-choices,
+.journal-suggestions,
+.journal-reader-tools {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.journal-side-choices button[aria-pressed="true"] {
+  border-color: var(--ac);
+  background: #b6954d33;
+}
+.journal-suggestions {
+  margin-top: 6px;
+}
+.journal-suggestions button {
+  font-size: 11px;
+  padding: 4px 8px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.journal-result-hint {
+  padding: 12px;
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  color: var(--tx);
+}
+.journal-prices {
+  margin: 12px 0 18px;
+  padding: 14px;
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+}
+.journal-prices summary {
+  cursor: pointer;
+  color: var(--ac);
+}
+.journal-prices .fg {
+  margin-top: 14px;
+}
+.journal-reader-tools {
+  align-items: center;
+  margin: 12px 0;
+}
+.journal-reader-tools small {
+  flex-basis: 100%;
+  line-height: 1.5;
+  color: var(--mu);
+}
+#dlg .diary-quick-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+#dlg #f_close + button {
+  margin-top: 6px;
+  align-self: flex-start;
+}
+@media (max-width: 480px) {
+  #dlg .diary-quick-fields {
+    grid-template-columns: 1fr;
+  }
+}
+#journal-shot-area {
+  border: 1px solid var(--bd);
+  border-radius: 9px;
+  margin: 12px 0;
+}
+#journal-shot-area > summary {
+  padding: 14px;
+  cursor: pointer;
+  color: var(--ac);
+}
+#journal-shot-area .shot-intake {
+  margin: 0;
+  border: 0;
+  padding-top: 8px;
+}
+#journal-shot-area #th {
+  padding: 0 14px;
+}
+#journal-notes > label {
+  display: block;
+  margin-top: 14px;
+}
+#dlg > .row {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background: #10151b;
+  border-top: 1px solid var(--bd);
+  padding: 12px 0;
+  margin-top: 12px;
+}

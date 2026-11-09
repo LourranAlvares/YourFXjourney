@@ -86,7 +86,7 @@ const assert = require("node:assert/strict"),
         { short, scale, encoding },
       );
       await p.evaluate(() => edit(null));
-      assert.match(await p.locator("#shot-reader-version").innerText(), /TV-2/);
+      assert.match(await p.locator("#shot-reader-version").innerText(), /TV-3/);
       await p
         .locator("#shot-file")
         .setInputFiles({

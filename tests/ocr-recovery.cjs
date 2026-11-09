@@ -56,7 +56,7 @@ const assert = require("node:assert/strict"),
     await p.waitForFunction(() =>
       document
         .querySelector("#shot-status")
-        .textContent.startsWith("Leitura concluída"),
+        .textContent.match(/^Leitura (concluída|parcial)/),
     );
     await p.evaluate(() => saveT());
     assert.equal(await p.evaluate(() => S.tradeDrafts.length), 2);

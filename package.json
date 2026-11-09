@@ -31,7 +31,8 @@
     "test:world:disabled": "node tests/world-disabled.cjs",
     "test:ocr:charts": "node tests/shot-reader.cjs",
     "test:ocr:tv-format": "node tests/shot-tv-format.cjs",
-    "test:data:durability": "node tests/data-durability.cjs"
+    "test:data:durability": "node tests/data-durability.cjs",
+    "test:journal:practical": "node tests/journal-practical.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.13"
