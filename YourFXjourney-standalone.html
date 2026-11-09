@@ -13941,7 +13941,7 @@ for(const [key,label] of [['open','Open(?: time)?|Abertura'],['close','Close(?: 
 if(out.entry>0&&out.stop>0&&out.target>0){if(out.stop<out.entry&&out.target>out.entry)out.side='long';else if(out.stop>out.entry&&out.target<out.entry)out.side='short';else issues.push('Entrada, stop e alvo não formam uma posição válida.');if(out.side){const ratio=Math.abs(out.target-out.entry)/Math.abs(out.entry-out.stop);if(out.plannedRR!=null&&Math.abs(out.plannedRR-ratio)>.05){issues.push('R:R lido diverge dos preços; confira os níveis.');delete out.plannedRR}else out.plannedRR=ratio}}
 for(const k of ['entry','stop','target','risk','size','plannedRR'])if(out[k]!=null&&out[k]<=0){delete out[k];issues.push('Valor inválido de '+k+'.')}
 return {fields:out,evidence,issues}}
-function shotPanel(){return `<section class="shot-intake" ondragover="event.preventDefault()" ondrop="event.preventDefault();readTradingShot(event.dataTransfer.files[0])"><div class="eyebrow">Cadastro rápido</div><h3>Comece com um print do TradingView</h3><p>Escolha, arraste ou cole uma imagem completa e legível, com os rótulos e níveis da posição visíveis.</p><label class="b">Ler print<input id="shot-file" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="const file=this.files[0];this.value='';readTradingShot(file)"></label><p id="shot-status" role="status" class="muted-note"></p><div id="shot-results"></div><p class="muted-note">Leitura local. Rótulos ausentes ou ambíguos não são adivinhados. Um alvo no gráfico não comprova uma saída realizada.</p></section>`}
+function shotPanel(){return `<section class="shot-intake" ondragover="event.preventDefault()" ondrop="event.preventDefault();readTradingShot(event.dataTransfer.files[0])"><div class="eyebrow">Cadastro rápido</div><h3>Comece com um print do TradingView</h3><small id="shot-reader-version">Leitor TradingView · TV-2</small><p>Escolha, arraste ou cole uma imagem completa e legível, com os rótulos e níveis da posição visíveis.</p><label class="b">Ler print<input id="shot-file" type="file" accept="image/png,image/jpeg,image/webp" hidden onchange="const file=this.files[0];this.value='';readTradingShot(file)"></label><p id="shot-status" role="status" class="muted-note"></p><div id="shot-results"></div><p class="muted-note">Leitura local. Rótulos ausentes ou ambíguos não são adivinhados. Um alvo no gráfico não comprova uma saída realizada.</p></section>`}
 function shotReadFields(){const o={...cur};FL.forEach(([k,,ty])=>{const v=$('#f_'+k).value;o[k]=ty==='number'?(v===''?null:Number(v)):v});if(o.importSource==='mt5')o.mt5StopConfirmed=!!$('#f_mt5_stop_confirmed')?.checked;o.feelings=$('#f_feelings').value;o.notes=$('#f_notes').value;o.lesson=$('#f_lesson').value;const b=insReadBehavior();if(b)o.behavior=b;else delete o.behavior;return o}
 function shotWait(promise){return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('A leitura demorou demais. Tente outra captura.')),60000);Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value)},error=>{clearTimeout(timer);reject(error)})})}
 let shotRuntime=null;
@@ -13951,7 +13951,7 @@ async function readPositionLabels(worker,canvas){const {width:w,height:h}=canvas
 if(bands.red.length!==1||bands.green.length!==1)return {text:'',issues:[]};const a=bands.red[0],b=bands.green[0],gray=bands.gray.filter(g=>g.top>Math.min(a.bottom,b.bottom)&&g.bottom<Math.max(a.top,b.top));if(gray.length!==1)return {text:'',issues:['Níveis coloridos encontrados, mas a entrada cinza não está inequívoca.']};let redArea=0,greenArea=0;for(let y=Math.min(a.top,b.top);y<Math.max(a.bottom,b.bottom);y+=3)for(let x=Math.floor(w*.45);x<w-140;x+=3){const i=(y*w+x)*4,r=data[i],g=data[i+1],blue=data[i+2];if(r>g+8&&r>blue+5)redArea++;if(g>r+15&&blue>r+8)greenArea++}if(redArea<40||greenArea<40)return {text:'',issues:[]};await worker.setParameters({tessedit_pageseg_mode:'7',tessedit_char_whitelist:'0123456789.,'});const values=[],precisions=[];try{for(const band of [a,gray[0],b]){const c=document.createElement('canvas');c.width=110*4;c.height=(band.bottom-band.top+4)*4;const x=c.getContext('2d');x.fillStyle='white';x.fillRect(0,0,c.width,c.height);const crop=ctx.getImageData(x0,Math.max(0,band.top-2),w-x0,band.bottom-band.top+4);for(let i=0;i<crop.data.length;i+=4){const pixelX=x0+(i/4)%crop.width,pixelY=Math.max(0,band.top-2)+Math.floor(i/4/crop.width),middle=(Math.min(h-1,Math.floor((band.top+band.bottom)/2))*w+pixelX)*4;let badge=false;for(const yy of [band.top,band.top+1,band.bottom-1]){const q=(yy*w+pixelX)*4;if(data[q]<210||data[q+1]<210||data[q+2]<210)badge=true}const bg=((band.top+1)*w+pixelX)*4,base=.2126*data[bg]+.7152*data[bg+1]+.0722*data[bg+2],lum=.2126*crop.data[i]+.7152*crop.data[i+1]+.0722*crop.data[i+2],intensity=badge&&pixelY>=band.top&&pixelY<band.bottom?255-Math.max(0,Math.min(1,(lum-base)/Math.max(1,255-base)))*255:255;crop.data[i]=crop.data[i+1]=crop.data[i+2]=intensity}const small=document.createElement('canvas');small.width=crop.width;small.height=crop.height;small.getContext('2d').putImageData(crop,0,0);x.imageSmoothingEnabled=true;x.drawImage(small,0,0,c.width,c.height);const res=await worker.recognize(c);let text=res.data.text.trim();const precision=t=>/^\d{1,7}[.,]\d{1,8}$/.test(t)?t.split(/[.,]/)[1].length:null;if(precisions.length&&precision(text)!==precisions[0]){const alternatives=[];for(const mode of ['6','13','8']){await worker.setParameters({tessedit_pageseg_mode:mode});const alternative=(await worker.recognize(c)).data.text.trim();if(precision(alternative)===precisions[0])alternatives.push(alternative);else if(/^\d+$/.test(alternative)&&alternative.length>precisions[0])alternatives.push(alternative.slice(0,-precisions[0])+'.'+alternative.slice(-precisions[0]))}await worker.setParameters({tessedit_pageseg_mode:'7'});text=new Set(alternatives).size===1&&alternatives.length>=2?alternatives[0]:''}precisions.push(precision(text));const n=/^\d{1,7}[.,]\d{1,8}$/.test(text)?Number(text.replace(',','.')):null;values.push(n)}}finally{await worker.setParameters({tessedit_pageseg_mode:'3',tessedit_char_whitelist:''})}const [stop,entry,target]=values;if(values.some(v=>v===null)||!((stop>entry&&entry>target)||(stop<entry&&entry<target)))return {text:'',issues:['Confira os preços da ferramenta de posição; a leitura dos níveis não foi consistente.']};return {text:`\nEntry price: ${entry}\nStop loss: ${stop}\nTarget price: ${target}`,issues:['Níveis sugeridos pelos rótulos coloridos da ferramenta. Confira entrada, stop e alvo com a imagem.']}}
 
 async function shotLoadLibrary(){if(embeddedShotRuntime())return;if(globalThis.Tesseract)return;if(location.protocol==='file:')throw new Error('Para ler prints, abra o site por HTTP/HTTPS com a pasta vendor disponível. Veja o README.');await new Promise((resolve,reject)=>{const tag=document.createElement('script');tag.src='vendor/ocr/tesseract.min.js';const timer=setTimeout(()=>{tag.remove();reject(new Error('O leitor demorou para carregar. Use a versão com OCR embutido.'))},15000);tag.onload=()=>{clearTimeout(timer);resolve()};tag.onerror=()=>{clearTimeout(timer);tag.remove();reject(new Error('Arquivos de leitura indisponíveis. Use a versão com OCR embutido.'))};document.head.append(tag)})}
-async function readTradingShot(file){if(!file)return;const run=++shotGeneration,trade=cur;let attached=false;if(!/^image\/(png|jpeg|webp)$/.test(file.type)||file.size>20*1024*1024){$('#shot-status').textContent='Use uma imagem PNG, JPEG ou WebP de até 20 MB.';return}const status=text=>{if(cur===trade&&run===shotGeneration&&$('#shot-status'))$('#shot-status').textContent=text};status('Abrindo imagem…');try{const canvas=await diaryTrackImage(trade,decodeShotImage(file));if(cur!==trade||run!==shotGeneration||!$('#dlg').open)return;cur.screenshotIntake=true;cur.img.push(canvas.toDataURL('image/jpeg',.85));attached=true;thumbs();$('#shot-results').innerHTML='<p>Print aberto. Preparando identificação dos dados…</p><label class="shot-review"><input id="shot-reviewed" type="checkbox"> Conferi os dados antes de salvar</label>';status('Print aberto. Iniciando leitura…');await shotLoadLibrary();if(cur!==trade||run!==shotGeneration)return;if(!shotWorker)shotWorker=Tesseract.createWorker(['eng','por'],1,{workerPath:new URL('vendor/ocr/worker.min.js',location.href).href,corePath:new URL('vendor/ocr/core/',location.href).href,langPath:new URL('vendor/ocr/lang/',location.href).href,workerBlobURL:false,cacheMethod:'none',...(shotRuntime||{}),errorHandler:e=>status('Falha na leitura. O print continua anexado; tente novamente.'),logger:m=>status(m.status==='recognizing text'?'Lendo imagem… '+Math.round(m.progress*100)+'%':'Preparando o reconhecimento…')}).catch(e=>{shotWorker=null;throw e});const worker=await shotWait(shotWorker);const reading=await shotWait(shotReadChart(worker,canvas,()=>cur===trade&&run===shotGeneration&&$('#dlg').open,status));if(cur!==trade||run!==shotGeneration||!$('#dlg').open)return;const {result,parsed}=reading;const applied=[];for(const [key,value] of Object.entries(parsed.fields)){const input=$('#f_'+key);if(input&&input.value===''){input.value=value;applied.push(key)}}if(cur.isNew&&$('#f_side').value===cur.side){$('#f_side').value=parsed.fields.side||''}cur.shotEvidence={engine:'tesseract-7',confidence:Math.round(result.data.confidence),issues:parsed.issues};$('#shot-results').innerHTML=`<p>${applied.length} campo(s) preenchido(s). Confira os valores que serão salvos; campos já preenchidos foram preservados.</p><div class="shot-summary">${Object.entries(parsed.fields).map(([key,value])=>`<div><small>${esc(FL.find(f=>f[0]===key)?.[1]||key)}</small><b>${esc(key==='side'?($('#f_side').value==='long'?'Compra':$('#f_side').value==='short'?'Venda':'Não identificado'):($('#f_'+key)?.value??value))}</b></div>`).join('')}</div>${parsed.issues.map(t=>`<p class="mu">${esc(t)}</p>`).join('')}<label class="shot-review"><input id="shot-reviewed" type="checkbox"> Conferi os campos reconhecidos com o print</label>`;$('#trade-technical').open=Object.keys(parsed.fields).some(key=>!['symbol','close','pnl'].includes(key));thumbs();status(Object.keys(parsed.fields).length?'Leitura concluída. Confira os campos sugeridos antes de salvar.':'Não consegui identificar campos com segurança. O print está anexado: tente uma captura mais nítida ou recortada na operação, ou preencha os campos que quiser.')}catch(e){if(cur===trade&&run===shotGeneration){const failed=shotWorker;shotWorker=null;Promise.resolve(failed).then(w=>w?.terminate?.()).catch(()=>{})}status((e.message||'Não foi possível ler os dados.')+(attached?' O print permanece anexado. Você pode salvar o registro e revisar os campos quando quiser.':' Nenhum print foi anexado. Escolha outra imagem ou salve somente suas notas.'));if(cur===trade&&run===shotGeneration)shotGeneration++}}
+async function readTradingShot(file){if(!file)return;const run=++shotGeneration,trade=cur;let attached=false;if(!/^image\/(png|jpeg|webp)$/.test(file.type)||file.size>20*1024*1024){$('#shot-status').textContent='Use uma imagem PNG, JPEG ou WebP de até 20 MB.';return}const status=text=>{if(cur===trade&&run===shotGeneration&&$('#shot-status'))$('#shot-status').textContent=text};status('Abrindo imagem…');try{const canvas=await diaryTrackImage(trade,decodeShotImage(file));if(cur!==trade||run!==shotGeneration||!$('#dlg').open)return;cur.screenshotIntake=true;cur.img.push(canvas.toDataURL('image/jpeg',.85));attached=true;thumbs();$('#shot-results').innerHTML='<p>Print aberto. Preparando identificação dos dados…</p><label class="shot-review"><input id="shot-reviewed" type="checkbox"> Conferi os dados antes de salvar</label>';status('Print aberto. Iniciando leitura…');await shotLoadLibrary();if(cur!==trade||run!==shotGeneration)return;if(!shotWorker)shotWorker=Tesseract.createWorker(['eng','por'],1,{workerPath:new URL('vendor/ocr/worker.min.js',location.href).href,corePath:new URL('vendor/ocr/core/',location.href).href,langPath:new URL('vendor/ocr/lang/',location.href).href,workerBlobURL:false,cacheMethod:'none',...(shotRuntime||{}),errorHandler:e=>status('Falha na leitura. O print continua anexado; tente novamente.'),logger:m=>status(m.status==='recognizing text'?'Lendo imagem… '+Math.round(m.progress*100)+'%':'Preparando o reconhecimento…')}).catch(e=>{shotWorker=null;throw e});const worker=await shotWait(shotWorker);const reading=await shotWait(shotReadChart(worker,canvas,()=>cur===trade&&run===shotGeneration&&$('#dlg').open,status));if(cur!==trade||run!==shotGeneration||!$('#dlg').open)return;const {result,parsed}=reading;const applied=[];for(const [key,value] of Object.entries(parsed.fields)){const input=$('#f_'+key);if(input&&input.value===''){input.value=value;applied.push(key)}}if(cur.isNew&&$('#f_side').value===cur.side){$('#f_side').value=parsed.fields.side||''}cur.shotEvidence={engine:'tesseract-7',reader:'TV-2',confidence:Math.round(result.data.confidence),issues:parsed.issues};$('#shot-results').innerHTML=`<p>${applied.length} campo(s) preenchido(s). Confira os valores que serão salvos; campos já preenchidos foram preservados.</p><div class="shot-summary">${Object.entries(parsed.fields).map(([key,value])=>`<div><small>${esc(FL.find(f=>f[0]===key)?.[1]||key)}</small><b>${esc(key==='side'?($('#f_side').value==='long'?'Compra':$('#f_side').value==='short'?'Venda':'Não identificado'):($('#f_'+key)?.value??value))}</b></div>`).join('')}</div>${parsed.issues.map(t=>`<p class="mu">${esc(t)}</p>`).join('')}<label class="shot-review"><input id="shot-reviewed" type="checkbox"> Conferi os campos reconhecidos com o print</label>`;$('#trade-technical').open=Object.keys(parsed.fields).some(key=>!['symbol','close','pnl'].includes(key));thumbs();status(Object.keys(parsed.fields).length?'Leitura concluída. Confira os campos sugeridos antes de salvar.':'Não consegui identificar campos com segurança. O print está anexado: tente uma captura mais nítida ou recortada na operação, ou preencha os campos que quiser.')}catch(e){if(cur===trade&&run===shotGeneration){const failed=shotWorker;shotWorker=null;Promise.resolve(failed).then(w=>w?.terminate?.()).catch(()=>{})}status((e.message||'Não foi possível ler os dados.')+(attached?' O print permanece anexado. Você pode salvar o registro e revisar os campos quando quiser.':' Nenhum print foi anexado. Escolha outra imagem ou salve somente suas notas.'));if(cur===trade&&run===shotGeneration)shotGeneration++}}
 function saveShotDraft(){return diarySaveRecord('planned')}
 function editShotDraft(id){return diaryEditPartial(id)}
 function shotDraftList(){return diaryPartialList()}
@@ -18446,8 +18446,351 @@ function shotOCRCanvas(source, rect, maxWidth = 3200) {
   ctx.putImageData(pixels, 0, 0);
   return c;
 }
+// Position-tool rectangles give an entry boundary independently of badge color.
+function shotPositionBoundaries(canvas) {
+  const w = canvas.width,
+    h = canvas.height,
+    d = canvas
+      .getContext("2d", { willReadFrequently: true })
+      .getImageData(0, 0, w, h).data;
+  const bands = { red: [], green: [] },
+    active = { red: null, green: null },
+    minWidth = Math.max(45, w * 0.035);
+  const color = (i) => {
+    const r = d[i],
+      g = d[i + 1],
+      b = d[i + 2];
+    return r - g > 12 && r - b > 12
+      ? "red"
+      : g - r > 9 && g - b > 7
+        ? "green"
+        : "";
+  };
+  for (let y = 0; y <= h; y++) {
+    const best = { red: null, green: null };
+    let start = 0,
+      last = "";
+    for (let x = Math.floor(w * 0.35); x <= w - 75 && y < h; x++) {
+      const next = x < w - 75 ? color((y * w + x) * 4) : "";
+      if (next !== last) {
+        if (
+          last &&
+          x - start >= minWidth &&
+          (!best[last] || x - start > best[last].right - best[last].left)
+        )
+          best[last] = { left: start, right: x };
+        start = x;
+        last = next;
+      }
+    }
+    for (const kind of ["red", "green"]) {
+      const row = best[kind],
+        band = active[kind];
+      if (
+        row &&
+        (!band ||
+          Math.min(row.right, band.right) - Math.max(row.left, band.left) >
+            minWidth * 0.7)
+      ) {
+        if (!band)
+          active[kind] = {
+            top: y,
+            bottom: y + 1,
+            left: row.left,
+            right: row.right,
+            rows: 1,
+          };
+        else {
+          band.bottom = y + 1;
+          band.rows++;
+          band.left = Math.max(band.left, row.left);
+          band.right = Math.min(band.right, row.right);
+        }
+      } else {
+        if (band && band.rows >= 8 && band.right - band.left >= minWidth)
+          bands[kind].push(band);
+        active[kind] = row
+          ? { top: y, bottom: y + 1, left: row.left, right: row.right, rows: 1 }
+          : null;
+      }
+    }
+  }
+  const pairs = [];
+  for (const r of bands.red)
+    for (const g of bands.green) {
+      const overlap = Math.min(r.right, g.right) - Math.max(r.left, g.left),
+        gap = Math.min(Math.abs(r.bottom - g.top), Math.abs(g.bottom - r.top));
+      if (overlap < minWidth || gap > Math.max(4, h * 0.004)) continue;
+      const long = g.top < r.top,
+        entryY = long ? (g.bottom + r.top) / 2 : (r.bottom + g.top) / 2;
+      pairs.push({
+        entryY,
+        stopY: long ? r.bottom : r.top,
+        targetY: long ? g.top : g.bottom,
+        long,
+        left: Math.max(r.left, g.left),
+        right: Math.min(r.right, g.right),
+      });
+    }
+  return pairs;
+}
+async function shotReadGeometricLabels(worker, canvas) {
+  const pairs = shotPositionBoundaries(canvas);
+  if (pairs.length !== 1)
+    return {
+      text: "",
+      issues:
+        pairs.length > 1
+          ? ["Mais de uma ferramenta de posição visível. Recorte uma operação."]
+          : [],
+    };
+  if (!worker.setParameters) return { text: "", issues: [] };
+  const geometry = pairs[0],
+    w = canvas.width,
+    h = canvas.height,
+    ctx = canvas.getContext("2d", { willReadFrequently: true }),
+    d = ctx.getImageData(0, 0, w, h).data;
+  const read = async (y, kind, style) => {
+    const x0 = Math.max(0, w - Math.max(115, Math.round(w * 0.085))),
+      pad = Math.max(18, Math.round(h * 0.022)),
+      rows = [];
+    const matches = (i) => {
+      const r = d[i],
+        g = d[i + 1],
+        b = d[i + 2];
+      return kind === "red"
+        ? r > 140 && r > g * 1.4 && r > b * 1.2
+        : kind === "green"
+          ? g > 85 && g > r * 1.2 && g > b * 1.1
+          : Math.max(r, g, b) - Math.min(r, g, b) < 20 && r < 185;
+    };
+    let xend = w;
+    if (kind === "neutral")
+      while (
+        xend > x0 &&
+        [-1, -0.5, 0, 0.5, 1].every((f) =>
+          matches(
+            (Math.max(0, Math.min(h - 1, Math.round(y + f * pad))) * w +
+              xend -
+              1) *
+              4,
+          ),
+        )
+      )
+        xend--;
+    for (
+      let yy = Math.max(0, Math.floor(y - pad));
+      yy < Math.min(h, Math.ceil(y + pad));
+      yy++
+    ) {
+      let count = 0,
+        left = w,
+        right = 0;
+      for (let x = x0; x < xend; x++)
+        if (matches((yy * w + x) * 4)) {
+          count++;
+          left = Math.min(left, x);
+          right = x + 1;
+        }
+      rows.push({ y: yy, count, left, right });
+    }
+    const groups = [];
+    let group = null;
+    for (const row of rows) {
+      if (row.count >= Math.max(10, w * 0.006)) {
+        if (!group)
+          group = {
+            top: row.y,
+            bottom: row.y + 1,
+            left: row.left,
+            right: row.right,
+            rows: 1,
+            lefts: [row.left],
+            rights: [row.right],
+          };
+        else {
+          group.bottom = row.y + 1;
+          group.left = Math.min(group.left, row.left);
+          group.right = Math.max(group.right, row.right);
+          group.rows++;
+          group.lefts.push(row.left);
+          group.rights.push(row.right);
+        }
+      } else if (group && row.y - group.bottom > 2) {
+        groups.push(group);
+        group = null;
+      }
+    }
+    if (group) groups.push(group);
+    const choices = groups
+      .filter(
+        (b) =>
+          b.rows >= 5 &&
+          b.bottom - b.top <= Math.max(44, h * 0.045) &&
+          Math.abs((b.top + b.bottom) / 2 - y) <= Math.max(10, h * 0.012),
+      )
+      .sort(
+        (a, b) =>
+          Math.abs((a.top + a.bottom) / 2 - y) -
+          Math.abs((b.top + b.bottom) / 2 - y),
+      );
+    if (!choices.length) return null;
+    const box = choices[0];
+    box.left = box.lefts.sort((a, b) => a - b)[
+      Math.floor(box.lefts.length / 2)
+    ];
+    box.right = box.rights.sort((a, b) => a - b)[
+      Math.floor(box.rights.length / 2)
+    ];
+    const cw = box.right - box.left,
+      ch = box.bottom - box.top,
+      samples = [];
+    for (let yy = box.top; yy < box.bottom; yy++)
+      for (let x = box.left; x < box.right; x++) {
+        const i = (yy * w + x) * 4;
+        if (matches(i))
+          samples.push(0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]);
+      }
+    samples.sort((a, b) => a - b);
+    const bg = samples[Math.floor(samples.length * 0.35)];
+    const small = document.createElement("canvas");
+    small.width = cw + 8;
+    small.height = ch + 8;
+    const sx = small.getContext("2d");
+    sx.fillStyle = "white";
+    sx.fillRect(0, 0, small.width, small.height);
+    const pixels = sx.getImageData(4, 4, cw, ch);
+    for (let yy = 0; yy < ch; yy++)
+      for (let x = 0; x < cw; x++) {
+        const i = ((yy + box.top) * w + x + box.left) * 4,
+          j = (yy * cw + x) * 4,
+          lum = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+        pixels.data[j] =
+          pixels.data[j + 1] =
+          pixels.data[j + 2] =
+            style === "soft"
+              ? 255 -
+                Math.round(
+                  Math.max(0, Math.min(1, (lum - bg) / Math.max(1, 255 - bg))) *
+                    255,
+                )
+              : lum > bg + (255 - bg) * style
+                ? 0
+                : 255;
+        pixels.data[j + 3] = 255;
+      }
+    sx.putImageData(pixels, 4, 4);
+    const c = document.createElement("canvas");
+    c.width = small.width * 4;
+    c.height = small.height * 4;
+    c.getContext("2d").drawImage(small, 0, 0, c.width, c.height);
+    const values = [];
+    for (const mode of ["7", "6", "8", "13"]) {
+      await worker.setParameters({
+        tessedit_pageseg_mode: mode,
+        tessedit_char_whitelist: "0123456789.,",
+      });
+      const result = await worker.recognize(c),
+        text = (result.data.text || "").trim().replace(/\s/g, "");
+      if (/^\d{1,8}(?:[.,]\d{1,8})?$/.test(text))
+        values.push(text.replace(",", "."));
+    }
+    const options = [...new Set(values)],
+      votes = options.map((value) => ({
+        raw: value,
+        votes: values.filter(
+          (v) =>
+            v === value ||
+            (!v.includes(".") &&
+              value.includes(".") &&
+              v === value.replace(".", "")),
+        ).length,
+      }));
+    return votes
+      .filter((v) => v.votes >= 2)
+      .map((v) => ({
+        ...v,
+        value: Number(v.raw),
+        precision: v.raw.includes(".") ? v.raw.split(".")[1].length : 0,
+      }));
+  };
+  try {
+    for (const style of ["soft", 0.15, 0.45]) {
+      const stops = await read(geometry.stopY, "red", style),
+        entries = await read(geometry.entryY, "neutral", style),
+        targets = await read(geometry.targetY, "green", style),
+        valid = new Map();
+      if (!stops || !entries || !targets) continue;
+      for (const s of stops)
+        for (const e of entries)
+          for (const t of targets) {
+            const values = [s, e, t],
+              precisions = values
+                .filter((v) => v.precision > 0)
+                .map((v) => v.precision),
+              distinct = [...new Set(precisions)];
+            if (distinct.length > 1) continue;
+            const precision = distinct[0] || 0;
+            if (precision > 0 && precisions.length < 2) continue;
+            const normalized = values.map((v) =>
+              v.precision === precision
+                ? v.value
+                : v.precision === 0 && v.raw.length > precision
+                  ? v.value / 10 ** precision
+                  : NaN,
+            );
+            if (normalized.some((v) => !Number.isFinite(v) || v <= 0)) continue;
+            const [stop, entry, target] = normalized;
+            if (
+              !(geometry.long
+                ? stop < entry && entry < target
+                : target < entry && entry < stop)
+            )
+              continue;
+            const pixelRatio =
+                Math.abs(geometry.targetY - geometry.entryY) /
+                Math.abs(geometry.stopY - geometry.entryY),
+              priceRatio = Math.abs(target - entry) / Math.abs(stop - entry);
+            if (Math.abs(priceRatio / pixelRatio - 1) > 0.22) continue;
+            valid.set(normalized.join("|"), {
+              stop,
+              entry,
+              target,
+              decimalRestored: values.some((v) => v.precision !== precision),
+            });
+          }
+      if (valid.size !== 1) continue;
+      const { stop, entry, target, decimalRestored } = [...valid.values()][0];
+      return {
+        text: `\nEntry price: ${entry}\nStop loss: ${stop}\nTarget price: ${target}`,
+        issues: [
+          "Entrada identificada na divisão entre as áreas de alvo e stop. Confira os preços com o print.",
+          ...(decimalRestored
+            ? [
+                "Separador decimal recuperado pela precisão das outras duas etiquetas da mesma escala. Revise os números.",
+              ]
+            : []),
+        ],
+      };
+    }
+    return {
+      text: "",
+      issues: [
+        "Confira os números da ferramenta: a leitura das etiquetas não foi consistente com a escala.",
+      ],
+    };
+  } finally {
+    await worker.setParameters({
+      tessedit_pageseg_mode: "11",
+      tessedit_char_whitelist: "",
+    });
+  }
+}
+
 const shotReadLabelsStrict = readPositionLabels;
 readPositionLabels = async function (worker, canvas) {
+  const geometric = await shotReadGeometricLabels(worker, canvas);
+  if (geometric.text) return geometric;
   const direct = await shotReadLabelsStrict(worker, canvas);
   if (direct.text) return direct;
   const { width: w, height: h } = canvas,
@@ -18507,7 +18850,7 @@ readPositionLabels = async function (worker, canvas) {
         "Mais de uma posição visível. Recorte a operação que deseja registrar.",
       ],
     };
-  return direct;
+  return { text: direct.text, issues: [...geometric.issues, ...direct.issues] };
 };
 let shotChartQueue = Promise.resolve();
 function shotReadChart(worker, canvas, current, status) {

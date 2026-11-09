@@ -5,6 +5,8 @@ files={'library':'tesseract.min.js','worker':'worker.min.js','core':'core/tesser
 assets={k:base64.b64encode((root/'vendor/ocr'/f).read_bytes()).decode() for k,f in files.items()}
 source=(root/'YourFXjourney.html').read_text()
 # World is paused: the standalone build contains only the main workspace.
+# Cache-busted served reader is still embedded in the offline build.
+source=source.replace('<script src="public/shot-reader.js?v=tv2"></script>', '<script src="public/shot-reader.js"></script>')
 for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','journal-records','shot-reader','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience','onboarding']:
  source=source.replace(f'<script src="public/{name}.js"></script>', '<script>'+ (root/'public'/f'{name}.js').read_text().replace('</script', '<\\/script') +'</script>')
 source=source.replace('<link rel="stylesheet" href="public/assistant.css">', '<style>'+(root/'public/assistant.css').read_text()+'</style>')
