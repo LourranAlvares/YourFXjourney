@@ -58,20 +58,17 @@ Volatilidade usa dados reais quando conectada e cálculo ATR documentado: média
 
 O insight local da Home é determinístico e identificado como registro observado ou sugestão baseada no plano. Padrões exigem amostra/cobertura; sem dados suficientes, a orientação é neutra. Isso não é apresentado como texto gerado por IA. Com conexão autenticada e chave, **Gerar insight com IA** envia somente o plano/perfil e fatos agregados calculados por código. O modelo escolhe IDs desses fatos e uma ação curta; o servidor reconstrói os textos estatísticos originais e rejeita IDs desconhecidos e números/percentuais inventados na ação. Essa chamada não contém histórico bruto nem evidências de mercado ao vivo; a IA é instruída a não inferir condições atuais a partir dela. A consulta é iniciada pelo usuário, com cache e deduplicação.
 
-## Trading Plan e Trade Analyst
+## Trading Plan e análise SMC IA
 
-Registre as definições da sua estratégia, sem depender de conceitos genéricos de ICT/SMC. Critérios possuem definição, peso, obrigatoriedade, criticidade, tipo e função (confirmação ou invalidação).
+O Trading Plan continua guardando definições e critérios pessoais. A revisão manual/legada mantém sua fórmula de score e registros anteriores.
 
-- **Score:** peso satisfeito / peso total ×100; o denominador inclui critérios não verificáveis e sua cobertura fica visível.
-- Critério obrigatório/crítico ausente ou falho impede conformidade completa. Invalidação presente bloqueia independentemente da nota.
-- R:R mínimo, risco máximo por trade, sessão e notícias usam regras determinísticas/contexto estruturado. A IA não escolhe a porcentagem. Limites diário/semanal ficam documentados no plano; o sistema não presume que correspondam a soma de risco, drawdown ou perda líquida e não executa bloqueio de ordens.
-- Screenshots e definições são enviados ao provedor apenas ao clicar **Analisar com IA**. Sem credenciais, é possível usar **Revisar manualmente**. Dados e critérios sem evidência são “Não verificável”.
-- Critérios numéricos exigem dados na unidade do plano. Sugestões visuais não substituem o R:R explicitamente informado; divergências ficam para revisão.
-- Cada análise conserva plano, contexto, perfil e imagem exatos enviados, inclusive se a pessoa mudar o plano durante a requisição.
-- Correções de avaliações visuais guardam status anterior, evidência e data, sem apagar a resposta original e sem alegar retreinamento automático. Critérios automáticos exigem corrigir os dados estruturados e reavaliar.
-- Sessão e janela de notícias da análise online são verificadas pelo servidor; calendário inválido ou indisponível mantém a restrição “Não verificável”. Não há execução de trades.
+A ação existente agora se chama **Analisar um Setup com SMC IA** e usa exclusivamente o motor Python SMC Elite V1, com regras V7. Na mesma tela é possível selecionar Macro/Micro, informar ativo e timeframes, revisar decisão/fuso/recorte/máscaras e receber a classificação estruturada do motor. Essa classificação não é recalculada pelo score do plano pessoal.
 
-O provedor só avalia evidência visível; OHLC não é usado para comprovar BOS, liquidez ou Order Blocks nesta versão. Os módulos separados permitem um adaptador OHLC posterior sem substituir o histórico ou a fórmula do score.
+O resultado mostra direção candidata, evidências por imagem, critérios encontrados/violados/não verificáveis, limitações e filtros. Não inventa campos macro/micro ausentes na resposta. A resposta original do modelo, a decisão após os filtros e as revisões humanas ficam separadas. Correções não retreinam automaticamente o modelo.
+
+Rascunhos pendentes ficam neste dispositivo, por conta, sem chamada paga. Análises enviadas, imagens privadas e correções ficam no backend Python durável, com histórico paginado, idempotência, estados consultáveis e reserva persistente de custos. Recarga não reenvia uma chamada paga. Histórico legado continua legível sem migração destrutiva.
+
+**Ativação exige o serviço Python privado e armazenamento persistente.** Chave e orçamento ficam no Python; URL interna e token de serviço ficam no Node. Sem configuração o erro é explícito, sem fallback para o classificador genérico antigo. Consulte [docs/SMC-IA.md](docs/SMC-IA.md). Diário/briefing permanecem independentes. Nenhuma execução financeira/MT5 foi adicionada, e World continua pausado.
 
 ## Diário, importação e cálculos preservados
 

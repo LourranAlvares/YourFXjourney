@@ -8,7 +8,8 @@ source=(root/'YourFXjourney.html').read_text()
 # Cache-busted served reader is still embedded in the offline build.
 source=source.replace('<script src="public/shot-reader.js?v=tv3"></script>', '<script src="public/shot-reader.js"></script>')
 source=source.replace('<link rel="stylesheet" href="public/journal-quick.css">', '<style>'+(root/'public/journal-quick.css').read_text()+'</style>')
-for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','journal-records','shot-reader','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience','onboarding','plan-drafts','journal-quick']:
+source=source.replace('<link rel="stylesheet" href="public/smc-analysis.css">', '<style>'+(root/'public/smc-analysis.css').read_text()+'</style>')
+for name in ['plan-engine','session-engine','daily-workspace','assistant','asset-picker','account-tools','terminal','premium','diary','journal-records','shot-reader','mt5-import','office','trader-review','reference','dashboard','mobile','cloud','smc','management','growth-engine','growth-export','growth','panel-engine','panel','experience-engine','experience','onboarding','plan-drafts','journal-quick','smc-analysis']:
  source=source.replace(f'<script src="public/{name}.js"></script>', '<script>'+ (root/'public'/f'{name}.js').read_text().replace('</script', '<\\/script') +'</script>')
 source=source.replace('<link rel="stylesheet" href="public/assistant.css">', '<style>'+(root/'public/assistant.css').read_text()+'</style>')
 source=source.replace('<link rel="stylesheet" href="public/terminal.css">', '<style>'+(root/'public/terminal.css').read_text()+'</style>')

@@ -190,6 +190,7 @@ test("status exposes binding presence only and API data requires authentication"
     assert.equal(data.authenticated, false);
     assert.equal(data.csrf, null);
     assert.deepEqual(data.services, {
+      smc: false,
       ai: true,
       economicCalendar: true,
       economicProvider: "fmp",

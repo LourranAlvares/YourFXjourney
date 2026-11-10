@@ -140,6 +140,7 @@ const { createApp } = require("../server/index.cjs");
     );
     await p.evaluate(() => taGo("cal"));
     await p.locator(".cd.gb2").first().hover();
+    await p.locator("#premium-context-tooltip").waitFor({ state: "visible" });
     assert.equal(await p.locator("#premium-context-tooltip").isVisible(), true);
     await p.locator(".cd.gb2").first().click();
     assert.equal(await p.locator(".cd.premium-selected").count(), 1);

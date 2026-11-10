@@ -4,6 +4,7 @@ const http = require("node:http"),
   fs = require("node:fs/promises"),
   path = require("node:path");
 const { createProviders, APIError } = require("./providers.cjs");
+const { createSMCEngine } = require("./smc-engine.cjs");
 const ROOT = path.resolve(__dirname, "..");
 function createApp(options = {}) {
   const env = options.env || process.env,
@@ -14,6 +15,7 @@ function createApp(options = {}) {
       fetchFn: options.fetchFn || global.fetch,
       now: options.now || (() => new Date()),
     }),
+    smc = createSMCEngine({ env, fetchFn: options.smcFetchFn || global.fetch }),
     revokedSessions = new Map(),
     attempts = new Map(),
     requests = new Map(),
@@ -299,6 +301,7 @@ function createApp(options = {}) {
             csrf: current?.csrf || null,
             authConfigured: !!cloud || configured,
             services: {
+              smc: smc.configured,
               ai: !!env.TRADE_AI_KEY,
               economicCalendar:
                 ["forexfactory", "showmytrades"].includes(
@@ -460,9 +463,12 @@ function createApp(options = {}) {
           json(res, 200, { authenticated: false });
           return;
         }
-        const aiRoute = ["/api/analyse", "/api/briefing", "/api/extract-trade"].includes(
-          url.pathname,
-        );
+        const aiRoute = [
+          "/api/analyse",
+          "/api/briefing",
+          "/api/extract-trade",
+          "/api/smc/evidence",
+        ].includes(url.pathname);
         rate(
           requests,
           aiRoute
@@ -473,6 +479,79 @@ function createApp(options = {}) {
           aiRoute ? 20 : 120,
           60 * 60e3,
         );
+        if (req.method === "GET" && url.pathname === "/api/smc/status") {
+          json(res, 200, await smc.status(current.user));
+          return;
+        }
+        if (req.method === "GET" && url.pathname === "/api/smc/analyses") {
+          json(
+            res,
+            200,
+            await smc.history(current.user, url.searchParams.get("before")),
+          );
+          return;
+        }
+        if (req.method === "POST" && url.pathname === "/api/smc/evidence") {
+          json(res, 200, await smc.upload(current.user, await body(req)));
+          return;
+        }
+        const smcRoute = url.pathname.match(
+          /^\/api\/smc\/analyses\/([a-f0-9-]{36})(?:\/(review|cancel))?$/,
+        );
+        if (smcRoute) {
+          if (req.method === "GET" && !smcRoute[2]) {
+            json(res, 200, await smc.get(current.user, smcRoute[1]));
+            return;
+          }
+          if (req.method === "POST" && smcRoute[2] === "review") {
+            json(
+              res,
+              200,
+              await smc.review(
+                current.user,
+                smcRoute[1],
+                await body(req, 16384),
+              ),
+            );
+            return;
+          }
+          if (req.method === "POST" && smcRoute[2] === "cancel") {
+            json(res, 200, await smc.cancel(current.user, smcRoute[1]));
+            return;
+          }
+        }
+        const smcDerived = url.pathname.match(
+          /^\/api\/smc\/analyses\/([a-f0-9-]{36})\/images\/([0-3])$/,
+        );
+        if (req.method === "GET" && smcDerived) {
+          const image = await smc.derived(
+            current.user,
+            smcDerived[1],
+            smcDerived[2],
+          );
+          res.writeHead(200, {
+            "content-type": image.type,
+            "cache-control": "no-store",
+            "x-content-type-options": "nosniff",
+            "content-length": image.bytes.length,
+          });
+          res.end(image.bytes);
+          return;
+        }
+        const smcImage = url.pathname.match(
+          /^\/api\/smc\/evidence\/([a-f0-9-]{36})$/,
+        );
+        if (req.method === "GET" && smcImage) {
+          const image = await smc.image(current.user, smcImage[1]);
+          res.writeHead(200, {
+            "content-type": image.type,
+            "cache-control": "no-store",
+            "x-content-type-options": "nosniff",
+            "content-length": image.bytes.length,
+          });
+          res.end(image.bytes);
+          return;
+        }
         if (req.method === "POST" && url.pathname === "/api/briefing") {
           json(
             res,
@@ -482,14 +561,20 @@ function createApp(options = {}) {
           return;
         }
         if (req.method === "POST" && url.pathname === "/api/extract-trade") {
-          json(res, 200, await providers.extractTrade(await body(req), current.token));
+          json(
+            res,
+            200,
+            await providers.extractTrade(await body(req), current.token),
+          );
           return;
         }
         if (req.method === "POST" && url.pathname === "/api/analyse") {
-          const result = await providers.analyse(
-            await body(req),
-            current.token,
-          );
+          const payload = await body(req);
+          if (payload?.engine === "smc-elite-v1") {
+            json(res, 202, await smc.analyse(current.user, payload));
+            return;
+          }
+          const result = await providers.analyse(payload, current.token);
           json(res, 200, result);
           return;
         }
@@ -551,7 +636,8 @@ function createApp(options = {}) {
         throw new APIError(404, "not_found", "Arquivo não encontrado.");
       const types = {
         ".pdf": "application/pdf",
-        ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        ".pptx":
+          "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         ".html": "text/html; charset=utf-8",
         ".js": "text/javascript; charset=utf-8",
         ".css": "text/css; charset=utf-8",
@@ -579,7 +665,9 @@ function createApp(options = {}) {
           )
         : await fs.readFile(real);
       if (
-        ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(publicPath)
+        ["/YourFXjourney.html", "/YourFXjourney-standalone.html"].includes(
+          publicPath,
+        )
       ) {
         const enabled = env.SMC_WORLD_ENABLED === "true";
         payload = Buffer.from(

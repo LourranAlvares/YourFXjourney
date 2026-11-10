@@ -247,7 +247,7 @@ function eliteReferenceHome() {
       .trim()
       .split(/\s+/)[0],
   )}!</span></h1><p>Pronto para o seu dia de trading?<br>Seu processo, com mais clareza.</p></div><div class="reference-workspace-actions"><div class="elite-office scene-composer">${eliteConnectionGate()}<button class="reference-command" onclick="eliteOpenTools()">${terminalIcon("tools")}<span>Escolha uma ferramenta ou análise…</span><b>${terminalIcon("arrow")}</b></button></div><div class="scene-bottom-actions elite-function-actions">${[
-    ["analyst", "SMC Elite Analyst"],
+    ["analyst", "Analisar um Setup com SMC IA"],
     ["economic", "Eventos de hoje"],
     ["plan", "Revisar meu plano"],
     ["ins", "Raio-X do Trader"],

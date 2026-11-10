@@ -55,7 +55,7 @@ function smcHomeView() {
     focus = valid ? taBriefing.result.action : experienceModel().focus;
   return `<section class="smc-home reference-home"><div class="smc-hero-grid"><div class="smc-home-left"><section class="smc-desk reference-left"><div class="smc-office-scene" aria-hidden="true"><div class="scene-character-motion"></div></div><div class="scene-greeting"><div class="home-assistant-label">SMC ELITE ASSISTANT</div><h1><small>${h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"},</small><span>${esc(name)}!</span></h1>${experienceSpeech()}</div><div class="reference-workspace-actions"><div class="scene-bottom-actions elite-function-actions">${[
     ["reviews", "Revisar minha semana"],
-    ["analyst", "Analisar um setup"],
+    ["analyst", "Analisar um Setup com SMC IA"],
   ]
     .map(
       ([id, label]) =>
